@@ -1,0 +1,3220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SC Bridge — Singapore → Cambridge</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap');
+
+:root {
+  --map-bg: #E4D9B8;
+  --map-bg2: #D8CA9F;
+  --ink: #2A2013;
+  --ink-soft: #5C5138;
+  --paper: #FBF7EA;
+  --paper-raised: #FFFDF6;
+  --line: #C9BB8E;
+  --sg: #C81E3A;
+  --sg-tint: #F6DCE0;
+  --cam: #123C6B;
+  --cam-tint: #D9E4EC;
+  --gold: #D9A32B;
+  --gold-tint: #F6E7BE;
+  --green: #3E8E4F;
+  --green-tint: #DCEBE1;
+  --red-hp: #D3402A;
+  --shadow-pixel: 0 3px 0 rgba(42,32,19,0.35);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', sans-serif;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  padding-bottom: 84px;
+  min-height: 100vh;
+  background: var(--map-bg);
+  background-image: linear-gradient(180deg, var(--map-bg), var(--map-bg2));
+}
+
+.pixel-font { font-family: 'Press Start 2P', monospace; }
+
+/* ---------- Header ---------- */
+
+header.app-header {
+  padding: 16px 16px 12px;
+  border-bottom: 4px solid var(--ink);
+  background: var(--paper-raised);
+  position: sticky; top: 0; z-index: 20;
+}
+.app-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  display: flex; align-items: center; gap: 8px;
+  color: var(--ink);
+}
+.app-title .flag-chip {
+  font-size: 9px; font-weight: 700;
+  padding: 3px 6px; border-radius: 3px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.flag-chip-sg { background: var(--sg-tint); color: var(--sg); }
+.flag-chip-cam { background: var(--cam-tint); color: var(--cam); }
+.app-subtitle { margin-top: 8px; font-size: 12.5px; color: var(--ink-soft); font-weight: 500; }
+
+/* ---------- Bottom nav ---------- */
+
+nav.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  display: flex;
+  background: var(--ink);
+  z-index: 30;
+  border-top: 4px solid var(--gold);
+}
+.navbtn {
+  flex: 1; background: none; border: none;
+  color: #A99C7A;
+  font-size: 10.5px; font-weight: 700;
+  padding: 10px 4px 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: pointer;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+.navbtn .navicon { font-size: 19px; }
+.navbtn.active { color: #FBF7EA; }
+
+/* ---------- Panels ---------- */
+
+main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
+.panel { display: none; }
+.panel.active { display: block; animation: fadein 0.2s ease; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popin { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+.section-heading { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+.section-sub { font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; }
+
+/* ================= HERO HUD (atlas top bar) ================= */
+
+.hero-hud {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--ink); color: #fff;
+  border-radius: 10px; padding: 10px 14px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-pixel);
+}
+.hero-hud-avatar { font-size: 26px; }
+.hero-hud-mid { flex: 1; }
+.hero-hud-level { font-size: 11px; font-weight: 700; margin-bottom: 3px; color: var(--gold-tint); }
+.xp-track { height: 8px; border-radius: 5px; background: #3A3222; overflow: hidden; border: 1.5px solid #4A4130; }
+.xp-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #F0C860); transition: width 0.4s ease; }
+.hero-hud-stars { font-size: 13px; font-weight: 700; color: var(--gold-tint); white-space: nowrap; }
+
+.atlas-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+.atlas-narrative {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  background: var(--paper-raised);
+  border-left: 3px solid var(--gold);
+  padding: 10px 12px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+/* ================= WORLD MAP GRID ================= */
+
+.world-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.world-node {
+  --wcolor: #999;
+  background: var(--paper-raised);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  padding: 14px 10px 12px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-pixel);
+  position: relative;
+}
+.world-node::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 6px;
+  background: var(--wcolor);
+  border-radius: 8px 8px 0 0;
+}
+.world-node-icon { font-size: 30px; margin-top: 4px; }
+.world-node-code { font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--wcolor); margin-top: 6px; }
+.world-node-name { font-size: 12.5px; font-weight: 700; margin-top: 4px; line-height: 1.3; }
+.world-node-stars { margin-top: 6px; font-size: 13px; color: var(--gold); }
+.world-node-soon { margin-top: 6px; font-size: 10.5px; color: var(--ink-soft); font-weight: 600; }
+.world-node.world-locked { opacity: 0.55; cursor: not-allowed; }
+.world-node.world-soon { opacity: 0.7; }
+
+/* ================= WORLD DETAIL ================= */
+
+.back-btn {
+  background: none; border: none;
+  color: var(--ink-soft);
+  font-size: 13px; font-weight: 700;
+  padding: 4px 0 14px;
+  cursor: pointer;
+}
+
+.world-detail { --wcolor: #999; }
+.world-detail-head {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--paper-raised);
+  border: 3px solid var(--ink);
+  border-left: 8px solid var(--wcolor);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-pixel);
+}
+.world-detail-icon { font-size: 32px; }
+.world-detail-name { font-size: 16px; font-weight: 700; }
+.world-detail-tagline { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.mission-tile {
+  aspect-ratio: 1;
+  background: var(--paper-raised);
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-pixel);
+  position: relative;
+}
+.tile-badge {
+  position: absolute; top: 4px; left: 6px;
+  font-size: 9px; font-weight: 700; color: var(--ink-soft);
+  font-family: 'IBM Plex Mono', monospace;
+}
+.tile-symbol { font-size: 24px; }
+
+.mission-tile.tile-locked {
+  background: #DCD3B6;
+  border-color: var(--line);
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.mission-tile.tile-locked .tile-badge { color: var(--line); }
+
+.mission-tile.tile-unlocked {
+  background: linear-gradient(160deg, var(--gold), #F0C860);
+  border-color: var(--ink);
+}
+.mission-tile.tile-unlocked .tile-symbol { color: #fff; text-shadow: 0 1.5px 0 rgba(42,32,19,0.4); }
+.mission-tile.tile-unlocked .tile-badge { color: rgba(42,32,19,0.6); }
+
+.mission-tile.tile-done { background: var(--green-tint); border-color: var(--green); }
+.mission-tile.tile-done .tile-symbol { color: var(--green); }
+
+.boss-tile {
+  width: 100%;
+  display: flex; align-items: center; gap: 12px;
+  background: var(--ink); color: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  box-shadow: var(--shadow-pixel);
+}
+.boss-tile-icon { font-size: 28px; }
+.boss-tile-text { font-size: 13.5px; font-weight: 700; text-align: left; }
+.boss-tile.boss-done { background: var(--green); }
+.boss-tile.boss-locked { background: #DCD3B6; color: var(--ink-soft); opacity: 0.75; cursor: not-allowed; box-shadow: none; }
+
+/* ================= MISSION PLAYER ================= */
+
+.mission-player { --wcolor: #999; }
+.mission-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+.mission-progress { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.stage-dot {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--paper-raised);
+  border: 2px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  opacity: 0.45;
+}
+.stage-dot.on { border-color: var(--wcolor); background: var(--gold-tint); opacity: 1; }
+
+.stage-box {
+  background: var(--paper-raised);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: var(--shadow-pixel);
+  animation: popin 0.2s ease;
+}
+.stage-heading-big { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--wcolor, var(--gold)); margin-bottom: 10px; }
+.stage-text { font-size: 14.5px; line-height: 1.6; margin-bottom: 14px; }
+.stage-body { display: flex; flex-direction: column; gap: 4px; }
+
+.choice-list { display: flex; flex-direction: column; gap: 9px; margin-bottom: 14px; }
+.choice-btn {
+  text-align: left;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 14px;
+  border: 2.5px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.choice-btn:active { transform: translateY(1px); }
+.choice-btn.choice-selected {
+  border-color: var(--gold);
+  background: var(--gold-tint);
+  color: #6B5314;
+}
+
+#singapore-choices.choice-list { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+.choice-chip {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 20px;
+  cursor: pointer;
+}
+.choice-chip:active { transform: translateY(1px); }
+.choice-chip.choice-selected {
+  border-color: var(--green);
+  background: var(--green-tint);
+  color: #23543A;
+}
+#input-singapore-extra { margin-top: 4px; }
+
+.think-input, .challenge-input {
+  width: 100%;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14.5px;
+  padding: 10px 11px;
+  border: 2px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  margin-bottom: 12px;
+}
+.think-input:focus, .challenge-input:focus { outline: 2.5px solid var(--gold); outline-offset: 1px; }
+
+.stage-btn {
+  border: 2.5px solid var(--ink);
+  background: var(--ink);
+  color: #fff;
+  border-radius: 8px;
+  padding: 11px 16px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'IBM Plex Sans', sans-serif;
+  box-shadow: var(--shadow-pixel);
+}
+.stage-btn:active { transform: translateY(2px); box-shadow: none; }
+.stage-btn-secondary { background: var(--paper); color: var(--ink); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.challenge-feedback { font-size: 13.5px; margin: 4px 0 10px; min-height: 18px; display: flex; flex-direction: column; gap: 3px; }
+.feedback-good { color: var(--green); font-weight: 700; }
+.feedback-retry { color: #B36B00; font-weight: 700; }
+.feedback-hint { color: var(--ink-soft); font-weight: 500; font-size: 12.5px; }
+
+.algebra-line {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 19px; font-weight: 700;
+  color: var(--cam);
+  background: var(--cam-tint);
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-bottom: 14px;
+}
+.algebra-line-small { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--cam); }
+
+/* Cambridge "scroll" — deliberately different texture from the game chrome */
+.scroll-box {
+  background: #F3EAD3;
+  border: 2px solid #B89B5E;
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  position: relative;
+}
+.scroll-box::before {
+  content: "✍ Cambridge Working";
+  position: absolute; top: -11px; left: 12px;
+  background: #F3EAD3;
+  padding: 0 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #8A6D34;
+  letter-spacing: 0.03em;
+}
+.working-line { font-family: 'IBM Plex Mono', monospace; font-size: 14.5px; padding: 3px 0; color: #3B2E17; }
+.final-answer { font-family: 'IBM Plex Mono', monospace; font-size: 14.5px; font-weight: 700; padding-top: 6px; margin-top: 4px; border-top: 1.5px dashed #B89B5E; color: #3B2E17; }
+
+.working-box { background: #fff; border: 2px solid var(--line); border-left: 4px solid var(--cam); border-radius: 6px; padding: 10px 12px; }
+.working-box-small { padding: 8px 10px; font-size: 12.5px; }
+
+.mark-box { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.mark-row {
+  display: flex; align-items: flex-start; gap: 9px;
+  font-size: 13.5px;
+  background: var(--paper);
+  padding: 9px 11px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.mark-row input[type="checkbox"] { margin-top: 2px; width: 18px; height: 18px; accent-color: var(--green); flex: none; }
+
+/* ---------- Pictures reused (bar / number line / mental steps) ---------- */
+
+.barmodel { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.bar-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bar-label { font-size: 12px; font-weight: 700; color: var(--ink-soft); min-width: 20px; }
+.bar-track { display: flex; gap: 2px; }
+.bar-box {
+  width: 26px; height: 26px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; font-weight: 700; color: #fff;
+}
+.bar-sg { background: var(--sg); }
+.bar-cam { background: var(--cam); }
+.bar-box:not(.bar-shaded).bar-sg { background: var(--sg-tint); color: var(--sg); border: 2px solid var(--sg); }
+.bar-plus { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 13px; color: var(--ink-soft); }
+.bar-total { font-size: 12px; color: var(--ink-soft); margin-top: 2px; font-style: italic; }
+
+.numberline-svg { width: 100%; max-width: 320px; height: auto; margin-bottom: 10px; }
+.nl-axis { stroke: var(--ink-soft); stroke-width: 1.5; }
+.nl-tick { stroke: var(--ink-soft); stroke-width: 1; }
+.nl-num { font-size: 8px; fill: var(--ink-soft); font-family: 'IBM Plex Mono', monospace; }
+.nl-arc { fill: none; stroke: var(--sg); stroke-width: 2; }
+.nl-arrowhead { fill: var(--sg); }
+.nl-dot { fill: var(--cam); }
+
+.mental-steps { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+.mental-step { font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; background: var(--paper); padding: 6px 10px; border-radius: 5px; }
+
+/* Crossing-out / regrouping */
+.regroup-block { display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px; }
+.regroup-row { display: flex; gap: 2px; }
+.regroup-gutter { width: 16px; text-align: center; font-weight: 700; font-size: 17px; }
+.regroup-col { width: 28px; text-align: center; font-size: 17px; }
+.regroup-correction .regroup-col { font-size: 12px; color: var(--gold); font-weight: 700; height: 15px; }
+.regroup-main .regroup-col.regroup-cross { text-decoration: line-through; color: var(--ink-soft); font-weight: 600; }
+.regroup-sub .regroup-col, .regroup-sub .regroup-gutter { font-weight: 600; }
+.regroup-divider { width: 100%; max-width: 160px; border-top: 2px solid var(--ink); margin: 3px 0; }
+.regroup-result .regroup-col { font-weight: 700; color: var(--green); }
+
+/* Number bonds */
+.bond-svg { width: 150px; height: 105px; }
+.bond-line { stroke: var(--ink-soft); stroke-width: 2; }
+.bond-whole { fill: var(--gold-tint); stroke: var(--gold); stroke-width: 2; }
+.bond-part { fill: var(--cam-tint); stroke: var(--cam); stroke-width: 2; }
+.bond-text { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; fill: var(--ink); }
+
+/* Grouping (division) */
+.grouping-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
+.grouping-box { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 3px; padding: 7px; border: 2px solid var(--cam); border-radius: 6px; width: 44px; background: var(--cam-tint); }
+.grouping-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--cam); }
+
+/* Sequencing */
+.sequence-wrap { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.sequence-chip { font-family: 'IBM Plex Mono', monospace; font-weight: 700; background: var(--sg-tint); color: var(--sg); padding: 6px 10px; border-radius: 6px; font-size: 14px; }
+.sequence-arrow { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-soft); font-weight: 700; }
+
+/* Geometry: angle sectors */
+.angle-svg { width: 170px; height: 105px; margin-bottom: 6px; }
+.angle-wedge { stroke: var(--paper-raised); stroke-width: 2; }
+.angle-wedge.angle-known { fill: var(--cam-tint); }
+.angle-wedge.angle-unknown { fill: var(--sg-tint); }
+.angle-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700; fill: var(--ink); }
+
+/* Geometry: area / volume grid */
+.area-grid { display: grid; gap: 2px; margin: 0 auto; }
+.area-cell { aspect-ratio: 1; background: var(--sg-tint); border: 1.5px solid var(--sg); border-radius: 2px; }
+.area-grid-label { text-align: center; font-size: 12px; color: var(--ink-soft); margin-top: 8px; font-family: 'IBM Plex Mono', monospace; }
+
+/* Geometry: right triangle (Pythagoras) */
+.triangle-svg { width: 170px; height: 115px; margin-bottom: 6px; }
+.triangle-shape { fill: var(--cam-tint); stroke: var(--cam); stroke-width: 2; }
+.triangle-rightangle { fill: none; stroke: var(--ink-soft); stroke-width: 1.5; }
+.triangle-label { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700; fill: var(--ink); }
+
+/* Data: bar chart */
+.barchart-wrap { display: flex; align-items: flex-end; gap: 12px; height: 130px; padding: 8px 4px 0; }
+.barchart-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; flex: 1; }
+.barchart-bar { width: 100%; max-width: 34px; background: var(--cam); border-radius: 4px 4px 0 0; }
+.barchart-value { font-size: 11px; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; font-family: 'IBM Plex Mono', monospace; }
+.barchart-cat { font-size: 11px; color: var(--ink-soft); margin-top: 5px; font-weight: 600; }
+
+/* Data: number-line data points */
+.dataplot-svg { width: 100%; max-width: 320px; height: auto; margin-bottom: 6px; }
+.dataplot-dot { fill: var(--sg); }
+
+/* Data: probability tree */
+.tree-svg { width: 100%; max-width: 280px; height: auto; margin-bottom: 6px; }
+.tree-line { stroke: var(--ink-soft); stroke-width: 1.5; }
+.tree-prob { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-weight: 700; fill: var(--cam); }
+.tree-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700; fill: var(--ink); }
+
+/* ---------- Word problem keywords ---------- */
+
+.kw-text { background: var(--paper); padding: 12px 14px; border-radius: 8px; }
+mark { padding: 1px 3px; border-radius: 3px; font-weight: 700; }
+.kw-add { background: var(--green-tint); color: var(--green); }
+.kw-sub { background: var(--sg-tint); color: var(--sg); }
+.kw-mul { background: var(--cam-tint); color: var(--cam); }
+.kw-div { background: #EEE0F5; color: #7B3FA0; }
+.kw-legend { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; font-size: 11.5px; }
+.kw-legend span { padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+.chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+.num-chip { font-family: 'IBM Plex Mono', monospace; font-weight: 700; background: var(--gold-tint); color: #8A6D1E; padding: 5px 12px; border-radius: 16px; font-size: 14px; }
+
+/* ================= BOSS BATTLE ================= */
+
+.boss-battle { --wcolor: #999; }
+.boss-header {
+  background: var(--ink); color: #fff;
+  border-radius: 10px; padding: 14px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-pixel);
+}
+.boss-name { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.hp-track { height: 16px; border-radius: 3px; background: #3A3222; border: 2px solid #56492E; overflow: hidden; }
+.hp-fill { height: 100%; background: linear-gradient(90deg, var(--red-hp), #F0705A); transition: width 0.5s ease; }
+.hp-label { font-size: 11px; margin-top: 5px; color: #C9C1A8; font-family: 'IBM Plex Mono', monospace; }
+.boss-q-count { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 6px; }
+.boss-q { font-size: 16px; font-weight: 600; }
+
+.victory-box { text-align: center; padding: 10px 0; }
+.victory-title { font-family: 'Press Start 2P', monospace; font-size: 16px; color: var(--gold); margin-bottom: 10px; }
+.victory-star { font-size: 44px; animation: popin 0.4s ease; }
+
+/* ================= SPELLBOOK (dictionary) ================= */
+
+.subnav { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 4px; }
+.subtab {
+  flex: none; border: 2px solid var(--line); background: var(--paper-raised);
+  border-radius: 20px; padding: 7px 13px; font-size: 12.5px; font-weight: 700;
+  color: var(--ink-soft); cursor: pointer; white-space: nowrap;
+}
+.subtab.active { border-color: var(--ink); color: var(--ink); background: var(--gold-tint); }
+.subtab-icon { margin-right: 2px; }
+
+.dict-intro {
+  font-size: 13px; color: var(--ink-soft); background: var(--paper-raised);
+  border-left: 3px solid var(--gold); padding: 10px 12px; border-radius: 4px; margin: 0 0 14px;
+}
+.dict-card { background: var(--paper-raised); border: 2.5px solid var(--ink); border-radius: 10px; margin-bottom: 14px; box-shadow: var(--shadow-pixel); overflow: hidden; }
+.dict-card-head { padding: 10px 14px; border-bottom: 2px dashed var(--line); display: flex; align-items: center; flex-wrap: wrap; gap: 4px; background: var(--paper); }
+.dict-card-body { display: grid; grid-template-columns: 1fr 1fr; }
+.dict-side { padding: 14px; }
+.dict-side-sg { border-right: 2px dashed var(--line); }
+@media (max-width: 480px) { .dict-card-body { grid-template-columns: 1fr; } .dict-side-sg { border-right: none; border-bottom: 2px dashed var(--line); } }
+.cam-line { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--cam); padding: 2px 0; }
+
+.tag { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; font-weight: 700; padding: 3px 8px; border-radius: 3px; display: inline-block; }
+.tag-sg { background: var(--sg-tint); color: var(--sg); }
+.tag-cam { background: var(--cam-tint); color: var(--cam); }
+.bridge-arrow { color: var(--gold); font-weight: 700; margin: 0 4px; }
+
+/* ================= WORKSHOP (My Bridge) ================= */
+
+.field-block { margin-bottom: 15px; }
+.field-label { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 5px; color: var(--ink-soft); }
+textarea, input[type=text] {
+  width: 100%; font-family: 'IBM Plex Sans', sans-serif; font-size: 14.5px;
+  padding: 10px 11px; border: 2px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink); resize: vertical;
+}
+#input-working { font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; }
+textarea:focus, input:focus { outline: 2.5px solid var(--gold); outline-offset: 1px; }
+
+.builder-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.builder-label-input { width: 84px; font-size: 12.5px; padding: 6px 8px; border: 2px solid var(--line); border-radius: 6px; }
+.builder-controls { display: flex; gap: 5px; }
+.mini-btn {
+  width: 30px; height: 30px; border-radius: 6px; border: 2px solid var(--ink);
+  background: var(--paper-raised); font-size: 15px; font-weight: 700; cursor: pointer; color: var(--ink);
+}
+.mini-btn-remove { color: var(--sg); border-color: var(--sg); }
+.text-btn { background: none; border: none; color: var(--gold); font-weight: 700; font-size: 13px; cursor: pointer; padding: 4px 0; }
+
+/* Number line & pie builders (My Bridge) */
+.builder-preview { background: var(--paper); border-radius: 8px; padding: 12px; margin-top: 8px; display: flex; flex-direction: column; align-items: center; }
+.nl-builder-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+.nl-builder-label {
+  display: flex; flex-direction: column; gap: 4px;
+  font-size: 12px; font-weight: 700; color: var(--ink-soft);
+}
+.nl-builder-label input[type="number"] {
+  width: 90px; font-size: 14px; padding: 8px 10px;
+  border: 2px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink);
+}
+.nl-jump-label { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+.stepper-group { display: flex; align-items: center; gap: 8px; }
+.stepper-label { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); }
+.stepper-val {
+  min-width: 26px; text-align: center;
+  font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 14px;
+}
+.pie-block { margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1.5px dashed var(--line); }
+.pie-block:last-child { border-bottom: none; }
+.pie-svg { width: 150px; height: 150px; }
+.pie-slice { fill: var(--sg-tint); stroke: var(--paper-raised); stroke-width: 2; cursor: pointer; }
+.pie-slice.pie-slice-shaded { fill: var(--sg); }
+.pie-fraction-label {
+  text-align: center; margin-top: 8px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; color: var(--ink-soft);
+}
+
+.save-btn {
+  width: 100%; padding: 13px; border-radius: 8px; border: 2.5px solid var(--ink);
+  background: var(--ink); color: #fff; font-size: 15px; font-weight: 700;
+  cursor: pointer; margin-top: 4px; letter-spacing: 0.02em; box-shadow: var(--shadow-pixel);
+}
+.save-btn:active { transform: translateY(2px); box-shadow: none; }
+
+.notebook-card { background: var(--paper-raised); border: 2px solid var(--line); border-radius: 9px; padding: 12px 14px; margin-bottom: 12px; }
+.notebook-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.notebook-date { font-size: 11px; color: var(--ink-soft); font-family: 'IBM Plex Mono', monospace; }
+.notebook-q { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.notebook-row { font-size: 13px; margin: 4px 0; display: flex; align-items: baseline; gap: 6px; }
+.empty-note { font-size: 13px; color: var(--ink-soft); font-style: italic; }
+hr.divider { border: none; border-top: 2px dashed var(--line); margin: 22px 0 16px; }
+
+/* ================= HERO STATS TAB ================= */
+
+.hero-panel-header {
+  text-align: center; background: var(--ink); color: #fff;
+  border-radius: 12px; padding: 22px 16px; margin-bottom: 18px;
+  box-shadow: var(--shadow-pixel);
+}
+.hero-panel-avatar { font-size: 48px; }
+.hero-panel-level { font-family: 'Press Start 2P', monospace; font-size: 15px; color: var(--gold-tint); margin-top: 8px; }
+.hero-panel-xptrack { height: 10px; border-radius: 6px; background: #3A3222; overflow: hidden; margin-top: 12px; border: 2px solid #4A4130; }
+.hero-panel-xpfill { height: 100%; background: linear-gradient(90deg, var(--gold), #F0C860); }
+.hero-panel-xplabel { font-size: 11px; margin-top: 6px; color: #C9C1A8; }
+
+.stat-row { display: flex; gap: 10px; margin-bottom: 18px; }
+.stat-card { flex: 1; background: var(--paper-raised); border: 2.5px solid var(--ink); border-radius: 10px; padding: 12px; text-align: center; box-shadow: var(--shadow-pixel); }
+.stat-card-num { font-size: 22px; font-weight: 700; color: var(--gold); }
+.stat-card-label { font-size: 10.5px; color: var(--ink-soft); font-weight: 600; margin-top: 2px; }
+
+.badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
+.badge {
+  --wcolor: #999;
+  background: var(--paper-raised); border: 3px solid var(--wcolor); border-radius: 10px;
+  padding: 12px 8px; text-align: center; box-shadow: var(--shadow-pixel);
+}
+.badge-icon { font-size: 26px; }
+.badge-name { font-size: 10.5px; font-weight: 700; margin-top: 6px; line-height: 1.3; }
+
+/* ---------- Toast ---------- */
+
+#stamp-toast {
+  position: fixed; bottom: 92px; left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--ink); color: #fff;
+  padding: 11px 18px; border-radius: 30px;
+  font-size: 13px; font-weight: 700;
+  box-shadow: var(--shadow-pixel);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 50; white-space: nowrap;
+}
+#stamp-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-title">
+    <span class="flag-chip flag-chip-sg">SG</span>
+    🌉
+    <span class="flag-chip flag-chip-cam">CAM</span>
+    SC BRIDGE
+  </div>
+  <div class="app-subtitle">Think Singapore → Write Cambridge → Score Cambridge</div>
+</header>
+
+<main>
+
+  <!-- ============ MAP (home) ============ -->
+  <section id="panel-map" class="panel active"></section>
+
+  <!-- ============ SPELLBOOK (dictionary) ============ -->
+  <section id="panel-dict" class="panel">
+    <div class="section-heading">📘 Manual</div>
+    <div class="section-sub">Technical reference — how each Singapore method translates into Cambridge notation.</div>
+    <div id="dict-subnav" class="subnav"></div>
+    <div id="dict-body"></div>
+  </section>
+
+  <!-- ============ WORKSHOP (My Bridge) ============ -->
+  <section id="panel-mybridge" class="panel">
+    <div class="section-heading">📐 My Bridge</div>
+    <div class="section-sub">Work through your own question, step by step. Earns XP too!</div>
+
+    <div class="field-block">
+      <label class="field-label">The question</label>
+      <textarea id="input-question" rows="2" placeholder="Type or paste the question from your homework..."></textarea>
+    </div>
+    <div class="field-block">
+      <label class="field-label">🇸🇬 How I think in the Singapore way (tap all that apply)</label>
+      <div id="singapore-choices" class="choice-list"></div>
+      <input type="text" id="input-singapore-extra" placeholder="Add more detail (optional)">
+    </div>
+    <div class="field-block">
+      <label class="field-label">💡 Draw the picture</label>
+      <div id="picture-type-tabs" class="subnav"></div>
+
+      <div id="builder-bars-wrap">
+        <div id="builder-bars"></div>
+        <button id="builder-add" class="text-btn">+ Add another bar</button>
+      </div>
+
+      <div id="builder-numberline-wrap" style="display:none;">
+        <div class="nl-builder-row">
+          <label class="nl-builder-label">Lowest<input type="number" id="nl-min" value="-10"></label>
+          <label class="nl-builder-label">Highest<input type="number" id="nl-max" value="10"></label>
+        </div>
+        <div class="nl-builder-row">
+          <div class="stepper-group">
+            <span class="stepper-label">Jump from</span>
+            <button id="nl-from-minus" class="mini-btn">−</button>
+            <span id="nl-from-val" class="stepper-val">0</span>
+            <button id="nl-from-plus" class="mini-btn">+</button>
+          </div>
+          <div class="stepper-group">
+            <span class="stepper-label">Jump to</span>
+            <button id="nl-to-minus" class="mini-btn">−</button>
+            <span id="nl-to-val" class="stepper-val">5</span>
+            <button id="nl-to-plus" class="mini-btn">+</button>
+          </div>
+        </div>
+        <div id="nl-builder-preview" class="builder-preview"></div>
+      </div>
+
+      <div id="builder-pie-wrap" style="display:none;">
+        <div id="pie-builders"></div>
+        <button id="pie-add" class="text-btn">+ Add another pie</button>
+      </div>
+    </div>
+    <div class="field-block">
+      <label class="field-label">🧩 Convert to Algebra</label>
+      <input type="text" id="input-algebra" placeholder="e.g. 2x + 5 = 17">
+    </div>
+    <div class="field-block">
+      <label class="field-label">✍ Cambridge Exam Working</label>
+      <textarea id="input-working" rows="4" placeholder="One step per line, the way you'd write it for your teacher..."></textarea>
+    </div>
+    <div class="field-block">
+      <label class="field-label">🎯 Self-check before you save</label>
+      <div id="save-checklist" class="mark-box"></div>
+    </div>
+    <button id="save-entry" class="save-btn">🎫 Stamp &amp; Save (+5 XP)</button>
+
+    <hr class="divider">
+    <div class="section-heading" style="font-size:16px; margin-bottom:10px;">Saved pages</div>
+    <div id="notebook-list"></div>
+  </section>
+
+  <!-- ============ HERO (stats) ============ -->
+  <section id="panel-hero" class="panel">
+    <div class="hero-panel-header">
+      <div class="hero-panel-avatar">🏆</div>
+      <div class="hero-panel-level">LEVEL <span id="hero-level">1</span></div>
+      <div class="hero-panel-xptrack"><div class="hero-panel-xpfill" id="hero-xp-fill" style="width:0%"></div></div>
+      <div class="hero-panel-xplabel" id="hero-xp-label">0 / 100 XP to next level</div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-card-num" id="hero-total-xp">0</div><div class="stat-card-label">Total XP</div></div>
+      <div class="stat-card"><div class="stat-card-num" id="hero-missions">0</div><div class="stat-card-label">Missions Done</div></div>
+      <div class="stat-card"><div class="stat-card-num" id="hero-stars">0</div><div class="stat-card-label">Stars</div></div>
+    </div>
+
+    <div class="section-heading" style="font-size:16px; margin-bottom:10px;">🎖️ Badges</div>
+    <div id="hero-badges" class="badge-grid"></div>
+  </section>
+
+</main>
+
+<nav class="bottom-nav">
+  <button id="nav-map" class="navbtn active" onclick="switchTab('map')">
+    <span class="navicon">🗺️</span> Map
+  </button>
+  <button id="nav-dict" class="navbtn" onclick="switchTab('dict')">
+    <span class="navicon">📘</span> Manual
+  </button>
+  <button id="nav-mybridge" class="navbtn" onclick="switchTab('mybridge')">
+    <span class="navicon">📐</span> My Bridge
+  </button>
+  <button id="nav-hero" class="navbtn" onclick="switchTab('hero')">
+    <span class="navicon">🏆</span> Trophies
+  </button>
+</nav>
+
+<div id="stamp-toast">🎫 Stamp collected!</div>
+
+<script>
+/* ================================================================
+   SC BRIDGE — Singapore → Cambridge Bridge (RPG Edition)
+   ================================================================ */
+
+/* ---------- KEYWORD DICTIONARY (for Word Problem Translator) ---------- */
+
+const KEYWORDS = [
+  { word: "altogether", type: "add" },
+  { word: "in all", type: "add" },
+  { word: "total", type: "add" },
+  { word: "together", type: "add" },
+  { word: "difference", type: "sub" },
+  { word: "remain", type: "sub" },
+  { word: "remaining", type: "sub" },
+  { word: "left", type: "sub" },
+  { word: "more than", type: "sub" },
+  { word: "less than", type: "sub" },
+  { word: "times as many", type: "mul" },
+  { word: "twice", type: "mul" },
+  { word: "double", type: "mul" },
+  { word: "half", type: "div" },
+  { word: "shared equally", type: "div" },
+  { word: "each", type: "div" },
+];
+
+function highlightKeywords(text) {
+  let html = escapeHtml(text);
+  const sorted = [...KEYWORDS].sort((a, b) => b.word.length - a.word.length);
+  sorted.forEach(k => {
+    const re = new RegExp("\\b" + k.word.replace(/ /g, "\\s+") + "\\b", "gi");
+    html = html.replace(re, m => `<mark class="kw-${k.type}">${m}</mark>`);
+  });
+  return html;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ---------- WORLD DATA ---------- */
+
+const WORLDS = [
+  {
+    id: 1, chain: 0, code: "W1", icon: "🔢", name: "Number Thinking Bridge",
+    color: "#3B82C4", status: "ready",
+    tagline: "Number bonds & compensation → written arithmetic",
+    missions: [
+      {
+        id: "1-1", title: "499 + 87",
+        warmup: "Try to solve 499 + 87 in your head. Give yourself 10 seconds before you look at the trick.",
+        thinking: { prompt: "In Singapore Math you might round 499 up to 500 to make it friendly, then fix it after. Which way would you think about it?", choices: ["Round 499 up to 500, then take away 1 at the end", "Add the numbers directly without rounding", "Count up from 499 one by one"] },
+        picture: { type: "steps", steps: ["499 + 87", "→ round 499 up to 500 (add 1)", "→ 500 + 87 = 587", "→ take away the extra 1"] },
+        algebra: "499 + 87 = (500 + 87) − 1",
+        working: ["499 + 87", "= (500 + 87) − 1", "= 587 − 1", "= 586"],
+        challenge: { prompt: "Your turn — use the same trick: 298 + 76 = ?", answer: "374", hint: "Round 298 up to 300, add 76, then subtract 2." }
+      },
+      {
+        id: "1-2", title: "603 − 198",
+        warmup: "603 − 198 looks hard. Is there a friendlier number near 198?",
+        thinking: { prompt: "198 is close to 200. What happens if you subtract 200 instead of 198?", choices: ["Round 198 up to 200, then add back 2", "Subtract 198 directly, column by column", "Count backwards from 603 one by one"] },
+        picture: { type: "steps", steps: ["603 − 198", "→ 198 is close to 200", "→ 603 − 200 = 403", "→ you subtracted 2 too many, so add it back"] },
+        algebra: "603 − 198 = (603 − 200) + 2",
+        working: ["603 − 198", "= (603 − 200) + 2", "= 403 + 2", "= 405"],
+        challenge: { prompt: "Your turn: 802 − 297 = ?", answer: "505", hint: "297 is close to 300." }
+      },
+      {
+        id: "1-3", title: "Round 3,482 to the nearest 100",
+        warmup: "Picture 3,482 on a number line between 3,400 and 3,500.",
+        thinking: { prompt: "Which hundred is 3,482 closer to — 3,400 or 3,500?", choices: ["Compare 3,482 to the halfway point, 3,450", "Just look at the last digit", "Guess based on how the number looks"] },
+        picture: { type: "line", from: 3482, to: 3500, min: 3400, max: 3500 },
+        algebra: "3,482 → 3,500 (nearest 100)",
+        working: ["3,482 is between 3,400 and 3,500", "the tens digit (8) tells us it's past the halfway point (3,450)", "so 3,482 rounds up to 3,500"],
+        challenge: { prompt: "Your turn: round 6,241 to the nearest 100", answer: "6200", hint: "Is 6,241 closer to 6,200 or 6,300?" }
+      },
+      {
+        id: "1-4", title: "25 × 4 × 17 — friendly numbers",
+        warmup: "Multiplication can be done in any order. Which two of these numbers make a really friendly pair?",
+        thinking: { prompt: "25 × 4 is a well-known friendly pair. What does it equal?", choices: ["Multiply 25 × 4 first because it's a friendly pair", "Multiply in the order given: 25 × 4 × 17 straight through", "Multiply 4 × 17 first"] },
+        picture: { type: "steps", steps: ["25 × 4 × 17", "→ group the friendly pair: (25 × 4) × 17", "→ 25 × 4 = 100", "→ 100 × 17"] },
+        algebra: "25 × 4 × 17 = (25 × 4) × 17",
+        working: ["25 × 4 × 17", "= (25 × 4) × 17", "= 100 × 17", "= 1700"],
+        challenge: { prompt: "Your turn: 4 × 37 × 25 = ?", answer: "3700", hint: "Group 4 × 25 first." }
+      },
+      {
+        id: "1-5", title: "64 + 36 — number bonds to 100",
+        warmup: "Some number pairs are special because they make a round 100.",
+        thinking: { prompt: "64 and 36 — do you recognise this pair?", choices: ["They're a number bond to 100, so they add to exactly 100", "They need to be added digit by digit", "One of them should be rounded first"] },
+        picture: { type: "steps", steps: ["64 + 36", "→ 64 needs 36 to reach 100", "→ 36 is exactly that amount", "→ they're a number bond to 100"] },
+        algebra: "64 + 36 = 100",
+        working: ["64 + 36", "64 is 36 away from 100", "36 + 64 = 100"],
+        challenge: { prompt: "Your turn: 47 + 53 = ?", answer: "100", hint: "Does 47 need 53 to reach 100?" }
+      },
+      {
+        id: "1-6", title: "234 + 152 — place value columns",
+        warmup: "Break both numbers into hundreds, tens, and ones before adding.",
+        thinking: { prompt: "234 + 152 — what's a clear way to add using place value?", choices: ["Add hundreds, then tens, then ones, and combine", "Add the numbers right to left without separating place value", "Round both numbers first"] },
+        picture: { type: "steps", steps: ["234 + 152", "→ hundreds: 200 + 100 = 300", "→ tens: 30 + 50 = 80", "→ ones: 4 + 2 = 6"] },
+        algebra: "234 + 152 = (200+100) + (30+50) + (4+2)",
+        working: ["234 + 152", "= (200 + 100) + (30 + 50) + (4 + 2)", "= 300 + 80 + 6", "= 386"],
+        challenge: { prompt: "Your turn: 341 + 226 = ?", answer: "567", hint: "300+200, 40+20, 1+6" }
+      },
+      {
+        id: "1-7", title: "98 × 5 — friendly multiplication",
+        warmup: "98 is very close to 100 — a friendly number to multiply by.",
+        thinking: { prompt: "How could you use 100 to make 98 × 5 easier?", choices: ["Work out 100 × 5, then subtract 2 × 5", "Multiply 98 × 5 digit by digit", "Round 5 up to 10 instead"] },
+        picture: { type: "steps", steps: ["98 × 5", "→ 100 × 5 = 500", "→ 98 is 2 less than 100, so subtract 2 × 5", "→ 500 − 10"] },
+        algebra: "98 × 5 = (100 − 2) × 5",
+        working: ["98 × 5", "= (100 − 2) × 5", "= 500 − 10", "= 490"],
+        challenge: { prompt: "Your turn: 97 × 4 = ?", answer: "388", hint: "100 × 4 − 3 × 4" }
+      }
+    ],
+    boss: {
+      name: "The Compensation Golem", hp: 100,
+      questions: [
+        { prompt: "199 + 56 = ?", answer: "255" },
+        { prompt: "701 − 199 = ?", answer: "502" },
+        { prompt: "Round 4,758 to the nearest 100", answer: "4800" },
+        { prompt: "2 × 37 × 50 = ?", answer: "3700" },
+        { prompt: "998 + 347 = ?", answer: "1345" },
+        { prompt: "58 + 42 = ? (number bond)", answer: "100" },
+        { prompt: "312 + 156 = ? (use place value)", answer: "468" },
+        { prompt: "96 × 4 = ? (use 100 − 4)", answer: "384" }
+      ]
+    }
+  },
+  {
+    id: 2, chain: 1, code: "W2", icon: "↔️", name: "Number Line Universe",
+    color: "#7B4FC9", status: "ready",
+    tagline: "Jump strategy & negative numbers → directed numbers",
+    missions: [
+      {
+        id: "2-1", title: "A submarine rises",
+        warmup: "Imagine a number line running from deep underwater to the surface.",
+        thinking: { prompt: "A submarine is at −5 m and rises to 8 m. Which direction does it jump, and how far?", choices: ["Count the jump from −5 up to 8 on the number line", "Add −5 and 8 together without thinking about direction", "Subtract 8 from −5"] },
+        picture: { type: "line", from: -5, to: 8, min: -8, max: 10 },
+        algebra: "distance = 8 − (−5)",
+        working: ["distance risen = 8 − (−5)", "= 8 + 5", "= 13 m"],
+        challenge: { prompt: "Your turn: a diver at −12 m rises to 3 m. How far did they rise?", answer: "15", hint: "3 − (−12)" }
+      },
+      {
+        id: "2-2", title: "Temperature drop",
+        warmup: "Start at 0 on the number line.",
+        thinking: { prompt: "The temperature starts at 0°C and drops 3°C. Which way do you jump?", choices: ["Start at 0 and move 3 steps left", "Start at 0 and move 3 steps right", "Add 3 to 0"] },
+        picture: { type: "line", from: 0, to: -3, min: -6, max: 6 },
+        algebra: "0 − 3 = x",
+        working: ["0 − 3 = x", "x = −3°C"],
+        challenge: { prompt: "Your turn: temperature starts at 2°C and drops 7°C. What is the new temperature?", answer: "-5", hint: "2 − 7" }
+      },
+      {
+        id: "2-3", title: "Adding two negative jumps",
+        warmup: "Two jumps left in a row, both below zero.",
+        thinking: { prompt: "−4 + (−6) — what happens when you combine two negative jumps?", choices: ["Both jumps go left, so you move left a total of 10", "The two negatives cancel out to zero", "You jump right because two negatives make a positive"] },
+        picture: { type: "line", from: -4, to: -10, min: -12, max: 4 },
+        algebra: "−4 + (−6) = x",
+        working: ["−4 + (−6)", "both jumps move left", "= −10"],
+        challenge: { prompt: "Your turn: −7 + (−5) = ?", answer: "-12", hint: "Both jumps move further left." }
+      },
+      {
+        id: "2-4", title: "Distance between two points",
+        warmup: "The distance between two points is always positive, even if one point is negative.",
+        thinking: { prompt: "What is the distance between −3 and 5 on the number line?", choices: ["Count all the steps from −3 across to 5", "Just subtract the two numbers without counting steps", "Add −3 and 5 together"] },
+        picture: { type: "line", from: -3, to: 5, min: -6, max: 8 },
+        algebra: "distance = 5 − (−3)",
+        working: ["distance = 5 − (−3)", "= 5 + 3", "= 8"],
+        challenge: { prompt: "Your turn: find the distance between −6 and 2.", answer: "8", hint: "2 − (−6)" }
+      }
+    ],
+    boss: {
+      name: "The Negative Number Wraith", hp: 100,
+      questions: [
+        { prompt: "−4 + 9 = ?", answer: "5" },
+        { prompt: "6 − 10 = ?", answer: "-4" },
+        { prompt: "A lift goes from floor −2 to floor 5. How many floors did it rise?", answer: "7" },
+        { prompt: "−15 + 15 = ?", answer: "0" },
+        { prompt: "−3 − 3 = ?", answer: "-6" },
+        { prompt: "−8 + (−2) = ?", answer: "-10" },
+        { prompt: "Find the distance between −5 and 4.", answer: "9" }
+      ]
+    }
+  },
+  {
+    id: 3, chain: 2, code: "W3", icon: "▦", name: "Bar Model Kingdom",
+    color: "#D9A32B", status: "ready",
+    tagline: "The heart of the bridge — bars become equations",
+    missions: [
+      {
+        id: "3-1", title: "Ribbon in equal parts",
+        warmup: "Imagine a ribbon cut into equal pieces.",
+        thinking: { prompt: "A ribbon 48 cm long is cut into 4 equal parts. What does each bar box represent?", choices: ["Split 48 into 4 equal boxes and find 1 box", "Guess how long one part might be", "Divide 48 by 2 instead of 4"] },
+        picture: { type: "bar", bars: [{ label: "ribbon", units: 4, color: "sg" }], totalLabel: "48 cm" },
+        algebra: "4x = 48",
+        working: ["Let each part = x cm", "4x = 48", "x = 48 ÷ 4", "x = 12 cm"],
+        challenge: { prompt: "Your turn: a rope 72 m long is cut into 6 equal parts. Find one part.", answer: "12", hint: "6x = 72" }
+      },
+      {
+        id: "3-2", title: "Tom & Sam's marbles",
+        warmup: "Two bars, one much longer than the other.",
+        thinking: { prompt: "Tom has some marbles. Sam has 3 times as many. Together they have 96. How many boxes should the bar have?", choices: ["1 box for Tom and 3 boxes for Sam, then share 96 between 4 boxes", "Split 96 exactly in half between Tom and Sam", "Give Tom 3 times 96"] },
+        picture: { type: "bar", bars: [{ label: "Tom", units: 1, color: "sg" }, { label: "Sam", units: 3, color: "cam" }], totalLabel: "96" },
+        algebra: "x + 3x = 96",
+        working: ["Let Tom = x, Sam = 3x", "x + 3x = 96", "4x = 96", "x = 24", "Tom = 24, Sam = 72"],
+        challenge: { prompt: "Your turn: Mia has some stickers, Leo has 4 times as many. Together 80. How many does Mia have?", answer: "16", hint: "x + 4x = 80" }
+      },
+      {
+        id: "3-3", title: "Car speed",
+        warmup: "A bar split into equal time chunks.",
+        thinking: { prompt: "A car travels 180 km in 3 hours at constant speed. What does each bar box represent?", choices: ["Split 180 into 3 equal boxes, one for each hour", "Multiply 180 by 3", "Guess a speed that feels about right"] },
+        picture: { type: "bar", bars: [{ label: "distance", units: 3, color: "sg" }], totalLabel: "180 km" },
+        algebra: "3x = 180",
+        working: ["Let speed = x km/h", "3x = 180", "x = 60 km/h"],
+        challenge: { prompt: "Your turn: a train travels 240 km in 4 hours. Find the speed.", answer: "60", hint: "4x = 240" }
+      },
+      {
+        id: "3-4", title: "Ratio bar — 1 : 2",
+        warmup: "Two bars, one twice the length of the other.",
+        thinking: { prompt: "Two numbers are in ratio 1 : 2 and their sum is 36. What is the smallest part worth?", choices: ["Draw 1 box and 2 boxes, then share 36 between 3 boxes total", "Split 36 exactly in half", "Multiply 36 by 2"] },
+        picture: { type: "bar", bars: [{ label: "", units: 1, color: "sg" }, { label: "", units: 2, color: "cam" }], totalLabel: "36" },
+        algebra: "x + 2x = 36",
+        working: ["smaller = x, larger = 2x", "x + 2x = 36", "3x = 36", "x = 12", "numbers are 12 and 24"],
+        challenge: { prompt: "Your turn: ratio 1 : 3, sum 48. Find the two numbers (smaller one).", answer: "12", hint: "4x = 48" }
+      },
+      {
+        id: "3-5", title: "Comparison bar — 'more than'",
+        warmup: "Two bars where one is a fixed amount longer, not a multiple.",
+        thinking: { prompt: "Ali has 45 stamps. Ben has 18 more than Ali. How should you draw Ben's bar?", choices: ["Draw Ben's bar the same length as Ali's, plus an extra 18 chunk", "Draw Ben's bar exactly 18 units long", "Draw Ben's bar twice as long as Ali's"] },
+        picture: { type: "bar", bars: [{ label: "Ali", units: 1, color: "sg", plusNumber: 0 }, { label: "Ben", units: 1, color: "cam", plusNumber: 18 }], totalLabel: "Ali = 45" },
+        algebra: "Ben = 45 + 18",
+        working: ["Ali = 45", "Ben = Ali + 18", "Ben = 45 + 18", "Ben = 63"],
+        challenge: { prompt: "Your turn: Mia has 32 stickers. Leo has 15 more than Mia. How many does Leo have?", answer: "47", hint: "32 + 15" }
+      },
+      {
+        id: "3-6", title: "Three-part ratio bar",
+        warmup: "Not every bar splits into just two parts — some split into three.",
+        thinking: { prompt: "$100 is shared in the ratio 2 : 3 : 5 between three friends. How many boxes total?", choices: ["Add 2 + 3 + 5 to find the total number of boxes first", "Just divide 100 by 3 (the number of friends)", "Multiply 2 × 3 × 5"] },
+        picture: { type: "bar", bars: [{ label: "", units: 2, color: "sg" }, { label: "", units: 3, color: "cam" }, { label: "", units: 5, color: "sg" }], totalLabel: "100" },
+        algebra: "2x + 3x + 5x = 100",
+        working: ["total boxes = 2 + 3 + 5 = 10", "10x = 100", "x = 10", "shares = 20, 30, 50"],
+        challenge: { prompt: "Your turn: $60 shared in ratio 1:2:3. Find the smallest share.", answer: "10", hint: "1+2+3=6 boxes, 6x=60" }
+      }
+    ],
+    boss: {
+      name: "The Bar Model King", hp: 100,
+      questions: [
+        { prompt: "Bar split into 5 equal boxes, total 65. Value of 1 box?", answer: "13" },
+        { prompt: "x + 2x = 30. Find x.", answer: "10" },
+        { prompt: "A bar of 3 boxes = 27. Value of 1 box?", answer: "9" },
+        { prompt: "Ratio 2 : 3, sum 40. Value of 1 unit?", answer: "8" },
+        { prompt: "x + 5x = 54. Find x.", answer: "9" },
+        { prompt: "A bar of 6 boxes = 96. Value of 1 box?", answer: "16" },
+        { prompt: "Tia has 20. Ravi has 9 more than Tia. How many does Ravi have?", answer: "29" },
+        { prompt: "$90 shared in ratio 1:2:6. Find the smallest share.", answer: "10" }
+      ]
+    }
+  },
+  {
+    id: 4, chain: 3, code: "W4", icon: "🔍", name: "Word Problem Translator",
+    color: "#1E9E8B", status: "ready",
+    tagline: "Numbers → Keywords → Model → Equation → Answer",
+    isWordProblemWorld: true,
+    missions: [
+      {
+        id: "4-1",
+        text: "Ali and Mei share 84 stickers altogether. Ali has 3 times as many stickers as Mei. How many stickers does Mei have?",
+        picture: { type: "bar", bars: [{ label: "Mei", units: 1, color: "sg" }, { label: "Ali", units: 3, color: "cam" }], totalLabel: "84" },
+        algebra: "x + 3x = 84",
+        working: ["Let Mei = x, Ali = 3x", "x + 3x = 84", "4x = 84", "x = 21"],
+        answer: "Mei has 21 stickers."
+      },
+      {
+        id: "4-2",
+        text: "A water tank holds 60 litres. After 25 litres are used, how many litres remain?",
+        picture: { type: "bar", bars: [{ label: "tank", units: 1, color: "sg", plusNumber: null }], totalLabel: "60 litres, 25 used" },
+        algebra: "60 − 25 = x",
+        working: ["60 − 25 = x", "x = 35"],
+        answer: "35 litres remain."
+      },
+      {
+        id: "4-3",
+        text: "Emma has twice as many books as Noah. Together they have 45 books. How many books does Noah have?",
+        picture: { type: "bar", bars: [{ label: "Noah", units: 1, color: "sg" }, { label: "Emma", units: 2, color: "cam" }], totalLabel: "45" },
+        algebra: "x + 2x = 45",
+        working: ["Let Noah = x, Emma = 2x", "x + 2x = 45", "3x = 45", "x = 15"],
+        answer: "Noah has 15 books."
+      },
+      {
+        id: "4-4",
+        text: "Liam scored 15 more points than Zara. Zara scored 27 points. How many points did Liam score?",
+        picture: { type: "bar", bars: [{ label: "Zara", units: 1, color: "sg" }, { label: "Liam", units: 1, color: "cam", plusNumber: 15 }], totalLabel: "Zara = 27" },
+        algebra: "Liam = 27 + 15",
+        working: ["Zara = 27", "Liam = Zara + 15", "Liam = 27 + 15", "Liam = 42"],
+        answer: "Liam scored 42 points."
+      },
+      {
+        id: "4-5",
+        text: "A florist has 120 roses. She shares them equally into 8 bunches. How many roses are in each bunch?",
+        picture: { type: "bar", bars: [{ label: "roses", units: 8, color: "sg" }], totalLabel: "120" },
+        algebra: "8x = 120",
+        working: ["Let 1 bunch = x roses", "8x = 120", "x = 15"],
+        answer: "Each bunch has 15 roses."
+      }
+    ],
+    boss: {
+      name: "The Riddle Sphinx", hp: 100,
+      questions: [
+        { prompt: "\"Twice as many\" means multiply by...?", answer: "2" },
+        { prompt: "A shop has 90 apples, sells some, 34 remain. How many sold?", answer: "56" },
+        { prompt: "Sam has half as many pens as Jo (Jo has 24). How many does Sam have?", answer: "12" },
+        { prompt: "\"Altogether\" is usually a clue to which operation? (add/subtract)", answer: "add" },
+        { prompt: "Three friends share 45 sweets equally. How many each?", answer: "15" },
+        { prompt: "Noah has 12 more marbles than Priya. Priya has 20. How many does Noah have?", answer: "32" },
+        { prompt: "84 pencils shared equally into 6 boxes. How many per box?", answer: "14" }
+      ]
+    }
+  },
+  {
+    id: 5, chain: 4, code: "W5", icon: "🍕", name: "Fraction Bridge",
+    color: "#D6407A", status: "ready",
+    tagline: "Pizza & chocolate bars → improper fractions & operations",
+    missions: [
+      {
+        id: "5-1", title: "3 out of 4 slices",
+        warmup: "Picture a pizza cut into 4 equal slices.",
+        thinking: { prompt: "If 3 of the 4 slices are eaten, what fraction is that?", choices: ["Count how many of the 4 slices are shaded", "Count how many slices are NOT shaded", "Guess the fraction by eye"] },
+        picture: { type: "bar", bars: [{ label: "pizza", units: 4, color: "sg", shaded: 3 }], totalLabel: "3 shaded of 4" },
+        algebra: "3/4",
+        working: ["4 equal slices total", "3 slices shaded", "fraction eaten = 3/4"],
+        challenge: { prompt: "Your turn: a bar has 5 equal parts, 2 are shaded. What fraction is shaded?", answer: "2/5", hint: "shaded parts / total parts" }
+      },
+      {
+        id: "5-2", title: "3/4 of a number is 60",
+        warmup: "If 3 boxes out of 4 equal boxes = 60, what does 1 box equal?",
+        thinking: { prompt: "Find the value of 1 part first, then the whole bar. What's the best order?", choices: ["Find what 1 part is worth first, then find all 4 parts", "Multiply 60 by 3/4", "Divide 60 by 4 only"] },
+        picture: { type: "bar", bars: [{ label: "", units: 4, color: "sg", shaded: 3 }], totalLabel: "3 parts = 60" },
+        algebra: "(3/4)x = 60",
+        working: ["3 parts = 60", "1 part = 60 ÷ 3 = 20", "4 parts (whole) = 20 × 4 = 80"],
+        challenge: { prompt: "Your turn: 2/5 of a number is 40. Find the number.", answer: "100", hint: "1 part = 40 ÷ 2, then × 5" }
+      },
+      {
+        id: "5-3", title: "Improper fraction",
+        warmup: "7 quarter-slices of pizza — more than one whole pizza!",
+        thinking: { prompt: "7 quarters is the same as how many wholes and how many quarters left over?", choices: ["Count how many full groups of 4 fit into 7", "Just write 7/4 as it is", "Turn it into a decimal instead"] },
+        picture: { type: "bar", bars: [{ label: "pizza A", units: 4, color: "sg", shaded: 4 }, { label: "pizza B", units: 4, color: "cam", shaded: 3 }], totalLabel: "7/4" },
+        algebra: "7/4 = 1¾",
+        working: ["7/4 means 7 quarters", "4 quarters = 1 whole, leaving 3 quarters", "7/4 = 1 whole and 3/4 = 1¾"],
+        challenge: { prompt: "Your turn: write 9/2 as a mixed number.", answer: "4 1/2", hint: "How many whole 2's fit into 9?" }
+      },
+      {
+        id: "5-4", title: "Adding fractions, same denominator",
+        warmup: "Two bars with the same number of equal parts.",
+        thinking: { prompt: "1/5 + 2/5 — what stays the same and what do you add?", choices: ["Keep the denominator the same, just add the shaded parts (numerators)", "Add both the top and bottom numbers", "Multiply the two fractions together"] },
+        picture: { type: "bar", bars: [{ label: "1/5", units: 5, color: "sg", shaded: 1 }, { label: "2/5", units: 5, color: "cam", shaded: 2 }], totalLabel: "" },
+        algebra: "1/5 + 2/5",
+        working: ["1/5 + 2/5", "same denominator, so add the numerators", "= (1+2)/5", "= 3/5"],
+        challenge: { prompt: "Your turn: 2/7 + 3/7 = ?", answer: "5/7", hint: "Add just the top numbers." }
+      },
+      {
+        id: "5-5", title: "Equivalent fractions",
+        warmup: "The same amount of pizza, cut into different numbers of slices.",
+        thinking: { prompt: "1/2 of a pizza is the same amount as how many quarters?", choices: ["Cut each half into 2, so 1/2 = 2/4", "1/2 is always smaller than any quarter amount", "1/2 can't be written any other way"] },
+        picture: { type: "bar", bars: [{ label: "1/2", units: 2, color: "sg", shaded: 1 }, { label: "2/4", units: 4, color: "cam", shaded: 2 }], totalLabel: "" },
+        algebra: "1/2 = 2/4",
+        working: ["1/2", "multiply top and bottom by 2", "= 2/4"],
+        challenge: { prompt: "Your turn: write 1/3 as an equivalent fraction with denominator 6.", answer: "2/6", hint: "Multiply top and bottom by 2." }
+      }
+    ],
+    boss: {
+      name: "The Fraction Djinn", hp: 100,
+      questions: [
+        { prompt: "5/8 of 40 = ?", answer: "25" },
+        { prompt: "Write 11/3 as a mixed number (e.g. 3 2/3)", answer: "3 2/3" },
+        { prompt: "1/2 + 1/4 = ? (as a fraction, e.g. 3/4)", answer: "3/4" },
+        { prompt: "3/5 of a number is 24. Find the number.", answer: "40" },
+        { prompt: "3/8 + 2/8 = ?", answer: "5/8" },
+        { prompt: "Write 2/3 as an equivalent fraction with denominator 9.", answer: "6/9" }
+      ]
+    }
+  },
+  {
+    id: 6, chain: 5, code: "W6", icon: "⚖️", name: "Ratio & Proportion Bridge",
+    color: "#3E8E4F", status: "ready",
+    tagline: "Ratio bars → scale, percentage, recipes & maps",
+    missions: [
+      {
+        id: "6-1", title: "Ratio 1 : 2",
+        warmup: "One bar, and a second bar twice as long.",
+        thinking: { prompt: "In a ratio bar, what does the smallest part always equal?", choices: ["Draw 1 box and 2 boxes, share 36 between 3 boxes", "Split 36 exactly in half", "Multiply 36 by 2"] },
+        picture: { type: "bar", bars: [{ label: "", units: 1, color: "sg" }, { label: "", units: 2, color: "cam" }], totalLabel: "36" },
+        algebra: "x : 2x  → 3x = 36",
+        working: ["smaller part = x", "larger part = 2x", "if total = 36: 3x = 36", "x = 12 → parts are 12 and 24"],
+        challenge: { prompt: "Your turn: ratio 2 : 5, total 63. Find the smaller part.", answer: "18", hint: "2x + 5x = 63" }
+      },
+      {
+        id: "6-2", title: "Recipe scaling",
+        warmup: "A recipe for 4 people needs scaling for 10 people.",
+        thinking: { prompt: "If 4 people need 200 g of rice, what should you find first?", choices: ["Find how much 1 person needs first, then multiply by 10", "Multiply 200 by 10 directly", "Divide 200 by 10"] },
+        picture: { type: "steps", steps: ["4 people → 200 g", "1 person → 200 ÷ 4 = 50 g", "10 people → 50 × 10"] },
+        algebra: "200 ÷ 4 × 10",
+        working: ["1 person needs 200 ÷ 4 = 50 g", "10 people need 50 × 10 = 500 g"],
+        challenge: { prompt: "Your turn: 3 people need 90 g. How much for 7 people?", answer: "210", hint: "1 person = 90 ÷ 3" }
+      },
+      {
+        id: "6-3", title: "Map scale",
+        warmup: "A map scale of 1 : 100,000 means 1 cm on paper is a lot in real life.",
+        thinking: { prompt: "If 1 cm = 100,000 cm in real life, how many metres is that?", choices: ["Convert 1 cm to real-life cm first, then to metres", "Just use 100,000 as the answer in metres", "Divide 100,000 by 1,000,000"] },
+        picture: { type: "steps", steps: ["scale 1 : 100,000", "1 cm on map = 100,000 cm real life", "100,000 cm ÷ 100 = metres"] },
+        algebra: "100,000 cm ÷ 100 = 1000 m",
+        working: ["1 cm represents 100,000 cm", "100,000 cm = 1000 m", "so 3 cm on the map = 3000 m"],
+        challenge: { prompt: "Your turn: scale 1 : 50,000. How many metres does 2 cm represent?", answer: "1000", hint: "2 × 50,000 cm, then ÷ 100" }
+      },
+      {
+        id: "6-4", title: "Percentage of an amount",
+        warmup: "Percent means 'out of 100' — a special kind of fraction.",
+        thinking: { prompt: "20% of 150 — what's a clear first step?", choices: ["Find 10% first (÷10), then double it for 20%", "Multiply 150 by 20 directly", "Add 20 to 150"] },
+        picture: { type: "steps", steps: ["20% of 150", "→ 10% of 150 = 15", "→ 20% is double that: 15 × 2"] },
+        algebra: "20% of 150 = (150 ÷ 10) × 2",
+        working: ["10% of 150 = 15", "20% = 2 × 15", "= 30"],
+        challenge: { prompt: "Your turn: find 30% of 200.", answer: "60", hint: "10% of 200 = 20, then × 3" }
+      },
+      {
+        id: "6-5", title: "Currency exchange",
+        warmup: "Exchange rates are just a ratio between two currencies.",
+        thinking: { prompt: "£1 = $1.30. How would you find the dollar value of £20?", choices: ["Multiply 20 by the exchange rate 1.30", "Divide 20 by 1.30", "Add 1.30 to 20"] },
+        picture: { type: "steps", steps: ["£1 = $1.30", "£20 = 20 × $1.30", "= $26"] },
+        algebra: "20 × 1.30",
+        working: ["£1 = $1.30", "£20 = 20 × 1.30", "= $26"],
+        challenge: { prompt: "Your turn: £1 = $1.30. How many dollars for £50?", answer: "65", hint: "50 × 1.30" }
+      }
+    ],
+    boss: {
+      name: "The Proportion Serpent", hp: 100,
+      questions: [
+        { prompt: "Ratio 3 : 4, total 70. Find the smaller part.", answer: "30" },
+        { prompt: "Exchange rate: £1 = $1.30. How many $ for £20?", answer: "26" },
+        { prompt: "20% of 150 = ?", answer: "30" },
+        { prompt: "5 people need 150 g each — total for 5?", answer: "750" },
+        { prompt: "Find 40% of 90.", answer: "36" },
+        { prompt: "£1 = $1.30. How many dollars for £10?", answer: "13" }
+      ]
+    }
+  },
+  {
+    id: 7, chain: 6, code: "W7", icon: "🔤", name: "Algebra Translator",
+    color: "#C23B3B", status: "ready",
+    tagline: "The most important world — Picture → Boxes → Letters → Solve",
+    isAlgebraLadder: true,
+    missions: [
+      {
+        id: "7-1", title: "Picture to boxes",
+        warmup: "Two boxes of unknown size, plus 5, makes 17.",
+        thinking: { prompt: "Draw two empty boxes, then + 5 = 17. What would you call the size of one box?", choices: ["Draw 2 boxes and call the box size x", "Just guess a number for x", "Add 5 and 17 together first"] },
+        picture: { type: "bar", bars: [{ label: "x", units: 2, color: "sg", plusNumber: 5 }], totalLabel: "17" },
+        algebra: "□ + □ + 5 = 17   →   2x + 5 = 17",
+        working: ["□ + □ + 5 = 17", "call the box size x: 2x + 5 = 17"],
+        challenge: { prompt: "Your turn: three boxes plus 4 makes 19. Write the equation using x.", answer: "3x+4=19", hint: "3 boxes = 3x" }
+      },
+      {
+        id: "7-2", title: "Solving 2x + 5 = 17",
+        warmup: "You already wrote the equation — now solve it.",
+        thinking: { prompt: "What's the first step to get x alone?", choices: ["Subtract 5 from both sides first, then divide by 2", "Divide by 2 first, then subtract 5", "Guess and check numbers"] },
+        picture: { type: "steps", steps: ["2x + 5 = 17", "→ subtract 5 from both sides", "→ 2x = 12", "→ divide both sides by 2"] },
+        algebra: "2x + 5 = 17",
+        working: ["2x + 5 = 17", "2x = 17 − 5", "2x = 12", "x = 6"],
+        challenge: { prompt: "Your turn: solve 3x + 4 = 19", answer: "5", hint: "3x = 15" }
+      },
+      {
+        id: "7-3", title: "Expanding brackets",
+        warmup: "2(x + 3) means 2 groups of (x + 3).",
+        thinking: { prompt: "If you have 2 groups of (x + 3), what do you get when you share the 2 into the bracket?", choices: ["Multiply 2 by both x and 3 separately", "Only multiply 2 by x", "Only multiply 2 by 3"] },
+        picture: { type: "steps", steps: ["2(x + 3)", "= 2 × x + 2 × 3", "= 2x + 6"] },
+        algebra: "2(x + 3) = 2x + 6",
+        working: ["2(x + 3)", "= 2 × x + 2 × 3", "= 2x + 6"],
+        challenge: { prompt: "Your turn: expand 3(x + 4)", answer: "3x+12", hint: "3 × x and 3 × 4" }
+      },
+      {
+        id: "7-4", title: "Factorising",
+        warmup: "Factorising is expanding backwards — find the common factor.",
+        thinking: { prompt: "3x + 9 — what number divides into both 3x and 9?", choices: ["Find the number that divides both 3x and 9", "Add 3x and 9 together", "Divide 3x by 9"] },
+        picture: { type: "steps", steps: ["3x + 9", "both terms share a factor of 3", "3x + 9 = 3(x + 3)"] },
+        algebra: "3x + 9 = 3(x + 3)",
+        working: ["3x + 9", "common factor = 3", "3x + 9 = 3(x + 3)"],
+        challenge: { prompt: "Your turn: factorise 4x + 20", answer: "4(x+5)", hint: "common factor is 4" }
+      },
+      {
+        id: "7-5", title: "Solving with brackets",
+        warmup: "This mission combines everything so far: expand, then solve.",
+        thinking: { prompt: "3(x + 2) = 21 — what's your first move?", choices: ["Expand the bracket first, then solve like a normal equation", "Divide 21 by 3 first without expanding", "Guess and check numbers"] },
+        picture: { type: "steps", steps: ["3(x + 2) = 21", "→ expand: 3x + 6 = 21", "→ subtract 6: 3x = 15", "→ divide by 3"] },
+        algebra: "3(x + 2) = 21",
+        working: ["3(x + 2) = 21", "3x + 6 = 21", "3x = 15", "x = 5"],
+        challenge: { prompt: "Your turn: solve 2(x + 5) = 24", answer: "7", hint: "2x + 10 = 24" }
+      },
+      {
+        id: "7-6", title: "x on both sides",
+        warmup: "This time x appears on both sides of the equals sign.",
+        thinking: { prompt: "5x − 3 = 2x + 9 — what's a sensible first move?", choices: ["Move the smaller x-term (2x) to the other side first", "Solve the left side and right side separately", "Ignore the x's on the right side"] },
+        picture: { type: "steps", steps: ["5x − 3 = 2x + 9", "→ subtract 2x from both sides: 3x − 3 = 9", "→ add 3 to both sides: 3x = 12", "→ divide by 3"] },
+        algebra: "5x − 3 = 2x + 9",
+        working: ["5x − 3 = 2x + 9", "5x − 2x = 9 + 3", "3x = 12", "x = 4"],
+        challenge: { prompt: "Your turn: solve 4x + 1 = x + 10", answer: "3", hint: "4x − x = 10 − 1" }
+      }
+    ],
+    boss: {
+      name: "The Equation Dragon", hp: 100,
+      questions: [
+        { prompt: "Solve: 4x + 3 = 19", answer: "4" },
+        { prompt: "Expand: 5(x + 2)", answer: "5x+10" },
+        { prompt: "Factorise: 6x + 18", answer: "6(x+3)" },
+        { prompt: "Solve: 2(x + 4) = 20", answer: "6" },
+        { prompt: "Solve: 3x − 4 = 11", answer: "5" },
+        { prompt: "Expand: 4(x − 1)", answer: "4x-4" },
+        { prompt: "Solve: 6x − 2 = 3x + 7", answer: "3" },
+        { prompt: "Factorise: 8x + 12", answer: "4(2x+3)" }
+      ]
+    }
+  },
+  {
+    id: 8, chain: 7, code: "W8", icon: "📐", name: "Geometry Visualization",
+    color: "#5B7DB1", status: "ready",
+    tagline: "Angles, area, volume, Pythagoras",
+    missions: [
+      {
+        id: "8-1", title: "Angles on a straight line",
+        warmup: "A straight line always measures 180°, no matter how it's split.",
+        thinking: { prompt: "One angle on a straight line is 110°. What must the other one be?", choices: ["180° − 110°, since the two angles must add to 180°", "110° × 2, since angles double on a line", "Just guess a number less than 110°"] },
+        picture: { type: "angle", startAngle: 270, sectors: [{ deg: 110, label: "110°", known: true }, { deg: 70, label: "?", known: false }] },
+        algebra: "x + 110 = 180",
+        working: ["angles on a straight line sum to 180°", "x + 110 = 180", "x = 70°"],
+        challenge: { prompt: "Your turn: one angle on a straight line is 65°. Find the other.", answer: "115", hint: "180 − 65" }
+      },
+      {
+        id: "8-2", title: "Angles around a point",
+        warmup: "A full turn around a point is 360°.",
+        thinking: { prompt: "Three angles meet at a point: 120°, 150°, and x. What equation can you write?", choices: ["120 + 150 + x = 360, since angles around a point sum to 360°", "120 + 150 + x = 180", "Just x = 360"] },
+        picture: { type: "angle", startAngle: 0, sectors: [{ deg: 120, label: "120°", known: true }, { deg: 150, label: "150°", known: true }, { deg: 90, label: "?", known: false }] },
+        algebra: "120 + 150 + x = 360",
+        working: ["angles around a point sum to 360°", "120 + 150 + x = 360", "270 + x = 360", "x = 90°"],
+        challenge: { prompt: "Your turn: angles 100°, 95°, and x meet at a point. Find x.", answer: "165", hint: "360 − 100 − 95" }
+      },
+      {
+        id: "8-3", title: "Area of a rectangle",
+        warmup: "Area counts how many unit squares fit inside a shape.",
+        thinking: { prompt: "A rectangle is 4 units wide and 3 units tall. How do you find the area?", choices: ["Multiply width × height: 4 × 3", "Add width + height: 4 + 3", "Count only the outside edge (perimeter)"] },
+        picture: { type: "areagrid", rows: 3, cols: 4 },
+        algebra: "Area = 4 × 3",
+        working: ["Area = width × height", "Area = 4 × 3", "Area = 12 unit²"],
+        challenge: { prompt: "Your turn: a rectangle is 6 units by 5 units. Find its area.", answer: "30", hint: "6 × 5" }
+      },
+      {
+        id: "8-4", title: "Area of a right triangle",
+        warmup: "A right triangle is exactly half of a rectangle.",
+        thinking: { prompt: "A right triangle has base 6 and height 4. What's a quick way to find its area?", choices: ["Find the rectangle area (6×4), then halve it", "Just multiply base × height with no halving", "Add base + height"] },
+        picture: { type: "areagrid", rows: 4, cols: 6 },
+        algebra: "Area = (6 × 4) ÷ 2",
+        working: ["the triangle is half of a 6 × 4 rectangle", "6 × 4 = 24", "24 ÷ 2 = 12 unit²"],
+        challenge: { prompt: "Your turn: base 8, height 5. Find the triangle's area.", answer: "20", hint: "(8×5)÷2" }
+      },
+      {
+        id: "8-5", title: "Volume of a cuboid",
+        warmup: "Volume counts how many unit cubes fill a box, layer by layer.",
+        thinking: { prompt: "A box is 3 wide, 2 deep, and 2 tall. What's a clear way to find the volume?", choices: ["Find one layer's area (3×2), then multiply by the height (2 layers)", "Just add 3+2+2", "Multiply only two of the three numbers"] },
+        picture: { type: "areagrid", rows: 2, cols: 3 },
+        algebra: "Volume = (3 × 2) × 2",
+        working: ["1 layer = 3 × 2 = 6 unit cubes", "there are 2 layers", "6 × 2 = 12 unit³"],
+        challenge: { prompt: "Your turn: a box is 4 wide, 3 deep, 2 tall. Find the volume.", answer: "24", hint: "(4×3)×2" }
+      },
+      {
+        id: "8-6", title: "Pythagoras' theorem",
+        warmup: "In a right triangle, the two shorter sides are the legs; the longest side is the hypotenuse.",
+        thinking: { prompt: "A right triangle has legs 3 and 4. How does Pythagoras find the hypotenuse?", choices: ["Square both legs, add them, then square root the result", "Add the two legs together directly", "Multiply the two legs together"] },
+        picture: { type: "triangle", a: "3", b: "4", c: "?" },
+        algebra: "c² = 3² + 4²",
+        working: ["c² = 3² + 4²", "c² = 9 + 16", "c² = 25", "c = √25 = 5"],
+        challenge: { prompt: "Your turn: legs 6 and 8. Find the hypotenuse.", answer: "10", hint: "√(6²+8²)" }
+      }
+    ],
+    boss: {
+      name: "The Angle Golem", hp: 100,
+      questions: [
+        { prompt: "Angles on a line: one is 75°, find the other.", answer: "105" },
+        { prompt: "Angles at a point: 90°, 130°, x. Find x.", answer: "140" },
+        { prompt: "Rectangle 7 by 3. Find area.", answer: "21" },
+        { prompt: "Triangle base 10, height 6. Find area.", answer: "30" },
+        { prompt: "Box 5×2×3. Find volume.", answer: "30" },
+        { prompt: "Legs 5 and 12. Find the hypotenuse.", answer: "13" }
+      ]
+    }
+  },
+  {
+    id: 9, chain: 8, code: "W9", icon: "🔁", name: "Pattern Explorer",
+    color: "#3A8F8A", status: "ready",
+    tagline: "Sequences, nth term, and function machines",
+    missions: [
+      {
+        id: "9-1", title: "Next term in a sequence",
+        warmup: "Look at the jumps between terms to find the pattern.",
+        thinking: { prompt: "3, 7, 11, 15, ... what's the pattern?", choices: ["Each term adds 4 to the one before", "Each term doubles", "Each term adds a different amount each time"] },
+        picture: { type: "sequence", terms: [3, 7, 11, 15, "?"], diff: 4 },
+        algebra: "15 + 4 = ?",
+        working: ["the pattern adds 4 each time", "15 + 4 = 19"],
+        challenge: { prompt: "Your turn: 5, 9, 13, 17, ... find the next term.", answer: "21", hint: "17 + 4" }
+      },
+      {
+        id: "9-2", title: "Square numbers pattern",
+        warmup: "Some patterns come from multiplying a number by itself.",
+        thinking: { prompt: "1, 4, 9, 16, ... — what's special about these numbers?", choices: ["Each one is a whole number multiplied by itself (1×1, 2×2, 3×3...)", "Each one adds 3 to the last", "Each one is double the last"] },
+        picture: { type: "areagrid", rows: 4, cols: 4 },
+        algebra: "4th term = 4 × 4",
+        working: ["1×1=1, 2×2=4, 3×3=9, 4×4=16", "these are square numbers", "the pattern continues: 5×5=25"],
+        challenge: { prompt: "Your turn: what is the 6th square number?", answer: "36", hint: "6×6" }
+      },
+      {
+        id: "9-3", title: "Finding the nth term",
+        warmup: "The nth term is a formula that gives any term instantly, without counting up.",
+        thinking: { prompt: "5, 9, 13, 17, ... each term adds 4. What's the nth term rule?", choices: ["Start with 4n, then adjust so the 1st term matches (4×1=4, need +1)", "Just use 4n with no adjustment", "Use the term number as the answer"] },
+        picture: { type: "sequence", terms: [5, 9, 13, 17], diff: 4 },
+        algebra: "nth term = 4n + 1",
+        working: ["each term goes up by 4, so start with 4n", "4×1=4, but the 1st term is 5, so add 1", "nth term = 4n + 1", "check: 4(2)+1=9 ✓"],
+        challenge: { prompt: "Your turn: sequence 2, 5, 8, 11 (+3 each time). Find the nth term.", answer: "3n-1", hint: "3n, then adjust so n=1 gives 2" }
+      },
+      {
+        id: "9-4", title: "Function machines",
+        warmup: "A function machine takes an input, applies steps in order, and gives an output.",
+        thinking: { prompt: "Input 5 → add 3 → multiply by 2 → output. What happens first?", choices: ["Add 3 to the input before multiplying", "Multiply first, then add 3", "Add 3 and multiply 2 at the same time"] },
+        picture: { type: "chain", items: [{ type: "value", text: "5" }, { type: "op", text: "+3" }, { type: "value", text: "8" }, { type: "op", text: "×2" }, { type: "value", text: "16" }] },
+        algebra: "output = (5 + 3) × 2",
+        working: ["input = 5", "add 3: 5 + 3 = 8", "multiply by 2: 8 × 2 = 16", "output = 16"],
+        challenge: { prompt: "Your turn: input 6 → add 3 → multiply by 2 → output?", answer: "18", hint: "(6+3)×2" }
+      },
+      {
+        id: "9-5", title: "Missing term in a sequence",
+        warmup: "Sometimes a term is missing from the middle, not the end.",
+        thinking: { prompt: "6, 11, __, 21, 26 — the pattern adds 5 each time. What's missing?", choices: ["11 + 5, since the pattern adds 5 between each term", "21 − 6, the difference between the ends", "Just guess a number between 11 and 21"] },
+        picture: { type: "sequence", terms: [6, 11, "?", 21, 26], diff: 5 },
+        algebra: "11 + 5 = ?",
+        working: ["the pattern adds 5 each time", "11 + 5 = 16", "check: 16 + 5 = 21 ✓"],
+        challenge: { prompt: "Your turn: 4, 10, __, 22, 28 (+6 each time). Find the missing term.", answer: "16", hint: "10 + 6" }
+      }
+    ],
+    boss: {
+      name: "The Sequence Oracle", hp: 100,
+      questions: [
+        { prompt: "2, 6, 10, 14 — find the next term.", answer: "18" },
+        { prompt: "What is the 5th square number?", answer: "25" },
+        { prompt: "Sequence 3, 7, 11 (+4 each time). Find the nth term.", answer: "4n-1" },
+        { prompt: "Input 4 → add 5 → multiply by 3 → output?", answer: "27" },
+        { prompt: "5, 12, __, 26 (+7 each time). Find the missing term.", answer: "19" },
+        { prompt: "A sequence starts at 10 and adds 3 each time. Find the 4th term.", answer: "19" }
+      ]
+    }
+  },
+  {
+    id: 10, chain: 9, code: "W10", icon: "📊", name: "Data & Probability",
+    color: "#B15B7D", status: "ready",
+    tagline: "Tables, graphs, mean, median, and probability",
+    missions: [
+      {
+        id: "10-1", title: "Reading a bar chart",
+        warmup: "A bar chart turns a table of data into a picture you can compare at a glance.",
+        thinking: { prompt: "Four friends' book counts: Ali 5, Bo 8, Chen 3, Dee 6. How do you find the total?", choices: ["Add all the values together: 5+8+3+6", "Multiply all the values together", "Just use the biggest number"] },
+        picture: { type: "barchart", categories: [{ label: "Ali", value: 5 }, { label: "Bo", value: 8 }, { label: "Chen", value: 3 }, { label: "Dee", value: 6 }] },
+        algebra: "total = 5 + 8 + 3 + 6",
+        working: ["5 + 8 + 3 + 6", "= 22"],
+        challenge: { prompt: "Your turn: values 4, 9, 2, 7. Find the total.", answer: "22", hint: "4+9+2+7" }
+      },
+      {
+        id: "10-2", title: "Finding the mean",
+        warmup: "The mean shares the total equally among all the data points.",
+        thinking: { prompt: "Scores: 4, 8, 6, 2. How do you find the mean?", choices: ["Add them all up, then divide by how many there are", "Just pick the middle value", "Multiply them all together"] },
+        picture: { type: "datapoints", min: 0, max: 10, points: [4, 8, 6, 2] },
+        algebra: "mean = (4+8+6+2) ÷ 4",
+        working: ["total = 4+8+6+2 = 20", "there are 4 values", "mean = 20 ÷ 4 = 5"],
+        challenge: { prompt: "Your turn: scores 3, 7, 5, 9. Find the mean.", answer: "6", hint: "(3+7+5+9)÷4" }
+      },
+      {
+        id: "10-3", title: "Finding the median",
+        warmup: "The median is the middle value once the data is in order.",
+        thinking: { prompt: "Data: 7, 2, 9, 4, 5. What's the first step to find the median?", choices: ["Sort the numbers from smallest to largest first", "Add all the numbers together", "Find the biggest number"] },
+        picture: { type: "datapoints", min: 0, max: 10, points: [2, 4, 5, 7, 9] },
+        algebra: "sorted: 2, 4, 5, 7, 9",
+        working: ["sort: 2, 4, 5, 7, 9", "5 values, so the middle one is the 3rd", "median = 5"],
+        challenge: { prompt: "Your turn: data 8, 3, 6, 1, 9. Find the median.", answer: "6", hint: "sort first: 1,3,6,8,9" }
+      },
+      {
+        id: "10-4", title: "Simple probability",
+        warmup: "Probability compares favourable outcomes to all possible outcomes.",
+        thinking: { prompt: "A bag has 3 red balls and 5 blue balls. What's the probability of picking red?", choices: ["favourable (3) out of total (8): 3/8", "favourable (3) out of blue (5): 3/5", "Just use the difference: 5-3"] },
+        picture: { type: "steps", steps: ["3 red + 5 blue = 8 total balls", "P(red) = red balls ÷ total balls", "P(red) = 3/8"] },
+        algebra: "P(red) = 3/8",
+        working: ["total balls = 3 + 5 = 8", "P(red) = 3/8"],
+        challenge: { prompt: "Your turn: 4 red, 6 blue. Find P(red).", answer: "4/10", hint: "4 out of 10 total" }
+      },
+      {
+        id: "10-5", title: "Probability tree",
+        warmup: "A probability tree shows every possible outcome of two events, one after another.",
+        thinking: { prompt: "Flip a coin twice. What are the two possible outcomes on each flip?", choices: ["Heads or Tails, each with probability 1/2", "Only Heads is possible", "The two flips must match"] },
+        picture: { type: "tree", stage1: [{ label: "H", prob: "1/2" }, { label: "T", prob: "1/2" }], stage2: [{ label: "H", prob: "1/2" }, { label: "T", prob: "1/2" }] },
+        algebra: "P(H,H) = 1/2 × 1/2",
+        working: ["each flip is independent", "P(H then H) = 1/2 × 1/2", "= 1/4"],
+        challenge: { prompt: "Your turn: find P(Tails then Tails).", answer: "1/4", hint: "1/2 × 1/2" }
+      }
+    ],
+    boss: {
+      name: "The Probability Phantom", hp: 100,
+      questions: [
+        { prompt: "Values 6, 2, 9, 3. Find the total.", answer: "20" },
+        { prompt: "Scores 5, 9, 4, 2. Find the mean.", answer: "5" },
+        { prompt: "Data 10, 3, 7, 1, 5. Find the median (sort first).", answer: "5" },
+        { prompt: "Bag has 2 red, 6 blue. Find P(red).", answer: "2/8" },
+        { prompt: "A coin is flipped twice. Find P(Heads then Tails).", answer: "1/4" },
+        { prompt: "Values 12, 15, 9, 14. Find the total.", answer: "50" }
+      ]
+    }
+  },
+  {
+    id: 11, chain: 10, code: "W11", icon: "🎓", name: "Cambridge Exam Translator",
+    color: "#1F3A5F", status: "ready",
+    tagline: "How Cambridge gives marks",
+    missions: [
+      {
+        id: "11-1", title: "35 × 19, mental to formal",
+        warmup: "Round 19 up to 20, then adjust.",
+        thinking: { prompt: "How would you tackle 35 × 19 in your head?", choices: ["Round 19 up to 20, then subtract one group of 35", "Multiply 35 × 19 directly, digit by digit", "Round 35 up to 40 instead"] },
+        picture: { type: "steps", steps: ["35 × 19", "→ 35 × 20 − 35", "→ 700 − 35"] },
+        algebra: "35 × 19 = 35 × (20 − 1)",
+        working: ["35 × 19", "= 35(20 − 1)", "= 700 − 35", "= 665"],
+        challenge: { prompt: "Your turn: 45 × 19 = ?", answer: "855", hint: "45 × 20 − 45" }
+      },
+      {
+        id: "11-2", title: "Where do the marks come from?",
+        warmup: "A Cambridge marker reads your working line by line, not your final answer alone.",
+        thinking: { prompt: "In the working for 35 × 19 above, which line shows the method, and which line shows the final answer?", choices: ["The method lines earn M1, the final answer earns A1", "Only the final answer matters for marks", "Neat handwriting earns the most marks"] },
+        picture: { type: "steps", steps: ["M1 = marks for a correct method shown", "A1 = marks for an accurate final answer", "B1 = marks for a stated fact, independent of method"] },
+        algebra: "M1 + M1 + A1",
+        working: ["35 × 19 = 35(20 − 1)   ← M1 (method: correct rewriting)", "= 700 − 35   ← M1 (method: correct expansion)", "= 665   ← A1 (accuracy: correct final answer)"],
+        challenge: { prompt: "If you write only \"665\" with no working, would you likely get full marks? (yes/no)", answer: "no", hint: "Markers reward the method, not just the answer." }
+      },
+      {
+        id: "11-3", title: "47 × 9, mental to formal",
+        warmup: "9 is very close to 10 — a friendly number to multiply by.",
+        thinking: { prompt: "How could you use 10 to make 47 × 9 easier?", choices: ["Work out 47 × 10, then subtract one group of 47", "Multiply 47 × 9 digit by digit", "Round 47 up to 50 instead"] },
+        picture: { type: "steps", steps: ["47 × 9", "→ 47 × 10 − 47", "→ 470 − 47"] },
+        algebra: "47 × 9 = 47 × (10 − 1)",
+        working: ["47 × 9", "= 47 × (10 − 1)   ← M1", "= 470 − 47   ← M1", "= 423   ← A1"],
+        challenge: { prompt: "Your turn: 63 × 9 = ?", answer: "567", hint: "63 × 10 − 63" }
+      },
+      {
+        id: "11-4", title: "1000 − 463, compensation subtraction",
+        warmup: "Subtracting from 1000 is easier than it looks with the right trick.",
+        thinking: { prompt: "1000 − 463 — what's a clean way to work this out?", choices: ["Subtract from each digit as if borrowing from 999, then add 1", "Subtract 463 from 1000 column by column with lots of borrowing", "Round 463 to 500 first"] },
+        picture: { type: "steps", steps: ["1000 − 463", "→ 999 − 463 = 536 (no borrowing needed)", "→ add the 1 back: 536 + 1"] },
+        algebra: "1000 − 463 = (999 − 463) + 1",
+        working: ["1000 − 463", "= (999 − 463) + 1   ← M1", "= 536 + 1   ← M1", "= 537   ← A1"],
+        challenge: { prompt: "Your turn: 1000 − 278 = ?", answer: "722", hint: "999 − 278, then + 1" }
+      }
+    ],
+    boss: {
+      name: "The Mark Scheme Oracle", hp: 100,
+      questions: [
+        { prompt: "62 × 19 = ? (use the (20-1) trick)", answer: "1178" },
+        { prompt: "A method mark is called M1 or A1?", answer: "M1" },
+        { prompt: "An accuracy mark (final answer) is called M1 or A1?", answer: "A1" },
+        { prompt: "48 × 29 = ? (round 29 to 30)", answer: "1392" },
+        { prompt: "36 × 9 = ? (use the (10-1) trick)", answer: "324" },
+        { prompt: "1000 − 528 = ? (use the 999 trick)", answer: "472" }
+      ]
+    }
+  },
+  {
+    id: 12, chain: 11, code: "W12", icon: "👑", name: "Grand Bridge Challenge",
+    color: "#4B2E83", status: "ready",
+    tagline: "The final gauntlet — cross the last bridge to rescue Princess Cambridge",
+    isGrandChallenge: true,
+    missions: [
+      {
+        id: "12-1", title: "Tom & Sam, together 96",
+        text: "Tom has some marbles. Sam has 3 times as many as Tom. Together they have 96 marbles. How many marbles does each person have?",
+        picture: { type: "bar", bars: [{ label: "Tom", units: 1, color: "sg" }, { label: "Sam", units: 3, color: "cam" }], totalLabel: "96" },
+        algebra: "x + 3x = 96",
+        working: ["Let Tom's marbles = x", "Sam's marbles = 3x", "x + 3x = 96", "4x = 96", "x = 24", "Tom = 24,  Sam = 72"],
+        answer: "Tom = 24, Sam = 72"
+      },
+      {
+        id: "12-2", title: "Box notation",
+        text: "Two boxes of unknown size, plus 5, makes 17. Find the size of one box.",
+        picture: { type: "bar", bars: [{ label: "x", units: 2, color: "sg", plusNumber: 5 }], totalLabel: "17" },
+        algebra: "2x + 5 = 17",
+        working: ["2x + 5 = 17", "2x = 17 − 5", "2x = 12", "x = 6"],
+        answer: "x = 6"
+      },
+      {
+        id: "12-3", title: "Ratio 1 : 2",
+        text: "Two numbers are in the ratio 1 : 2. Their sum is 36. Find the two numbers.",
+        picture: { type: "bar", bars: [{ label: "", units: 1, color: "sg" }, { label: "", units: 2, color: "cam" }], totalLabel: "36" },
+        algebra: "x + 2x = 36",
+        working: ["Let the smaller number = x", "the larger number = 2x", "x + 2x = 36", "3x = 36", "x = 12", "numbers are 12 and 24"],
+        answer: "12 and 24"
+      },
+      {
+        id: "12-4", title: "Submarine rise",
+        text: "A submarine is at −5 m. It rises to 8 m. How far did it rise?",
+        picture: { type: "line", from: -5, to: 8, min: -8, max: 10 },
+        algebra: "−5 + x = 8",
+        working: ["distance risen = 8 − (−5)", "= 8 + 5", "= 13 m"],
+        answer: "13 m"
+      },
+      {
+        id: "12-5", title: "Mental to formal: 52 × 19",
+        text: "Calculate 52 × 19 by rounding 19 up to 20 and adjusting.",
+        picture: { type: "steps", steps: ["52 × 19", "→ 52 × 20 − 52", "→ 1040 − 52"] },
+        algebra: "52 × 19 = 52 × (20 − 1)",
+        working: ["52 × 19", "= 52 × (20 − 1)", "= 52 × 20 − 52 × 1", "= 1040 − 52", "= 988"],
+        answer: "988"
+      },
+      {
+        id: "12-6", title: "3/4 of a number is 60",
+        text: "3/4 of a number is 60. Find the number.",
+        picture: { type: "bar", bars: [{ label: "", units: 4, color: "sg", shaded: 3 }], totalLabel: "3 parts = 60" },
+        algebra: "(3/4)x = 60",
+        working: ["3 parts = 60", "1 part = 60 ÷ 3 = 20", "4 parts (whole) = 20 × 4 = 80"],
+        answer: "80"
+      },
+      {
+        id: "12-7", title: "Age problem",
+        text: "Mary is 3 times as old as her son. In 5 years, she will be twice as old as him. Find their current ages.",
+        picture: { type: "bar", bars: [{ label: "son (now)", units: 1, color: "sg" }, { label: "Mary (now)", units: 3, color: "cam" }], totalLabel: "" },
+        algebra: "3x + 5 = 2(x + 5)",
+        working: ["Let son = x, Mary = 3x", "in 5 years: 3x + 5 = 2(x + 5)", "3x + 5 = 2x + 10", "x = 5", "son = 5, Mary = 15"],
+        answer: "Son = 5, Mary = 15"
+      }
+    ],
+    boss: {
+      name: "The Bridge Guardian", hp: 100,
+      questions: [
+        { prompt: "4x = 96. Find x.", answer: "24" },
+        { prompt: "2x + 5 = 17. Find x.", answer: "6" },
+        { prompt: "Ratio 1:2, sum 36 — find the smaller part.", answer: "12" },
+        { prompt: "8 − (−5) = ?", answer: "13" },
+        { prompt: "52 × 19 = ?", answer: "988" },
+        { prompt: "3/4 of a number is 60. Find the number.", answer: "80" },
+        { prompt: "3(x + 2) = 21. Find x.", answer: "5" }
+      ]
+    }
+  }
+];
+
+const UNLOCK_CHAIN = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+/* ---------- REFLECTION CHECKLIST (generic, reused everywhere) ---------- */
+
+const CHECKLIST = [
+  "I wrote the equation clearly (used = signs, not arrows)",
+  "I showed each step on its own line",
+  "I used x instead of a box or picture in the final working",
+  "I stated the final answer clearly, with units if needed"
+];
+
+/* ---------- STORAGE ---------- */
+
+const STORE_KEY = "sc_bridge_v2";
+function loadStore() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) throw new Error("empty");
+    const s = JSON.parse(raw);
+    s.xp = s.xp || 0;
+    s.completedMissions = s.completedMissions || [];
+    s.worldStars = s.worldStars || {};
+    s.badges = s.badges || [];
+    s.notebook = s.notebook || [];
+    return s;
+  } catch (e) {
+    return { xp: 0, completedMissions: [], worldStars: {}, badges: [], notebook: [] };
+  }
+}
+function saveStore() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(store));
+  } catch (e) {
+    console.warn("Could not save progress:", e);
+  }
+}
+let store = loadStore();
+
+function addXP(amount) {
+  const beforeLevel = heroLevel();
+  store.xp += amount;
+  saveStore();
+  const afterLevel = heroLevel();
+  if (afterLevel > beforeLevel) showToast(`⭐ Level Up! You're now Level ${afterLevel}!`);
+  else showToast(`+${amount} XP`);
+}
+function heroLevel() { return Math.floor(store.xp / 100) + 1; }
+function xpIntoLevel() { return store.xp % 100; }
+
+function isWorldUnlocked(world) {
+  if (world.status === "soon") return false;
+  const idx = UNLOCK_CHAIN.indexOf(world.id);
+  if (idx <= 0) return true;
+  const prevId = UNLOCK_CHAIN[idx - 1];
+  return (store.worldStars[prevId] || 0) >= 1;
+}
+
+function showToast(msg) {
+  const toast = document.getElementById("stamp-toast");
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toast.classList.remove("show"), 1800);
+}
+
+/* ---------- SHARED PICTURE RENDERERS ---------- */
+
+function renderBar(barsSpec, totalLabel) {
+  const wrap = document.createElement("div");
+  wrap.className = "barmodel";
+  barsSpec.forEach(spec => {
+    const row = document.createElement("div");
+    row.className = "bar-row";
+    if (spec.label) {
+      const lab = document.createElement("div");
+      lab.className = "bar-label";
+      lab.textContent = spec.label;
+      row.appendChild(lab);
+    }
+    const track = document.createElement("div");
+    track.className = "bar-track";
+    for (let i = 0; i < spec.units; i++) {
+      const box = document.createElement("div");
+      box.className = "bar-box bar-" + spec.color;
+      if (spec.shaded !== undefined && i < spec.shaded) box.classList.add("bar-shaded");
+      box.textContent = spec.label === "x" ? "x" : "";
+      track.appendChild(box);
+    }
+    row.appendChild(track);
+    if (spec.plusNumber) {
+      const plus = document.createElement("div");
+      plus.className = "bar-plus";
+      plus.textContent = "+ " + spec.plusNumber;
+      row.appendChild(plus);
+    }
+    wrap.appendChild(row);
+  });
+  if (totalLabel) {
+    const tot = document.createElement("div");
+    tot.className = "bar-total";
+    tot.textContent = "total = " + totalLabel;
+    wrap.appendChild(tot);
+  }
+  return wrap;
+}
+
+function renderNumberLine(spec) {
+  const { from, to, min, max } = spec;
+  const width = 300, height = 70, pad = 20;
+  const scale = (width - pad * 2) / (max - min);
+  const x = v => pad + (v - min) * scale;
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("class", "numberline-svg");
+
+  const axisY = 40;
+  const line = document.createElementNS(svgNS, "line");
+  line.setAttribute("x1", pad); line.setAttribute("x2", width - pad);
+  line.setAttribute("y1", axisY); line.setAttribute("y2", axisY);
+  line.setAttribute("class", "nl-axis");
+  svg.appendChild(line);
+
+  const step = (max - min) > 30 ? Math.ceil((max - min) / 10) : 1;
+  for (let v = min; v <= max; v += step) {
+    const tick = document.createElementNS(svgNS, "line");
+    tick.setAttribute("x1", x(v)); tick.setAttribute("x2", x(v));
+    tick.setAttribute("y1", axisY - 4); tick.setAttribute("y2", axisY + 4);
+    tick.setAttribute("class", "nl-tick");
+    svg.appendChild(tick);
+    const t = document.createElementNS(svgNS, "text");
+    t.setAttribute("x", x(v)); t.setAttribute("y", axisY + 18);
+    t.setAttribute("class", "nl-num"); t.setAttribute("text-anchor", "middle");
+    t.textContent = v;
+    svg.appendChild(t);
+  }
+  const arc = document.createElementNS(svgNS, "path");
+  const x1 = x(from), x2 = x(to);
+  const midX = (x1 + x2) / 2;
+  arc.setAttribute("d", `M ${x1} ${axisY} Q ${midX} ${axisY - 28} ${x2} ${axisY}`);
+  arc.setAttribute("class", "nl-arc");
+  arc.setAttribute("marker-end", "url(#nlarrow)");
+  svg.appendChild(arc);
+
+  const defs = document.createElementNS(svgNS, "defs");
+  defs.innerHTML = `<marker id="nlarrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" class="nl-arrowhead"/></marker>`;
+  svg.insertBefore(defs, svg.firstChild);
+
+  [from, to].forEach(v => {
+    if (v < min || v > max) return;
+    const dot = document.createElementNS(svgNS, "circle");
+    dot.setAttribute("cx", x(v)); dot.setAttribute("cy", axisY); dot.setAttribute("r", 4);
+    dot.setAttribute("class", "nl-dot");
+    svg.appendChild(dot);
+  });
+  return svg;
+}
+
+function renderSteps(steps) {
+  const wrap = document.createElement("div");
+  wrap.className = "mental-steps";
+  steps.forEach(s => {
+    const row = document.createElement("div");
+    row.className = "mental-step";
+    row.textContent = s;
+    wrap.appendChild(row);
+  });
+  return wrap;
+}
+
+/* Crossing-out / regrouping (e.g. 52 − 27 with borrowing) */
+function renderCrossOutRow(gutterText, values, extraClass) {
+  const row = document.createElement("div");
+  row.className = "regroup-row" + (extraClass ? " " + extraClass : "");
+  const gutter = document.createElement("span");
+  gutter.className = "regroup-gutter";
+  gutter.textContent = gutterText || "";
+  row.appendChild(gutter);
+  values.forEach(v => {
+    const cell = document.createElement("span");
+    cell.className = "regroup-col";
+    cell.textContent = v;
+    row.appendChild(cell);
+  });
+  return row;
+}
+function renderCrossOut(spec) {
+  // spec: { corrections: [...], topDigits: [...], operator: "−", subDigits: [...], resultDigits: [...] }
+  const wrap = document.createElement("div");
+  wrap.className = "regroup-block";
+  wrap.appendChild(renderCrossOutRow("", spec.corrections, "regroup-correction"));
+  const mainRow = renderCrossOutRow("", spec.topDigits, "regroup-main");
+  mainRow.querySelectorAll(".regroup-col").forEach(cell => cell.classList.add("regroup-cross"));
+  wrap.appendChild(mainRow);
+  wrap.appendChild(renderCrossOutRow(spec.operator, spec.subDigits, "regroup-sub"));
+  const divider = document.createElement("div");
+  divider.className = "regroup-divider";
+  wrap.appendChild(divider);
+  wrap.appendChild(renderCrossOutRow("", spec.resultDigits, "regroup-result"));
+  return wrap;
+}
+
+/* Number bond diagram (whole split into two parts) */
+function renderNumberBond(spec) {
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", "0 0 160 110");
+  svg.setAttribute("class", "bond-svg");
+
+  const lines = [[80, 32, 34, 68], [80, 32, 126, 68]];
+  lines.forEach(([x1, y1, x2, y2]) => {
+    const line = document.createElementNS(svgNS, "line");
+    line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+    line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+    line.setAttribute("class", "bond-line");
+    svg.appendChild(line);
+  });
+
+  const circles = [
+    { cx: 80, cy: 20, val: spec.whole, cls: "bond-whole" },
+    { cx: 30, cy: 82, val: spec.part1, cls: "bond-part" },
+    { cx: 130, cy: 82, val: spec.part2, cls: "bond-part" }
+  ];
+  circles.forEach(c => {
+    const circle = document.createElementNS(svgNS, "circle");
+    circle.setAttribute("cx", c.cx); circle.setAttribute("cy", c.cy); circle.setAttribute("r", 20);
+    circle.setAttribute("class", c.cls);
+    svg.appendChild(circle);
+    const text = document.createElementNS(svgNS, "text");
+    text.setAttribute("x", c.cx); text.setAttribute("y", c.cy + 5);
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute("class", "bond-text");
+    text.textContent = c.val;
+    svg.appendChild(text);
+  });
+  return svg;
+}
+
+/* Grouping visual for division (dots grouped into equal clusters) */
+function renderGrouping(spec) {
+  const wrap = document.createElement("div");
+  wrap.className = "grouping-wrap";
+  const groups = spec.total / spec.groupSize;
+  for (let g = 0; g < groups; g++) {
+    const groupBox = document.createElement("div");
+    groupBox.className = "grouping-box";
+    for (let i = 0; i < spec.groupSize; i++) {
+      const dot = document.createElement("div");
+      dot.className = "grouping-dot";
+      groupBox.appendChild(dot);
+    }
+    wrap.appendChild(groupBox);
+  }
+  return wrap;
+}
+
+/* Number sequence chain with jump labels */
+function renderSequence(spec) {
+  const wrap = document.createElement("div");
+  wrap.className = "sequence-wrap";
+  spec.terms.forEach((term, i) => {
+    const chip = document.createElement("div");
+    chip.className = "sequence-chip";
+    chip.textContent = term;
+    wrap.appendChild(chip);
+    if (i < spec.terms.length - 1) {
+      const arrow = document.createElement("div");
+      arrow.className = "sequence-arrow";
+      arrow.textContent = (spec.diff >= 0 ? "+" : "") + spec.diff;
+      wrap.appendChild(arrow);
+    }
+  });
+  return wrap;
+}
+
+function renderPicture(pic) {
+  if (pic.type === "bar") return renderBar(pic.bars, pic.totalLabel);
+  if (pic.type === "line") return renderNumberLine(pic);
+  if (pic.type === "steps") return renderSteps(pic.steps);
+  if (pic.type === "angle") return renderAngleSectors(pic);
+  if (pic.type === "areagrid") return renderAreaGrid(pic);
+  if (pic.type === "triangle") return renderRightTriangle(pic);
+  if (pic.type === "sequence") return renderSequence(pic);
+  if (pic.type === "chain") return renderChain(pic.items);
+  if (pic.type === "barchart") return renderBarChart(pic);
+  if (pic.type === "datapoints") return renderDataPoints(pic);
+  if (pic.type === "tree") return renderProbabilityTree(pic);
+  const fallback = document.createElement("div");
+  return fallback;
+}
+
+/* Angle sectors — reuses wedgePath/polarToCartesian from the pie builder */
+function renderAngleSectors(spec) {
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", "0 0 160 100");
+  svg.setAttribute("class", "angle-svg");
+  const cx = 80, cy = spec.startAngle === 270 ? 85 : 55, r = 60;
+  let cum = spec.startAngle;
+  spec.sectors.forEach(sec => {
+    const start = cum, end = cum + sec.deg;
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute("d", wedgePath(cx, cy, r, start, end));
+    path.setAttribute("class", "angle-wedge" + (sec.known ? " angle-known" : " angle-unknown"));
+    svg.appendChild(path);
+    const mid = start + sec.deg / 2;
+    const labelPos = polarToCartesian(cx, cy, r * 0.62, mid);
+    const text = document.createElementNS(svgNS, "text");
+    text.setAttribute("x", labelPos.x); text.setAttribute("y", labelPos.y);
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute("class", "angle-label");
+    text.textContent = sec.label;
+    svg.appendChild(text);
+    cum = end;
+  });
+  return svg;
+}
+
+/* Area / volume grid of unit squares */
+function renderAreaGrid(spec) {
+  const outer = document.createElement("div");
+  const grid = document.createElement("div");
+  grid.className = "area-grid";
+  grid.style.gridTemplateColumns = `repeat(${spec.cols}, 1fr)`;
+  grid.style.maxWidth = Math.min(220, spec.cols * 32) + "px";
+  for (let i = 0; i < spec.rows * spec.cols; i++) {
+    const cell = document.createElement("div");
+    cell.className = "area-cell";
+    grid.appendChild(cell);
+  }
+  outer.appendChild(grid);
+  const label = document.createElement("div");
+  label.className = "area-grid-label";
+  label.textContent = `${spec.rows} × ${spec.cols} = ${spec.rows * spec.cols} unit squares`;
+  outer.appendChild(label);
+  return outer;
+}
+
+/* Right triangle with labeled sides (for Pythagoras) */
+function renderRightTriangle(spec) {
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", "0 0 160 110");
+  svg.setAttribute("class", "triangle-svg");
+  const x0 = 25, y0 = 95, x1 = 125, y1 = 95, x2 = 25, y2 = 25;
+  const poly = document.createElementNS(svgNS, "polygon");
+  poly.setAttribute("points", `${x0},${y0} ${x1},${y1} ${x2},${y2}`);
+  poly.setAttribute("class", "triangle-shape");
+  svg.appendChild(poly);
+  const marker = document.createElementNS(svgNS, "rect");
+  marker.setAttribute("x", x0); marker.setAttribute("y", y0 - 10);
+  marker.setAttribute("width", 10); marker.setAttribute("height", 10);
+  marker.setAttribute("class", "triangle-rightangle");
+  svg.appendChild(marker);
+  [
+    { x: (x0 + x1) / 2, y: y0 + 16, text: spec.a },
+    { x: x0 - 12, y: (y0 + y2) / 2, text: spec.b },
+    { x: (x1 + x2) / 2 + 16, y: (y1 + y2) / 2 - 4, text: spec.c }
+  ].forEach(l => {
+    const t = document.createElementNS(svgNS, "text");
+    t.setAttribute("x", l.x); t.setAttribute("y", l.y);
+    t.setAttribute("text-anchor", "middle");
+    t.setAttribute("class", "triangle-label");
+    t.textContent = l.text;
+    svg.appendChild(t);
+  });
+  return svg;
+}
+
+/* Generic value/operation chain (function machines) — reuses sequence chip styling */
+function renderChain(items) {
+  const wrap = document.createElement("div");
+  wrap.className = "sequence-wrap";
+  items.forEach(item => {
+    const el = document.createElement("div");
+    el.className = item.type === "op" ? "sequence-arrow" : "sequence-chip";
+    el.textContent = item.text;
+    wrap.appendChild(el);
+  });
+  return wrap;
+}
+
+/* Simple bar chart */
+function renderBarChart(spec) {
+  const wrap = document.createElement("div");
+  wrap.className = "barchart-wrap";
+  const max = spec.maxValue || Math.max(...spec.categories.map(c => c.value));
+  spec.categories.forEach(c => {
+    const col = document.createElement("div");
+    col.className = "barchart-col";
+    const valueLabel = document.createElement("div");
+    valueLabel.className = "barchart-value";
+    valueLabel.textContent = c.value;
+    const bar = document.createElement("div");
+    bar.className = "barchart-bar";
+    bar.style.height = Math.max(4, Math.round((c.value / max) * 90)) + "px";
+    const catLabel = document.createElement("div");
+    catLabel.className = "barchart-cat";
+    catLabel.textContent = c.label;
+    col.appendChild(valueLabel);
+    col.appendChild(bar);
+    col.appendChild(catLabel);
+    wrap.appendChild(col);
+  });
+  return wrap;
+}
+
+/* Data points on a number line (for mean/median) */
+function renderDataPoints(spec) {
+  const width = 300, height = 80, pad = 20;
+  const { min, max, points } = spec;
+  const scale = (width - pad * 2) / (max - min);
+  const x = v => pad + (v - min) * scale;
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("class", "dataplot-svg");
+  const axisY = 55;
+  const line = document.createElementNS(svgNS, "line");
+  line.setAttribute("x1", pad); line.setAttribute("x2", width - pad);
+  line.setAttribute("y1", axisY); line.setAttribute("y2", axisY);
+  line.setAttribute("class", "nl-axis");
+  svg.appendChild(line);
+  for (let v = min; v <= max; v++) {
+    const tick = document.createElementNS(svgNS, "line");
+    tick.setAttribute("x1", x(v)); tick.setAttribute("x2", x(v));
+    tick.setAttribute("y1", axisY - 3); tick.setAttribute("y2", axisY + 3);
+    tick.setAttribute("class", "nl-tick");
+    svg.appendChild(tick);
+    const t = document.createElementNS(svgNS, "text");
+    t.setAttribute("x", x(v)); t.setAttribute("y", axisY + 16);
+    t.setAttribute("class", "nl-num"); t.setAttribute("text-anchor", "middle");
+    t.textContent = v;
+    svg.appendChild(t);
+  }
+  const counts = {};
+  points.forEach(p => {
+    counts[p] = (counts[p] || 0) + 1;
+    const stackIndex = counts[p];
+    const dot = document.createElementNS(svgNS, "circle");
+    dot.setAttribute("cx", x(p));
+    dot.setAttribute("cy", axisY - 8 - stackIndex * 10);
+    dot.setAttribute("r", 4.5);
+    dot.setAttribute("class", "dataplot-dot");
+    svg.appendChild(dot);
+  });
+  return svg;
+}
+
+/* Simple two-stage probability tree */
+function renderProbabilityTree(spec) {
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", "0 0 260 140");
+  svg.setAttribute("class", "tree-svg");
+  const root = { x: 20, y: 70 };
+  const mid = spec.stage1.map((s, i) => ({ x: 110, y: 25 + i * 55, label: s.label, prob: s.prob }));
+  mid.forEach(m => {
+    const line = document.createElementNS(svgNS, "line");
+    line.setAttribute("x1", root.x); line.setAttribute("y1", root.y);
+    line.setAttribute("x2", m.x); line.setAttribute("y2", m.y);
+    line.setAttribute("class", "tree-line");
+    svg.appendChild(line);
+    const t = document.createElementNS(svgNS, "text");
+    t.setAttribute("x", (root.x + m.x) / 2); t.setAttribute("y", (root.y + m.y) / 2 - 6);
+    t.setAttribute("class", "tree-prob"); t.setAttribute("text-anchor", "middle");
+    t.textContent = m.prob;
+    svg.appendChild(t);
+    const lbl = document.createElementNS(svgNS, "text");
+    lbl.setAttribute("x", m.x + 10); lbl.setAttribute("y", m.y + 4);
+    lbl.setAttribute("class", "tree-label");
+    lbl.textContent = m.label;
+    svg.appendChild(lbl);
+  });
+  mid.forEach(m => {
+    spec.stage2.forEach((s2, i) => {
+      const ey = m.y + (i === 0 ? -16 : 16);
+      const line = document.createElementNS(svgNS, "line");
+      line.setAttribute("x1", m.x + 18); line.setAttribute("y1", m.y);
+      line.setAttribute("x2", 220); line.setAttribute("y2", ey);
+      line.setAttribute("class", "tree-line");
+      svg.appendChild(line);
+      const t = document.createElementNS(svgNS, "text");
+      t.setAttribute("x", (m.x + 18 + 220) / 2); t.setAttribute("y", (m.y + ey) / 2 - 4);
+      t.setAttribute("class", "tree-prob"); t.setAttribute("text-anchor", "middle");
+      t.textContent = s2.prob;
+      svg.appendChild(t);
+      const lbl = document.createElementNS(svgNS, "text");
+      lbl.setAttribute("x", 226); lbl.setAttribute("y", ey + 4);
+      lbl.setAttribute("class", "tree-label");
+      lbl.textContent = s2.label;
+      svg.appendChild(lbl);
+    });
+  });
+  return svg;
+}
+
+/* ---------- ANSWER CHECKING ---------- */
+
+function normalizeAnswer(str) {
+  return String(str).trim().toLowerCase().replace(/\s+/g, " ").replace(/,/g, "");
+}
+function checkAnswer(userInput, correct) {
+  return normalizeAnswer(userInput) === normalizeAnswer(correct);
+}
+
+/* ---------- ENGINEER-STYLE RETRY FEEDBACK ---------- */
+
+const RETRY_CLOSE = [
+  "🔧 Close — just needs a small adjustment. Recalibrate and try again!",
+  "⚙️ Nearly in spec — double-check one step and try again.",
+  "🔩 Good attempt — you're close. Fine-tune it and try again!"
+];
+const RETRY_FAR = [
+  "🔧 Not matching spec yet — let's troubleshoot. Try again.",
+  "⚙️ That's not it — retrace your steps and try again.",
+  "🔩 Needs more work — run the calculation again."
+];
+
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function isCloseNumeric(userInput, correct) {
+  const u = parseFloat(String(userInput).replace(/,/g, ""));
+  const c = parseFloat(String(correct).replace(/,/g, ""));
+  if (isNaN(u) || isNaN(c) || c === 0) return false;
+  const diff = Math.abs(u - c);
+  const tolerance = Math.max(2, Math.abs(c) * 0.1);
+  return diff > 0 && diff <= tolerance;
+}
+
+function retryFeedback(userInput, correct) {
+  return isCloseNumeric(userInput, correct) ? pickRandom(RETRY_CLOSE) : pickRandom(RETRY_FAR);
+}
+
+/* ================================================================
+   SCREEN ROUTING (within the Map tab)
+   ================================================================ */
+
+let screen = "atlas"; // atlas | world | mission | boss
+let activeWorldId = null;
+let activeMissionIndex = 0;
+let missionStage = 0;
+let bossState = null;
+
+function goAtlas() { screen = "atlas"; renderMap(); }
+function goWorld(worldId) { screen = "world"; activeWorldId = worldId; renderMap(); }
+function goMission(worldId, missionIndex) {
+  screen = "mission"; activeWorldId = worldId; activeMissionIndex = missionIndex; missionStage = 0;
+  renderMap();
+}
+function goBoss(worldId) {
+  screen = "boss"; activeWorldId = worldId;
+  const world = WORLDS.find(w => w.id === worldId);
+  bossState = { qIndex: 0, hp: 100, hpStep: 100 / world.boss.questions.length, cleared: false };
+  renderMap();
+}
+
+/* ---------- ATLAS ---------- */
+
+function renderAtlas(container) {
+  const wrap = document.createElement("div");
+  wrap.className = "atlas";
+
+  const heroBar = document.createElement("div");
+  heroBar.className = "hero-hud";
+  heroBar.innerHTML = `
+    <div class="hero-hud-avatar">🧑‍🔧</div>
+    <div class="hero-hud-mid">
+      <div class="hero-hud-level">Level ${heroLevel()}</div>
+      <div class="xp-track"><div class="xp-fill" style="width:${xpIntoLevel()}%"></div></div>
+    </div>
+    <div class="hero-hud-stars">⭐ ${Object.values(store.worldStars).reduce((a, b) => a + b, 0)}</div>
+  `;
+  wrap.appendChild(heroBar);
+
+  const title = document.createElement("div");
+  title.className = "atlas-title";
+  title.textContent = "🗺️ The Bridge Atlas";
+  wrap.appendChild(title);
+
+  const narrative = document.createElement("div");
+  narrative.className = "atlas-narrative";
+  narrative.textContent = "🔧 Repair every bridge, defeat the monster guarding it, and reach Castle Cambridge to rescue Princess Cambridge!";
+  wrap.appendChild(narrative);
+
+  const grid = document.createElement("div");
+  grid.className = "world-grid";
+  WORLDS.forEach(world => {
+    const unlocked = isWorldUnlocked(world);
+    const stars = store.worldStars[world.id] || 0;
+    const node = document.createElement("button");
+    node.className = "world-node" + (unlocked ? "" : " world-locked") + (world.status === "soon" ? " world-soon" : "");
+    node.style.setProperty("--wcolor", world.color);
+    node.disabled = !unlocked && world.status !== "soon";
+    node.innerHTML = `
+      <div class="world-node-icon">${unlocked || world.status === "soon" ? world.icon : "🔒"}</div>
+      <div class="world-node-code">${world.code}</div>
+      <div class="world-node-name">${world.name}</div>
+      ${world.status === "soon" ? `<div class="world-node-soon">🚧 coming soon</div>` : `<div class="world-node-stars">${"⭐".repeat(stars)}${"☆".repeat(Math.max(0, 1 - stars))}</div>`}
+    `;
+    if (unlocked) node.onclick = () => goWorld(world.id);
+    else if (world.status === "soon") node.onclick = () => showToast("🚧 This world is still being built!");
+    else node.onclick = () => showToast("🔒 Clear the previous world's boss to unlock this one.");
+    grid.appendChild(node);
+  });
+  wrap.appendChild(grid);
+  container.appendChild(wrap);
+}
+
+/* ---------- WORLD DETAIL (level select) ---------- */
+
+function renderWorldDetail(container) {
+  const world = WORLDS.find(w => w.id === activeWorldId);
+  const wrap = document.createElement("div");
+  wrap.className = "world-detail";
+  wrap.style.setProperty("--wcolor", world.color);
+
+  wrap.innerHTML = `
+    <button class="back-btn" id="back-to-atlas">← Atlas</button>
+    <div class="world-detail-head">
+      <div class="world-detail-icon">${world.icon}</div>
+      <div>
+        <div class="world-detail-name">${world.name}</div>
+        <div class="world-detail-tagline">${world.tagline}</div>
+      </div>
+    </div>
+  `;
+
+  const missionGrid = document.createElement("div");
+  missionGrid.className = "mission-grid";
+  world.missions.forEach((m, i) => {
+    const done = store.completedMissions.includes(m.id);
+    const prevDone = i === 0 || store.completedMissions.includes(world.missions[i - 1].id);
+    const tile = document.createElement("button");
+    let stateClass, symbol;
+    if (done) { stateClass = "tile-done"; symbol = "✓"; }
+    else if (prevDone) { stateClass = "tile-unlocked"; symbol = "❓"; }
+    else { stateClass = "tile-locked"; symbol = "🔒"; }
+    tile.className = "mission-tile " + stateClass;
+    tile.innerHTML = `<div class="tile-badge">${i + 1}</div><div class="tile-symbol">${symbol}</div>`;
+    if (done || prevDone) {
+      tile.onclick = () => goMission(world.id, i);
+    } else {
+      tile.onclick = () => showToast(`🔒 Finish Mission ${i} first to unlock this one!`);
+    }
+    missionGrid.appendChild(tile);
+  });
+  wrap.appendChild(missionGrid);
+
+  const allMissionsDone = world.missions.every(m => store.completedMissions.includes(m.id));
+  const bossTile = document.createElement("button");
+  const bossDone = (store.worldStars[world.id] || 0) >= 1;
+  bossTile.className = "boss-tile" + (bossDone ? " boss-done" : "") + (!allMissionsDone ? " boss-locked" : "");
+  bossTile.innerHTML = allMissionsDone
+    ? `<div class="boss-tile-icon">🏰</div><div class="boss-tile-text">Boss Battle: ${world.boss.name}${bossDone ? " — Cleared!" : ""}</div>`
+    : `<div class="boss-tile-icon">🔒</div><div class="boss-tile-text">Boss Battle: ${world.boss.name} — finish all missions to unlock</div>`;
+  bossTile.onclick = allMissionsDone ? () => goBoss(world.id) : () => showToast("🔒 Finish every mission in this world to challenge the boss!");
+  wrap.appendChild(bossTile);
+
+  container.appendChild(wrap);
+  document.getElementById("back-to-atlas").onclick = goAtlas;
+}
+
+/* ---------- MISSION PLAYER ---------- */
+
+function renderMissionPlayer(container) {
+  const world = WORLDS.find(w => w.id === activeWorldId);
+  if (world.isWordProblemWorld) return renderWordProblemMission(container, world);
+  if (world.isGrandChallenge) return renderGrandChallengeMission(container, world);
+  const mission = world.missions[activeMissionIndex];
+
+  const wrap = document.createElement("div");
+  wrap.className = "mission-player";
+  wrap.style.setProperty("--wcolor", world.color);
+
+  wrap.innerHTML = `<button class="back-btn" id="back-to-world">← ${world.name}</button>
+    <div class="mission-title">${mission.title}</div>
+    <div class="mission-progress">${STAGE_LABELS.map((s, i) => `<span class="stage-dot${i <= missionStage ? " on" : ""}">${s.icon}</span>`).join("")}</div>`;
+
+  const stageBox = document.createElement("div");
+  stageBox.className = "stage-box";
+  renderMissionStage(stageBox, mission, world);
+  wrap.appendChild(stageBox);
+
+  container.appendChild(wrap);
+  document.getElementById("back-to-world").onclick = () => goWorld(world.id);
+}
+
+const STAGE_LABELS = [
+  { icon: "🎮", label: "Warm Up" },
+  { icon: "🧠", label: "Singapore Thinking" },
+  { icon: "🎨", label: "Draw It" },
+  { icon: "🔄", label: "Translate" },
+  { icon: "✍", label: "Cambridge Writing" },
+  { icon: "🏆", label: "Boss Challenge" },
+  { icon: "⭐", label: "Reflection" }
+];
+
+function renderMissionStage(box, mission, world) {
+  box.innerHTML = "";
+  const s = STAGE_LABELS[missionStage];
+  const heading = document.createElement("div");
+  heading.className = "stage-heading-big";
+  heading.textContent = `${s.icon} ${s.label}`;
+  box.appendChild(heading);
+
+  const body = document.createElement("div");
+  body.className = "stage-body";
+
+  if (missionStage === 0) {
+    body.innerHTML = `<p class="stage-text">${mission.warmup}</p>`;
+    const btn = mkBtn("I'm ready →", () => nextStage(box, mission, world));
+    body.appendChild(btn);
+  } else if (missionStage === 1) {
+    body.innerHTML = `<p class="stage-text">${mission.thinking.prompt}</p>`;
+    const choiceWrap = document.createElement("div");
+    choiceWrap.className = "choice-list";
+    const nextBtn = mkBtn("Next →", () => nextStage(box, mission, world));
+    nextBtn.disabled = true;
+    mission.thinking.choices.forEach(choiceText => {
+      const cbtn = document.createElement("button");
+      cbtn.className = "choice-btn";
+      cbtn.textContent = choiceText;
+      cbtn.onclick = () => {
+        choiceWrap.querySelectorAll(".choice-btn").forEach(b => b.classList.remove("choice-selected"));
+        cbtn.classList.add("choice-selected");
+        nextBtn.disabled = false;
+      };
+      choiceWrap.appendChild(cbtn);
+    });
+    body.appendChild(choiceWrap);
+    body.appendChild(nextBtn);
+  } else if (missionStage === 2) {
+    body.appendChild(renderPicture(mission.picture));
+    body.appendChild(mkBtn("Next →", () => nextStage(box, mission, world)));
+  } else if (missionStage === 3) {
+    const alg = document.createElement("div");
+    alg.className = "algebra-line";
+    alg.textContent = mission.algebra;
+    body.appendChild(alg);
+    body.appendChild(mkBtn("Next →", () => nextStage(box, mission, world)));
+  } else if (missionStage === 4) {
+    const scroll = document.createElement("div");
+    scroll.className = "scroll-box";
+    mission.working.forEach(line => {
+      const l = document.createElement("div");
+      l.className = "working-line";
+      l.textContent = line;
+      scroll.appendChild(l);
+    });
+    body.appendChild(scroll);
+    body.appendChild(mkBtn("Next →", () => nextStage(box, mission, world)));
+  } else if (missionStage === 5) {
+    body.innerHTML = `<p class="stage-text">${mission.challenge.prompt}</p>`;
+    const input = document.createElement("input");
+    input.type = "text"; input.className = "challenge-input"; input.placeholder = "Your answer";
+    body.appendChild(input);
+    const feedback = document.createElement("div");
+    feedback.className = "challenge-feedback";
+    body.appendChild(feedback);
+    const btnRow = document.createElement("div");
+    btnRow.className = "btn-row";
+    const checkBtn = mkBtn("Check", () => {
+      if (checkAnswer(input.value, mission.challenge.answer)) {
+        feedback.innerHTML = `<span class="feedback-good">✓ Correct! Great translation.</span>`;
+        setTimeout(() => nextStage(box, mission, world), 900);
+      } else {
+        feedback.innerHTML = `<span class="feedback-retry">${retryFeedback(input.value, mission.challenge.answer)}</span><span class="feedback-hint">🔍 Troubleshooting tip: ${mission.challenge.hint}</span>`;
+      }
+    });
+    const skipBtn = mkBtn("Show me & continue", () => nextStage(box, mission, world), true);
+    btnRow.appendChild(checkBtn); btnRow.appendChild(skipBtn);
+    body.appendChild(btnRow);
+  } else if (missionStage === 6) {
+    const list = document.createElement("div");
+    list.className = "mark-box";
+    CHECKLIST.forEach((text, i) => {
+      const row = document.createElement("label");
+      row.className = "mark-row";
+      row.innerHTML = `<input type="checkbox"><span>${text}</span>`;
+      list.appendChild(row);
+    });
+    body.appendChild(list);
+    body.appendChild(mkBtn("🎉 Complete Mission", () => {
+      if (!store.completedMissions.includes(mission.id)) {
+        store.completedMissions.push(mission.id);
+        saveStore();
+        addXP(10);
+      }
+      goWorld(world.id);
+    }));
+  }
+  box.appendChild(body);
+}
+
+function nextStage(box, mission, world) {
+  missionStage++;
+  const wrap = box.closest(".mission-player");
+  wrap.querySelector(".mission-progress").innerHTML = STAGE_LABELS.map((s, i) => `<span class="stage-dot${i <= missionStage ? " on" : ""}">${s.icon}</span>`).join("");
+  renderMissionStage(box, mission, world);
+}
+
+function mkBtn(label, onClick, secondary) {
+  const btn = document.createElement("button");
+  btn.className = "stage-btn" + (secondary ? " stage-btn-secondary" : "");
+  btn.textContent = label;
+  btn.onclick = onClick;
+  return btn;
+}
+
+/* ---------- WORD PROBLEM MISSION (World 4) ---------- */
+
+function renderWordProblemMission(container, world) {
+  const mission = world.missions[activeMissionIndex];
+  const wrap = document.createElement("div");
+  wrap.className = "mission-player";
+  wrap.style.setProperty("--wcolor", world.color);
+  wrap.innerHTML = `<button class="back-btn" id="back-to-world">← ${world.name}</button>
+    <div class="mission-title">Word Problem ${activeMissionIndex + 1}</div>`;
+
+  const stages = [
+    { icon: "📄", label: "Read It" },
+    { icon: "🔍", label: "Find Numbers" },
+    { icon: "🏷️", label: "Find Keywords" },
+    { icon: "🎨", label: "Draw Model" },
+    { icon: "🧩", label: "Equation" },
+    { icon: "✍", label: "Cambridge Answer" }
+  ];
+  wrap.innerHTML += `<div class="mission-progress">${stages.map((s, i) => `<span class="stage-dot${i <= missionStage ? " on" : ""}">${s.icon}</span>`).join("")}</div>`;
+
+  const box = document.createElement("div");
+  box.className = "stage-box";
+
+  function render() {
+    box.innerHTML = "";
+    const s = stages[missionStage];
+    const heading = document.createElement("div");
+    heading.className = "stage-heading-big";
+    heading.textContent = `${s.icon} ${s.label}`;
+    box.appendChild(heading);
+    const body = document.createElement("div");
+    body.className = "stage-body";
+
+    if (missionStage === 0) {
+      body.innerHTML = `<p class="stage-text">${escapeHtml(mission.text)}</p>`;
+      body.appendChild(mkBtn("Next →", advance));
+    } else if (missionStage === 1) {
+      const nums = mission.text.match(/\d+/g) || [];
+      body.innerHTML = `<p class="stage-text">The important numbers in this problem are:</p><div class="chip-row">${nums.map(n => `<span class="num-chip">${n}</span>`).join("")}</div>`;
+      body.appendChild(mkBtn("Next →", advance));
+    } else if (missionStage === 2) {
+      body.innerHTML = `<p class="stage-text kw-text">${highlightKeywords(mission.text)}</p><div class="kw-legend"><span class="kw-add">add</span><span class="kw-sub">subtract</span><span class="kw-mul">multiply</span><span class="kw-div">divide</span></div>`;
+      body.appendChild(mkBtn("Next →", advance));
+    } else if (missionStage === 3) {
+      body.appendChild(renderPicture(mission.picture));
+      body.appendChild(mkBtn("Next →", advance));
+    } else if (missionStage === 4) {
+      const alg = document.createElement("div");
+      alg.className = "algebra-line";
+      alg.textContent = mission.algebra;
+      body.appendChild(alg);
+      body.appendChild(mkBtn("Next →", advance));
+    } else if (missionStage === 5) {
+      const scroll = document.createElement("div");
+      scroll.className = "scroll-box";
+      mission.working.forEach(line => {
+        const l = document.createElement("div"); l.className = "working-line"; l.textContent = line;
+        scroll.appendChild(l);
+      });
+      const ans = document.createElement("div");
+      ans.className = "final-answer";
+      ans.textContent = mission.answer;
+      scroll.appendChild(ans);
+      body.appendChild(scroll);
+      body.appendChild(mkBtn("🎉 Complete Mission", () => {
+        if (!store.completedMissions.includes(mission.id)) {
+          store.completedMissions.push(mission.id);
+          saveStore(); addXP(10);
+        }
+        goWorld(world.id);
+      }));
+    }
+    box.appendChild(body);
+  }
+  function advance() {
+    missionStage++;
+    wrap.querySelector(".mission-progress").innerHTML = stages.map((s, i) => `<span class="stage-dot${i <= missionStage ? " on" : ""}">${s.icon}</span>`).join("");
+    render();
+  }
+
+  wrap.appendChild(box);
+  container.appendChild(wrap);
+  document.getElementById("back-to-world").onclick = () => goWorld(world.id);
+  render();
+}
+
+/* ---------- GRAND CHALLENGE MISSION (World 12) ---------- */
+
+function renderGrandChallengeMission(container, world) {
+  const mission = world.missions[activeMissionIndex];
+  const wrap = document.createElement("div");
+  wrap.className = "mission-player";
+  wrap.style.setProperty("--wcolor", world.color);
+  wrap.innerHTML = `<button class="back-btn" id="back-to-world">← ${world.name}</button>
+    <div class="mission-title">${mission.title}</div>`;
+
+  const stages = [
+    { icon: "📄", label: "The Quest" },
+    { icon: "🎨", label: "Picture / Bar Model" },
+    { icon: "🧩", label: "Equation" },
+    { icon: "✍", label: "Working" },
+    { icon: "🏁", label: "Final Answer" },
+    { icon: "⭐", label: "Self Check" }
+  ];
+  wrap.innerHTML += `<div class="mission-progress">${stages.map((s, i) => `<span class="stage-dot${i <= missionStage ? " on" : ""}">${s.icon}</span>`).join("")}</div>`;
+
+  const box = document.createElement("div");
+  box.className = "stage-box";
+
+  function render() {
+    box.innerHTML = "";
+    const s = stages[missionStage];
+    const heading = document.createElement("div");
+    heading.className = "stage-heading-big";
+    heading.textContent = `${s.icon} ${s.label}`;
+    box.appendChild(heading);
+    const body = document.createElement("div");
+    body.className = "stage-body";
+
+    if (missionStage === 0) {
+      body.innerHTML = `<p class="stage-text">${escapeHtml(mission.text)}</p>`;
+      body.appendChild(mkBtn("Next →", advance));
+    } else if (missionStage === 1) {
+      body.appendChild(renderPicture(mission.picture));
+      body.appendChild(mkBtn("Next →", advance));
+    } else if (missionStage === 2) {
+      const alg = document.createElement("div");
+      alg.className = "algebra-line";
+      alg.textContent = mission.algebra;
+      body.appendChild(alg);
+      body.appendChild(mkBtn("Next →", advance));
+    } else if (missionStage === 3) {
+      const scroll = document.createElement("div");
+      scroll.className = "scroll-box";
+      mission.working.forEach(line => {
+        const l = document.createElement("div"); l.className = "working-line"; l.textContent = line;
+        scroll.appendChild(l);
+      });
+      body.appendChild(scroll);
+      body.appendChild(mkBtn("Next →", advance));
+    } else if (missionStage === 4) {
+      const ans = document.createElement("div");
+      ans.className = "algebra-line";
+      ans.textContent = mission.answer;
+      body.appendChild(ans);
+      body.appendChild(mkBtn("Next →", advance));
+    } else if (missionStage === 5) {
+      const list = document.createElement("div");
+      list.className = "mark-box";
+      CHECKLIST.forEach(text => {
+        const row = document.createElement("label");
+        row.className = "mark-row";
+        row.innerHTML = `<input type="checkbox"><span>${text}</span>`;
+        list.appendChild(row);
+      });
+      body.appendChild(list);
+      body.appendChild(mkBtn("🎉 Complete Quest", () => {
+        if (!store.completedMissions.includes(mission.id)) {
+          store.completedMissions.push(mission.id);
+          saveStore(); addXP(15);
+        }
+        goWorld(world.id);
+      }));
+    }
+    box.appendChild(body);
+  }
+  function advance() {
+    missionStage++;
+    wrap.querySelector(".mission-progress").innerHTML = stages.map((s, i) => `<span class="stage-dot${i <= missionStage ? " on" : ""}">${s.icon}</span>`).join("");
+    render();
+  }
+
+  wrap.appendChild(box);
+  container.appendChild(wrap);
+  document.getElementById("back-to-world").onclick = () => goWorld(world.id);
+  render();
+}
+
+/* ---------- BOSS BATTLE ---------- */
+
+function renderBossBattle(container) {
+  const world = WORLDS.find(w => w.id === activeWorldId);
+  const boss = world.boss;
+  const wrap = document.createElement("div");
+  wrap.className = "boss-battle";
+  wrap.style.setProperty("--wcolor", world.color);
+
+  wrap.innerHTML = `<button class="back-btn" id="back-to-world">← ${world.name}</button>
+    <div class="boss-header">
+      <div class="boss-name">🏰 ${boss.name}</div>
+      <div class="hp-track"><div class="hp-fill" style="width:${bossState.hp}%"></div></div>
+      <div class="hp-label">${Math.round(bossState.hp)} / 100 HP</div>
+    </div>`;
+
+  const box = document.createElement("div");
+  box.className = "stage-box";
+
+  if (bossState.cleared) {
+    box.innerHTML = `<div class="victory-box">
+      <div class="victory-title">🏆 ${world.id === 12 ? "Bridge Complete!" : "Victory!"}</div>
+      <p class="stage-text">${world.id === 12
+        ? `You defeated ${boss.name} and repaired the final bridge into Castle Cambridge — Princess Cambridge is rescued! 👸🎉`
+        : `You repaired the bridge and defeated ${boss.name}, earning a star for ${world.name}!`}</p>
+      <div class="victory-star">${world.id === 12 ? "👸" : "⭐"}</div>
+    </div>`;
+    box.appendChild(mkBtn("Return to Atlas", goAtlas));
+  } else {
+    const q = boss.questions[bossState.qIndex];
+    box.innerHTML = `<div class="boss-q-count">Question ${bossState.qIndex + 1} of ${boss.questions.length}</div><p class="stage-text boss-q">${q.prompt}</p>`;
+    const input = document.createElement("input");
+    input.type = "text"; input.className = "challenge-input"; input.placeholder = "Your answer";
+    const feedback = document.createElement("div");
+    feedback.className = "challenge-feedback";
+    const btnRow = document.createElement("div");
+    btnRow.className = "btn-row";
+    btnRow.appendChild(mkBtn("🔧 Fix the Bridge!", () => {
+      if (checkAnswer(input.value, q.answer)) {
+        bossState.hp -= bossState.hpStep;
+        bossState.qIndex++;
+        if (bossState.qIndex >= boss.questions.length) {
+          bossState.hp = 0; bossState.cleared = true;
+          store.worldStars[world.id] = Math.max(store.worldStars[world.id] || 0, 1);
+          saveStore(); addXP(50);
+        }
+        renderMap();
+      } else {
+        feedback.innerHTML = `<span class="feedback-retry">${retryFeedback(input.value, q.answer)}</span>`;
+      }
+    }));
+    box.appendChild(input);
+    box.appendChild(feedback);
+    box.appendChild(btnRow);
+  }
+
+  wrap.appendChild(box);
+  container.appendChild(wrap);
+  document.getElementById("back-to-world").onclick = () => goWorld(world.id);
+}
+
+/* ---------- MAP TAB ROOT RENDER ---------- */
+
+function renderMap() {
+  const container = document.getElementById("panel-map");
+  container.innerHTML = "";
+  if (screen === "atlas") renderAtlas(container);
+  else if (screen === "world") renderWorldDetail(container);
+  else if (screen === "mission") renderMissionPlayer(container);
+  else if (screen === "boss") renderBossBattle(container);
+}
+
+/* ================================================================
+   SPELLBOOK (dictionary reference — unchanged content, new skin)
+   ================================================================ */
+
+const DICTIONARIES = {
+  barmodel: {
+    label: "Bar Model", icon: "▦",
+    intro: "Every bar is a quantity. Equal boxes inside a bar are equal parts. In Cambridge writing, a box of unknown size becomes x.",
+    entries: [
+      { sgTitle: "Three equal boxes", camTitle: "3x", bar: [{ label: "", units: 3, color: "sg" }], cam: ["3 boxes of the same size", "= 3 × x", "= 3x"] },
+      { sgTitle: "Two bars added", camTitle: "6x + 2x", bar: [{ label: "", units: 6, color: "sg" }, { label: "", units: 2, color: "cam" }], cam: ["first bar = 6x", "second bar = 2x", "together = 6x + 2x = 8x"] },
+      { sgTitle: "Box + known number", camTitle: "2x + 5 = 17", bar: [{ label: "x", units: 2, color: "sg", plusNumber: 5 }], cam: ["2 boxes, plus 5 more, makes 17", "2x + 5 = 17", "2x = 12", "x = 6"] }
+    ]
+  },
+  numberline: {
+    label: "Number Line", icon: "↔",
+    intro: "A jump on the number line is a change in value. Cambridge writing states this as an equation, not an arrow.",
+    entries: [
+      { sgTitle: "Jump from −5 to 8", camTitle: "−5 + 13 = 8", line: { from: -5, to: 8, min: -8, max: 10 }, cam: ["distance jumped = 8 − (−5)", "= 8 + 5", "= 13", "so −5 + 13 = 8"] },
+      { sgTitle: "Jump back 3 from 0", camTitle: "0 − 3 = −3", line: { from: 0, to: -3, min: -6, max: 6 }, cam: ["start at 0, move 3 left", "0 − 3 = −3"] }
+    ]
+  },
+  mentalmath: {
+    label: "Mental Math", icon: "⚡",
+    intro: "A mental math shortcut is a real algebraic identity. Cambridge writing shows the identity as a line of working.",
+    entries: [
+      { sgTitle: "52 × 19, round then adjust", camTitle: "52 × 19 = 988", steps: ["52 × 19", "→ 52 × 20 − 52", "→ 1040 − 52", "→ 988"], cam: ["52 × 19", "= 52 × (20 − 1)", "= 1040 − 52", "= 988"] }
+    ]
+  },
+  ratio: {
+    label: "Model / Ratio", icon: "◧",
+    intro: "In a ratio bar, the smallest part is worth 1 unit — call it x.",
+    entries: [
+      { sgTitle: "Ratio 1 : 2", camTitle: "x : 2x", bar: [{ label: "", units: 1, color: "sg" }, { label: "", units: 2, color: "cam" }], cam: ["smaller part = x", "larger part = 2x", "if total = 36: 3x = 36", "x = 12 → parts are 12 and 24"] }
+    ]
+  },
+  regroup: {
+    label: "Crossing Out", icon: "✂️",
+    intro: "When subtracting, if a digit is too small, cross it out, borrow from the next column, and write the new value above it.",
+    entries: [
+      {
+        sgTitle: "52 − 27, borrow once", camTitle: "52 − 27 = 25",
+        crossout: { corrections: ["4", "12"], topDigits: ["5", "2"], operator: "−", subDigits: ["2", "7"], resultDigits: ["2", "5"] },
+        cam: ["cross out the 5 (tens), write 4 above — one ten was borrowed", "cross out the 2 (ones), write 12 above", "12 − 7 = 5", "4 − 2 = 2", "answer: 25"]
+      },
+      {
+        sgTitle: "302 − 158, borrow twice", camTitle: "302 − 158 = 144",
+        crossout: { corrections: ["2", "9", "12"], topDigits: ["3", "0", "2"], operator: "−", subDigits: ["1", "5", "8"], resultDigits: ["1", "4", "4"] },
+        cam: ["ones column: 2 is too small, borrow from tens", "tens column is 0, so borrow from hundreds first", "hundreds: 3 → 2. tens: 0 → 9. ones: 2 → 12", "12 − 8 = 4, 9 − 5 = 4, 2 − 1 = 1", "answer: 144"]
+      }
+    ]
+  },
+  numberbonds: {
+    label: "Number Bonds", icon: "🔗",
+    intro: "A number bond shows how two parts combine to make a whole. Spotting these pairs makes mental math much faster.",
+    entries: [
+      {
+        sgTitle: "64 + 36, a bond to 100", camTitle: "64 + 36 = 100",
+        bond: { whole: 100, part1: 64, part2: 36 },
+        cam: ["64 and 36 are a number bond to 100", "64 + 36 = 100", "recognising the bond skips the column addition entirely"]
+      },
+      {
+        sgTitle: "7 + 8, bridging through 10", camTitle: "7 + 8 = 15",
+        bond: { whole: 15, part1: 7, part2: 8 },
+        cam: ["split 8 into 3 + 5 (since 7 needs 3 to make 10)", "7 + 3 = 10", "10 + 5 = 15"]
+      }
+    ]
+  },
+  grouping: {
+    label: "Grouping", icon: "➗",
+    intro: "Division can be seen as sharing a total into equal groups. Cambridge writing turns the grouping into a division fact.",
+    entries: [
+      {
+        sgTitle: "12 shared into groups of 3", camTitle: "12 ÷ 3 = 4",
+        grouping: { total: 12, groupSize: 3 },
+        cam: ["12 ÷ 3", "= 12 − 3 − 3 − 3 − 3 (subtract 3 four times)", "4 equal groups were made", "12 ÷ 3 = 4"]
+      },
+      {
+        sgTitle: "20 shared into groups of 5", camTitle: "20 ÷ 5 = 4",
+        grouping: { total: 20, groupSize: 5 },
+        cam: ["20 ÷ 5", "count how many groups of 5 fit into 20", "4 groups of 5 make 20", "20 ÷ 5 = 4"]
+      }
+    ]
+  },
+  sequence: {
+    label: "Sequencing", icon: "🔁",
+    intro: "Spotting the pattern between terms lets you predict what comes next, and eventually write a rule (the nth term).",
+    entries: [
+      {
+        sgTitle: "3, 7, 11, 15 — adding 4 each time", camTitle: "nth term = 4n − 1",
+        sequence: { terms: [3, 7, 11, 15], diff: 4 },
+        cam: ["each term goes up by 4, so the rule involves 4n", "4 × 1 = 4, but the 1st term is 3, so subtract 1", "nth term = 4n − 1", "check: 4(1)−1=3 ✓, 4(2)−1=7 ✓"]
+      },
+      {
+        sgTitle: "20, 17, 14, 11 — subtracting 3 each time", camTitle: "nth term = 23 − 3n",
+        sequence: { terms: [20, 17, 14, 11], diff: -3 },
+        cam: ["each term goes down by 3, so the rule involves −3n", "−3 × 1 = −3, but the 1st term is 20, so we need +23", "nth term = 23 − 3n", "check: 23−3(1)=20 ✓"]
+      }
+    ]
+  },
+  fractionmodel: {
+    label: "Fraction Models", icon: "🍕",
+    intro: "A fraction bar shows equal parts of a whole. Shading parts shows the fraction; two bars side by side show equivalent fractions.",
+    entries: [
+      {
+        sgTitle: "3 of 4 parts shaded", camTitle: "3/4",
+        bar: [{ label: "", units: 4, color: "sg", shaded: 3 }],
+        cam: ["4 equal parts total", "3 parts shaded", "fraction shaded = 3/4"]
+      },
+      {
+        sgTitle: "Same amount, cut differently", camTitle: "1/2 = 2/4",
+        bar: [{ label: "1/2", units: 2, color: "sg", shaded: 1 }, { label: "2/4", units: 4, color: "cam", shaded: 2 }],
+        cam: ["1/2 of a bar", "cut each half into 2 pieces", "1/2 = 2/4 — same amount, more pieces"]
+      }
+    ]
+  }
+};
+
+let currentDict = "barmodel";
+function renderDictionaryNav() {
+  const nav = document.getElementById("dict-subnav");
+  nav.innerHTML = "";
+  Object.keys(DICTIONARIES).forEach(key => {
+    const d = DICTIONARIES[key];
+    const btn = document.createElement("button");
+    btn.className = "subtab" + (key === currentDict ? " active" : "");
+    btn.innerHTML = `<span class="subtab-icon">${d.icon}</span> ${d.label}`;
+    btn.onclick = () => { currentDict = key; renderDictionaryNav(); renderDictionaryBody(); };
+    nav.appendChild(btn);
+  });
+}
+function renderDictionaryBody() {
+  const body = document.getElementById("dict-body");
+  body.innerHTML = "";
+  const d = DICTIONARIES[currentDict];
+  const intro = document.createElement("p");
+  intro.className = "dict-intro"; intro.textContent = d.intro;
+  body.appendChild(intro);
+  d.entries.forEach(entry => {
+    const card = document.createElement("div");
+    card.className = "dict-card";
+    const head = document.createElement("div");
+    head.className = "dict-card-head";
+    head.innerHTML = `<span class="tag tag-sg">🇸🇬 ${entry.sgTitle}</span><span class="bridge-arrow">→</span><span class="tag tag-cam">🇬🇧 ${entry.camTitle}</span>`;
+    card.appendChild(head);
+    const body2 = document.createElement("div");
+    body2.className = "dict-card-body";
+    const left = document.createElement("div");
+    left.className = "dict-side dict-side-sg";
+    if (entry.bar) left.appendChild(renderBar(entry.bar, null));
+    if (entry.line) left.appendChild(renderNumberLine(entry.line));
+    if (entry.steps) left.appendChild(renderSteps(entry.steps));
+    if (entry.crossout) left.appendChild(renderCrossOut(entry.crossout));
+    if (entry.bond) left.appendChild(renderNumberBond(entry.bond));
+    if (entry.grouping) left.appendChild(renderGrouping(entry.grouping));
+    if (entry.sequence) left.appendChild(renderSequence(entry.sequence));
+    const right = document.createElement("div");
+    right.className = "dict-side dict-side-cam";
+    entry.cam.forEach(line => {
+      const p = document.createElement("div"); p.className = "cam-line"; p.textContent = line;
+      right.appendChild(p);
+    });
+    body2.appendChild(left); body2.appendChild(right);
+    card.appendChild(body2);
+    body.appendChild(card);
+  });
+}
+
+/* ================================================================
+   WORKSHOP (My Bridge — freeform worksheet, unchanged, new skin)
+   ================================================================ */
+
+let builderBars = [{ label: "bar A", units: 3 }, { label: "bar B", units: 5 }];
+let drawTool = "bar";
+let nlState = { min: -10, max: 10, from: 0, to: 5 };
+let pieBuilders = [{ label: "pie 1", slices: 8, shaded: new Set([0, 1, 2]) }];
+
+function renderPictureTypeTabs() {
+  const wrap = document.getElementById("picture-type-tabs");
+  wrap.innerHTML = "";
+  const types = [
+    { key: "bar", icon: "🧱", label: "Bars" },
+    { key: "numberline", icon: "📏", label: "Number Line" },
+    { key: "pie", icon: "🥧", label: "Pie" }
+  ];
+  types.forEach(t => {
+    const btn = document.createElement("button");
+    btn.className = "subtab" + (drawTool === t.key ? " active" : "");
+    btn.innerHTML = `<span class="subtab-icon">${t.icon}</span> ${t.label}`;
+    btn.onclick = () => { drawTool = t.key; renderPictureTypeTabs(); updateDrawToolVisibility(); };
+    wrap.appendChild(btn);
+  });
+}
+
+function updateDrawToolVisibility() {
+  document.getElementById("builder-bars-wrap").style.display = drawTool === "bar" ? "" : "none";
+  document.getElementById("builder-numberline-wrap").style.display = drawTool === "numberline" ? "" : "none";
+  document.getElementById("builder-pie-wrap").style.display = drawTool === "pie" ? "" : "none";
+  if (drawTool === "numberline") renderNlBuilder();
+  if (drawTool === "pie") renderPieBuilders();
+}
+
+function clampNl() {
+  if (isNaN(nlState.min)) nlState.min = -10;
+  if (isNaN(nlState.max)) nlState.max = 10;
+  if (nlState.min >= nlState.max) nlState.max = nlState.min + 1;
+  nlState.from = Math.max(nlState.min, Math.min(nlState.max, nlState.from));
+  nlState.to = Math.max(nlState.min, Math.min(nlState.max, nlState.to));
+}
+
+function renderNlBuilder() {
+  clampNl();
+  document.getElementById("nl-min").value = nlState.min;
+  document.getElementById("nl-max").value = nlState.max;
+  document.getElementById("nl-from-val").textContent = nlState.from;
+  document.getElementById("nl-to-val").textContent = nlState.to;
+  const wrap = document.getElementById("nl-builder-preview");
+  wrap.innerHTML = "";
+  wrap.appendChild(renderNumberLine({ from: nlState.from, to: nlState.to, min: nlState.min, max: nlState.max }));
+  const diff = nlState.to - nlState.from;
+  const label = document.createElement("div");
+  label.className = "nl-jump-label";
+  label.textContent = `Jump: ${nlState.from} → ${nlState.to}  (${diff >= 0 ? "+" : ""}${diff})`;
+  wrap.appendChild(label);
+}
+
+function polarToCartesian(cx, cy, r, angleDeg) {
+  const rad = (angleDeg - 90) * Math.PI / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+}
+function wedgePath(cx, cy, r, startAngle, endAngle) {
+  const start = polarToCartesian(cx, cy, r, endAngle);
+  const end = polarToCartesian(cx, cy, r, startAngle);
+  const largeArc = endAngle - startAngle <= 180 ? 0 : 1;
+  return `M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 0 ${end.x} ${end.y} Z`;
+}
+
+function renderPieBuilders() {
+  const wrap = document.getElementById("pie-builders");
+  wrap.innerHTML = "";
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  pieBuilders.forEach((pie, pi) => {
+    const block = document.createElement("div");
+    block.className = "pie-block";
+
+    const headerRow = document.createElement("div");
+    headerRow.className = "builder-row";
+    const labelInput = document.createElement("input");
+    labelInput.className = "builder-label-input";
+    labelInput.value = pie.label;
+    labelInput.oninput = () => pie.label = labelInput.value;
+    headerRow.appendChild(labelInput);
+
+    const stepperGroup = document.createElement("div");
+    stepperGroup.className = "stepper-group";
+    const sLabel = document.createElement("span");
+    sLabel.className = "stepper-label"; sLabel.textContent = "Slices";
+    const minus = document.createElement("button");
+    minus.className = "mini-btn"; minus.textContent = "−";
+    minus.onclick = () => { if (pie.slices > 2) { pie.slices--; pie.shaded = new Set([...pie.shaded].filter(i => i < pie.slices)); renderPieBuilders(); } };
+    const valSpan = document.createElement("span");
+    valSpan.className = "stepper-val"; valSpan.textContent = pie.slices;
+    const plus = document.createElement("button");
+    plus.className = "mini-btn"; plus.textContent = "+";
+    plus.onclick = () => { if (pie.slices < 12) { pie.slices++; renderPieBuilders(); } };
+    stepperGroup.appendChild(sLabel); stepperGroup.appendChild(minus); stepperGroup.appendChild(valSpan); stepperGroup.appendChild(plus);
+    headerRow.appendChild(stepperGroup);
+
+    if (pieBuilders.length > 1) {
+      const remove = document.createElement("button");
+      remove.className = "mini-btn mini-btn-remove"; remove.textContent = "✕";
+      remove.onclick = () => { pieBuilders.splice(pi, 1); renderPieBuilders(); };
+      headerRow.appendChild(remove);
+    }
+    block.appendChild(headerRow);
+
+    const svgWrap = document.createElement("div");
+    svgWrap.className = "builder-preview";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", "0 0 120 120");
+    svg.setAttribute("class", "pie-svg");
+    const anglePer = 360 / pie.slices;
+    for (let i = 0; i < pie.slices; i++) {
+      const path = document.createElementNS(svgNS, "path");
+      path.setAttribute("d", wedgePath(60, 60, 55, i * anglePer, (i + 1) * anglePer));
+      path.setAttribute("class", "pie-slice" + (pie.shaded.has(i) ? " pie-slice-shaded" : ""));
+      path.onclick = () => {
+        if (pie.shaded.has(i)) pie.shaded.delete(i); else pie.shaded.add(i);
+        renderPieBuilders();
+      };
+      svg.appendChild(path);
+    }
+    svgWrap.appendChild(svg);
+    const fractionLabel = document.createElement("div");
+    fractionLabel.className = "pie-fraction-label";
+    fractionLabel.textContent = `${pie.shaded.size} / ${pie.slices} shaded`;
+    svgWrap.appendChild(fractionLabel);
+    block.appendChild(svgWrap);
+
+    wrap.appendChild(block);
+  });
+}
+
+const SINGAPORE_STRATEGIES = [
+  "🧱 I drew a bar model",
+  "🔢 I used a number line / jumps",
+  "🎯 I rounded to a friendly number",
+  "📐 I split by place value",
+  "➗ I shared it into equal parts",
+  "⚖️ I used a ratio",
+  "🍕 I used a fraction picture",
+  "🤔 I just thought about it in my head"
+];
+let selectedStrategies = new Set();
+
+function renderSingaporeChoices() {
+  const wrap = document.getElementById("singapore-choices");
+  wrap.innerHTML = "";
+  SINGAPORE_STRATEGIES.forEach(strategy => {
+    const btn = document.createElement("button");
+    btn.className = "choice-chip" + (selectedStrategies.has(strategy) ? " choice-selected" : "");
+    btn.textContent = strategy;
+    btn.onclick = () => {
+      if (selectedStrategies.has(strategy)) selectedStrategies.delete(strategy);
+      else selectedStrategies.add(strategy);
+      renderSingaporeChoices();
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+function renderBuilder() {
+  const wrap = document.getElementById("builder-bars");
+  wrap.innerHTML = "";
+  builderBars.forEach((bar, bi) => {
+    const row = document.createElement("div");
+    row.className = "builder-row";
+    const labelInput = document.createElement("input");
+    labelInput.className = "builder-label-input"; labelInput.value = bar.label;
+    labelInput.oninput = () => bar.label = labelInput.value;
+    row.appendChild(labelInput);
+    const track = document.createElement("div");
+    track.className = "bar-track";
+    for (let i = 0; i < bar.units; i++) {
+      const box = document.createElement("div");
+      box.className = "bar-box bar-" + (bi % 2 === 0 ? "sg" : "cam");
+      track.appendChild(box);
+    }
+    row.appendChild(track);
+    const controls = document.createElement("div");
+    controls.className = "builder-controls";
+    const minus = document.createElement("button");
+    minus.className = "mini-btn"; minus.textContent = "−";
+    minus.onclick = () => { if (bar.units > 1) { bar.units--; renderBuilder(); } };
+    const plus = document.createElement("button");
+    plus.className = "mini-btn"; plus.textContent = "+";
+    plus.onclick = () => { if (bar.units < 12) { bar.units++; renderBuilder(); } };
+    const remove = document.createElement("button");
+    remove.className = "mini-btn mini-btn-remove"; remove.textContent = "✕";
+    remove.onclick = () => { builderBars.splice(bi, 1); renderBuilder(); };
+    controls.appendChild(minus); controls.appendChild(plus);
+    if (builderBars.length > 1) controls.appendChild(remove);
+    row.appendChild(controls);
+    wrap.appendChild(row);
+  });
+}
+
+function renderChecklist() {
+  const wrap = document.getElementById("save-checklist");
+  wrap.innerHTML = "";
+  CHECKLIST.forEach((text, i) => {
+    const row = document.createElement("label");
+    row.className = "mark-row";
+    row.innerHTML = `<input type="checkbox" id="check-${i}"><span>${text}</span>`;
+    wrap.appendChild(row);
+  });
+}
+function clearBuilderForm() {
+  document.getElementById("input-question").value = "";
+  document.getElementById("input-singapore-extra").value = "";
+  selectedStrategies = new Set();
+  renderSingaporeChoices();
+  document.getElementById("input-algebra").value = "";
+  document.getElementById("input-working").value = "";
+  CHECKLIST.forEach((_, i) => document.getElementById("check-" + i).checked = false);
+  builderBars = [{ label: "bar A", units: 3 }, { label: "bar B", units: 5 }];
+  renderBuilder();
+  drawTool = "bar";
+  nlState = { min: -10, max: 10, from: 0, to: 5 };
+  pieBuilders = [{ label: "pie 1", slices: 8, shaded: new Set([0, 1, 2]) }];
+  renderPictureTypeTabs();
+  updateDrawToolVisibility();
+  renderNlBuilder();
+  renderPieBuilders();
+}
+function renderNotebookList() {
+  const wrap = document.getElementById("notebook-list");
+  wrap.innerHTML = "";
+  if (store.notebook.length === 0) {
+    wrap.innerHTML = `<p class="empty-note">No saved pages yet. Fill in a bridge above and tap "Stamp & Save".</p>`;
+    return;
+  }
+  store.notebook.forEach(entry => {
+    const card = document.createElement("div");
+    card.className = "notebook-card";
+    card.innerHTML = `
+      <div class="notebook-head">
+        <span class="notebook-date">${entry.date}</span>
+        <button class="mini-btn mini-btn-remove" data-id="${entry.id}">✕</button>
+      </div>
+      <div class="notebook-q">${escapeHtml(entry.question)}</div>
+      ${entry.singapore ? `<div class="notebook-row"><span class="tag tag-sg">🇸🇬</span> ${escapeHtml(entry.singapore)}</div>` : ""}
+      ${entry.algebra ? `<div class="notebook-row"><span class="tag tag-cam">🇬🇧</span> <span class="algebra-line-small">${escapeHtml(entry.algebra)}</span></div>` : ""}
+      ${entry.working ? `<div class="working-box working-box-small">${escapeHtml(entry.working).replace(/\n/g, "<br>")}</div>` : ""}
+    `;
+    card.querySelector(".mini-btn-remove").onclick = () => {
+      store.notebook = store.notebook.filter(e => e.id !== entry.id);
+      saveStore(); renderNotebookList();
+    };
+    wrap.appendChild(card);
+  });
+}
+
+/* ================================================================
+   HERO TAB (stats & badges)
+   ================================================================ */
+
+function renderHero() {
+  document.getElementById("hero-level").textContent = heroLevel();
+  document.getElementById("hero-xp-fill").style.width = xpIntoLevel() + "%";
+  document.getElementById("hero-xp-label").textContent = `${xpIntoLevel()} / 100 XP to next level`;
+  document.getElementById("hero-total-xp").textContent = store.xp;
+  document.getElementById("hero-missions").textContent = store.completedMissions.length;
+
+  const starsTotal = Object.values(store.worldStars).reduce((a, b) => a + b, 0);
+  document.getElementById("hero-stars").textContent = starsTotal;
+
+  const badgeGrid = document.getElementById("hero-badges");
+  badgeGrid.innerHTML = "";
+  const clearedWorlds = WORLDS.filter(w => (store.worldStars[w.id] || 0) >= 1);
+  if (clearedWorlds.length === 0) {
+    badgeGrid.innerHTML = `<p class="empty-note">No badges yet — clear a World Boss to earn your first one!</p>`;
+  } else {
+    clearedWorlds.forEach(w => {
+      const b = document.createElement("div");
+      b.className = "badge";
+      b.style.setProperty("--wcolor", w.color);
+      b.innerHTML = `<div class="badge-icon">${w.icon}</div><div class="badge-name">${w.name}</div>`;
+      badgeGrid.appendChild(b);
+    });
+  }
+}
+
+/* ================================================================
+   NAV & INIT
+   ================================================================ */
+
+function switchTab(tab) {
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".navbtn").forEach(b => b.classList.remove("active"));
+  document.getElementById("panel-" + tab).classList.add("active");
+  document.getElementById("nav-" + tab).classList.add("active");
+  window.scrollTo(0, 0);
+  if (tab === "hero") renderHero();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("builder-add").onclick = () => {
+    if (builderBars.length < 4) {
+      builderBars.push({ label: "bar " + String.fromCharCode(65 + builderBars.length), units: 2 });
+      renderBuilder();
+    }
+  };
+
+  document.getElementById("nl-min").onchange = (e) => { nlState.min = parseInt(e.target.value, 10); renderNlBuilder(); };
+  document.getElementById("nl-max").onchange = (e) => { nlState.max = parseInt(e.target.value, 10); renderNlBuilder(); };
+  document.getElementById("nl-from-minus").onclick = () => { nlState.from -= 1; renderNlBuilder(); };
+  document.getElementById("nl-from-plus").onclick = () => { nlState.from += 1; renderNlBuilder(); };
+  document.getElementById("nl-to-minus").onclick = () => { nlState.to -= 1; renderNlBuilder(); };
+  document.getElementById("nl-to-plus").onclick = () => { nlState.to += 1; renderNlBuilder(); };
+
+  document.getElementById("pie-add").onclick = () => {
+    if (pieBuilders.length < 3) {
+      pieBuilders.push({ label: "pie " + (pieBuilders.length + 1), slices: 8, shaded: new Set() });
+      renderPieBuilders();
+    }
+  };
+  document.getElementById("save-entry").onclick = () => {
+    const entry = {
+      id: Date.now(), date: new Date().toLocaleDateString(),
+      question: document.getElementById("input-question").value.trim(),
+      singapore: [...selectedStrategies].join(", ") + (document.getElementById("input-singapore-extra").value.trim() ? " — " + document.getElementById("input-singapore-extra").value.trim() : ""),
+      drawTool: drawTool,
+      bars: drawTool === "bar" ? JSON.parse(JSON.stringify(builderBars)) : null,
+      numberLine: drawTool === "numberline" ? { min: nlState.min, max: nlState.max, from: nlState.from, to: nlState.to } : null,
+      pie: drawTool === "pie" ? pieBuilders.map(p => ({ label: p.label, slices: p.slices, shaded: [...p.shaded] })) : null,
+      algebra: document.getElementById("input-algebra").value.trim(),
+      working: document.getElementById("input-working").value.trim(),
+    };
+    if (!entry.question) { alert("Write the question first — even a short version."); return; }
+    store.notebook.unshift(entry);
+    saveStore();
+    addXP(5);
+    clearBuilderForm();
+    renderNotebookList();
+  };
+
+  renderBuilder();
+  renderPictureTypeTabs();
+  updateDrawToolVisibility();
+  renderSingaporeChoices();
+  renderChecklist();
+  renderNotebookList();
+  renderDictionaryNav();
+  renderDictionaryBody();
+  renderMap();
+  renderHero();
+});
+
+</script>
+</body>
+</html>
