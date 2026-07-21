@@ -636,6 +636,19 @@ hr.divider { border: none; border-top: 2px dashed var(--line); margin: 22px 0 16
 .badge-icon { font-size: 26px; }
 .badge-name { font-size: 10.5px; font-weight: 700; margin-top: 6px; line-height: 1.3; }
 
+.backup-block { margin-bottom: 20px; }
+.backup-label { font-size: 13.5px; font-weight: 700; margin-bottom: 3px; }
+.backup-hint { font-size: 12px; color: var(--ink-soft); margin-bottom: 10px; line-height: 1.5; }
+.backup-textarea {
+  width: 100%; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px;
+  padding: 9px 10px; border: 2px solid var(--line); border-radius: 7px;
+  background: #fff; color: var(--ink); resize: vertical; margin-top: 10px;
+  word-break: break-all;
+}
+.backup-message { font-size: 13px; font-weight: 600; margin-top: 8px; min-height: 18px; }
+.backup-message.backup-success { color: var(--green); }
+.backup-message.backup-error { color: var(--sg); }
+
 /* ---------- Toast ---------- */
 
 #stamp-toast {
@@ -766,6 +779,29 @@ hr.divider { border: none; border-top: 2px dashed var(--line); margin: 22px 0 16
 
     <div class="section-heading" style="font-size:16px; margin-bottom:10px;">🎖️ Badges</div>
     <div id="hero-badges" class="badge-grid"></div>
+
+    <hr class="divider">
+
+    <div class="section-heading" style="font-size:16px; margin-bottom:4px;">🗄️ Backup &amp; Restore</div>
+    <div class="section-sub">Progress is saved on this device only. Back it up so it's never lost.</div>
+
+    <div class="backup-block">
+      <div class="backup-label">Export</div>
+      <div class="backup-hint">Save a copy of your progress — keep it somewhere safe, or move it to another device.</div>
+      <div class="btn-row">
+        <button id="backup-copy" class="stage-btn">📋 Copy Backup Code</button>
+        <button id="backup-download" class="stage-btn stage-btn-secondary">⬇️ Download File</button>
+      </div>
+      <textarea id="backup-output" class="backup-textarea" rows="3" readonly placeholder="Your backup code will appear here..."></textarea>
+    </div>
+
+    <div class="backup-block">
+      <div class="backup-label">Restore</div>
+      <div class="backup-hint">Paste a backup code below. This replaces your current progress on this device.</div>
+      <textarea id="backup-input" class="backup-textarea" rows="3" placeholder="Paste your backup code here..."></textarea>
+      <button id="backup-restore" class="stage-btn">📥 Restore Progress</button>
+      <div id="backup-message" class="backup-message"></div>
+    </div>
   </section>
 
 </main>
@@ -3150,6 +3186,89 @@ function renderHero() {
 }
 
 /* ================================================================
+   BACKUP & RESTORE
+   ================================================================ */
+
+function encodeStore() {
+  return btoa(unescape(encodeURIComponent(JSON.stringify(store))));
+}
+
+function decodeStore(code) {
+  const parsed = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
+  if (typeof parsed.xp !== "number" || !Array.isArray(parsed.completedMissions) ||
+      typeof parsed.worldStars !== "object" || !Array.isArray(parsed.badges) || !Array.isArray(parsed.notebook)) {
+    throw new Error("This doesn't look like a valid SC Bridge backup code.");
+  }
+  return parsed;
+}
+
+function setupBackupUI() {
+  const output = document.getElementById("backup-output");
+  const input = document.getElementById("backup-input");
+  const message = document.getElementById("backup-message");
+
+  document.getElementById("backup-copy").onclick = async () => {
+    const code = encodeStore();
+    output.value = code;
+    try {
+      await navigator.clipboard.writeText(code);
+      showToast("📋 Backup code copied!");
+    } catch (e) {
+      output.select();
+      showToast("📋 Backup code ready — select and copy it below.");
+    }
+  };
+
+  document.getElementById("backup-download").onclick = () => {
+    try {
+      const blob = new Blob([JSON.stringify(store, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const date = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `sc-bridge-backup-${date}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("⬇️ Backup file downloaded!");
+    } catch (e) {
+      output.value = encodeStore();
+      showToast("Downloads aren't supported here — use Copy Backup Code instead.");
+    }
+  };
+
+  document.getElementById("backup-restore").onclick = () => {
+    message.textContent = "";
+    message.className = "backup-message";
+    const code = input.value.trim();
+    if (!code) {
+      message.textContent = "Paste a backup code first.";
+      message.classList.add("backup-error");
+      return;
+    }
+    let restored;
+    try {
+      restored = decodeStore(code);
+    } catch (e) {
+      message.textContent = "Couldn't read that code — check it was copied in full.";
+      message.classList.add("backup-error");
+      return;
+    }
+    const confirmed = window.confirm("This will replace all current progress on this device with the backup. Continue?");
+    if (!confirmed) return;
+    store = restored;
+    saveStore();
+    goAtlas();
+    renderHero();
+    renderNotebookList();
+    message.textContent = "✓ Progress restored!";
+    message.classList.add("backup-success");
+    input.value = "";
+  };
+}
+
+/* ================================================================
    NAV & INIT
    ================================================================ */
 
@@ -3213,6 +3332,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderDictionaryBody();
   renderMap();
   renderHero();
+  setupBackupUI();
 });
 
 </script>
