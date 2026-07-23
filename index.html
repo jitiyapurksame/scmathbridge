@@ -344,6 +344,42 @@ main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
 .feedback-retry { color: #B36B00; font-weight: 700; }
 .feedback-hint { color: var(--ink-soft); font-weight: 500; font-size: 12.5px; }
 
+/* ---------- Scratchpad (place-value working space) ---------- */
+.scratchpad-toggle { font-size: 12.5px; padding: 8px 12px; margin-bottom: 10px; }
+.scratchpad {
+  background: #fff;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 10px 10px;
+  margin-bottom: 12px;
+}
+.scratchpad-title { font-size: 11px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+.scratchpad-grid { display: flex; justify-content: center; gap: 0; }
+.sp-col { display: flex; flex-direction: column; align-items: center; width: 44px; border-left: 2px solid var(--green); }
+.sp-col:first-child { border-left: none; }
+.sp-op-col { width: 22px; border-left: none; justify-content: flex-end; }
+.sp-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; }
+.sp-carry {
+  width: 22px; height: 18px; text-align: center;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700;
+  color: #2557C9; background: transparent; border: none; border-bottom: 1.5px dashed var(--line);
+  margin-bottom: 4px;
+}
+.sp-carry:focus { outline: 1.5px solid #2557C9; }
+.sp-digit {
+  width: 34px; height: 34px; text-align: center;
+  font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 700;
+  color: var(--ink); background: var(--paper); border: 1.5px solid var(--line); border-radius: 5px;
+  margin-bottom: 4px;
+}
+.sp-digit:focus { outline: 2px solid var(--gold); }
+.sp-digit.sp-given { background: var(--gold-tint); color: #8A6D1E; }
+.sp-op-symbol { font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 700; height: 34px; display: flex; align-items: center; margin-bottom: 4px; }
+.sp-rule { border: none; border-top: 2px solid var(--ink); margin: 2px 0 6px; }
+.sp-answer { background: #fff; border-color: var(--cam); }
+.sp-clear-row { text-align: center; margin-top: 8px; }
+.sp-clear-btn { font-size: 11.5px; padding: 6px 10px; }
+
 .algebra-line {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 19px; font-weight: 700;
@@ -506,12 +542,24 @@ mark { padding: 1px 3px; border-radius: 3px; font-weight: 700; }
   margin-bottom: 14px;
   box-shadow: var(--shadow-pixel);
 }
-.boss-name { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.boss-name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.boss-name { font-size: 14px; font-weight: 700; }
+.boss-face { font-size: 24px; margin-left: auto; transition: transform 0.3s ease; }
 .hp-track { height: 16px; border-radius: 3px; background: #3A3222; border: 2px solid #56492E; overflow: hidden; }
 .hp-fill { height: 100%; background: linear-gradient(90deg, var(--red-hp), #F0705A); transition: width 0.5s ease; }
 .hp-label { font-size: 11px; margin-top: 5px; color: #C9C1A8; font-family: 'IBM Plex Mono', monospace; }
+.bridge-track { display: flex; gap: 4px; margin-top: 10px; }
+.bridge-plank {
+  flex: 1; height: 14px; border-radius: 2px;
+  background: #56492E; border: 1.5px solid #3A3222;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; transition: background 0.4s ease;
+}
+.bridge-plank.plank-fixed { background: var(--gold); border-color: #B3811E; }
 .boss-q-count { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 6px; }
 .boss-q { font-size: 16px; font-weight: 600; }
+.boss-hint-box { background: var(--gold-tint); color: #8A6D1E; border-radius: 7px; padding: 9px 11px; font-size: 12.5px; font-weight: 600; margin: 4px 0 12px; }
+.boss-cheer { font-size: 12.5px; font-weight: 700; color: var(--green); margin-bottom: 8px; min-height: 16px; }
 
 .victory-box { text-align: center; padding: 10px 0; }
 .victory-title { font-family: 'Press Start 2P', monospace; font-size: 16px; color: var(--gold); margin-bottom: 10px; }
@@ -2205,6 +2253,160 @@ function retryFeedback(userInput, correct) {
   return isCloseNumeric(userInput, correct) ? pickRandom(RETRY_CLOSE) : pickRandom(RETRY_FAR);
 }
 
+/* ---------- SCRATCHPAD (place-value working space, replaces need for a calculator) ---------- */
+
+const SP_PLACE_LABELS = ["HTh", "TTh", "Th", "H", "T", "O"];
+
+function parseNumbersFromPrompt(prompt) {
+  const clean = prompt.replace(/,/g, "");
+  const m = clean.match(/(-?\d+(?:\.\d+)?)\s*([+\-−×x*])\s*(-?\d+(?:\.\d+)?)/);
+  if (!m) return null;
+  let op = m[2];
+  if (op === "x" || op === "*") op = "×";
+  if (op === "−") op = "-";
+  return { a: m[1], op, b: m[3] };
+}
+
+function buildScratchpadGrid(prompt) {
+  const parsed = parseNumbersFromPrompt(prompt);
+  const useCols = 4; // Th H T O — matches the paper grid the child already knows
+  const grid = document.createElement("div");
+  grid.className = "scratchpad-grid";
+
+  const isAddSub = parsed && (parsed.op === "+" || parsed.op === "-") && !parsed.a.includes(".") && !parsed.b.includes(".");
+  let aStr = "", bStr = "";
+  if (isAddSub) {
+    aStr = String(Math.abs(parseInt(parsed.a, 10))).slice(-useCols).padStart(useCols, " ");
+    bStr = String(Math.abs(parseInt(parsed.b, 10))).slice(-useCols).padStart(useCols, " ");
+  }
+
+  const labels = SP_PLACE_LABELS.slice(SP_PLACE_LABELS.length - useCols);
+
+  // leading operator column so the +/- sits to the left of the Ones-column numbers, like on paper
+  const opCol = document.createElement("div");
+  opCol.className = "sp-col sp-op-col";
+  opCol.innerHTML = `<div class="sp-label">&nbsp;</div><div class="sp-carry" aria-hidden="true"></div><div class="sp-digit" style="border:none;background:none;"></div><div class="sp-op-symbol">${isAddSub ? parsed.op : ""}</div>`;
+  grid.appendChild(opCol);
+
+  labels.forEach((label, i) => {
+    const col = document.createElement("div");
+    col.className = "sp-col";
+    const carryVal = ""; // left blank on purpose — child jots the carry/borrow digit here
+    const aDigit = isAddSub && aStr[i] !== " " ? aStr[i] : "";
+    const bDigit = isAddSub && bStr[i] !== " " ? bStr[i] : "";
+    col.innerHTML = `
+      <div class="sp-label">${label}</div>
+      <input class="sp-carry" maxlength="2" inputmode="numeric" placeholder="" title="carry / borrow">
+      <input class="sp-digit${aDigit ? " sp-given" : ""}" maxlength="1" inputmode="numeric" value="${aDigit}" ${aDigit ? "readonly" : ""}>
+      <input class="sp-digit${bDigit ? " sp-given" : ""}" maxlength="1" inputmode="numeric" value="${bDigit}" ${bDigit ? "readonly" : ""}>
+    `;
+    grid.appendChild(col);
+  });
+
+  const wrap = document.createElement("div");
+  wrap.appendChild(grid);
+  const rule = document.createElement("hr");
+  rule.className = "sp-rule";
+  wrap.appendChild(rule);
+
+  const ansGrid = document.createElement("div");
+  ansGrid.className = "scratchpad-grid";
+  const ansSpacer = document.createElement("div");
+  ansSpacer.className = "sp-col sp-op-col";
+  ansGrid.appendChild(ansSpacer);
+  labels.forEach(() => {
+    const col = document.createElement("div");
+    col.className = "sp-col";
+    col.innerHTML = `<input class="sp-digit sp-answer" maxlength="1" inputmode="numeric">`;
+    ansGrid.appendChild(col);
+  });
+  wrap.appendChild(ansGrid);
+
+  // digit-only, auto-advance for the answer boxes
+  wrap.querySelectorAll(".sp-digit:not([readonly])").forEach(inp => {
+    inp.addEventListener("input", () => {
+      inp.value = inp.value.replace(/[^0-9]/g, "").slice(-1);
+      if (inp.value) {
+        const all = Array.from(wrap.querySelectorAll(".sp-answer"));
+        const idx = all.indexOf(inp);
+        if (idx > -1 && idx < all.length - 1) all[idx + 1].focus();
+      }
+    });
+  });
+  wrap.querySelectorAll(".sp-carry").forEach(inp => {
+    inp.addEventListener("input", () => { inp.value = inp.value.replace(/[^0-9]/g, "").slice(0, 2); });
+  });
+
+  if (!isAddSub) {
+    const note = document.createElement("p");
+    note.className = "stage-text";
+    note.style.fontSize = "12.5px";
+    note.style.color = "var(--ink-soft)";
+    note.style.marginBottom = "8px";
+    note.textContent = "Use this grid as blank working paper — write one digit per box, place value column by column.";
+    wrap.insertBefore(note, grid);
+  }
+
+  const clearRow = document.createElement("div");
+  clearRow.className = "sp-clear-row";
+  const clearBtn = mkBtn("Clear", () => {
+    wrap.querySelectorAll(".sp-carry, .sp-answer").forEach(inp => inp.value = "");
+  }, true);
+  clearBtn.classList.add("sp-clear-btn");
+  clearRow.appendChild(clearBtn);
+  wrap.appendChild(clearRow);
+
+  return wrap;
+}
+
+function attachScratchpad(container, prompt) {
+  const toggleBtn = mkBtn("🧮 Working Space", null, true);
+  toggleBtn.classList.add("scratchpad-toggle");
+  const padHolder = document.createElement("div");
+  padHolder.style.display = "none";
+  toggleBtn.onclick = () => {
+    if (padHolder.style.display === "none") {
+      padHolder.innerHTML = "";
+      const titled = document.createElement("div");
+      titled.className = "scratchpad";
+      titled.innerHTML = `<div class="scratchpad-title">Th · H · T · O — work it out here</div>`;
+      titled.appendChild(buildScratchpadGrid(prompt));
+      padHolder.appendChild(titled);
+      padHolder.style.display = "block";
+      toggleBtn.textContent = "🧮 Hide Working Space";
+    } else {
+      padHolder.style.display = "none";
+      toggleBtn.textContent = "🧮 Working Space";
+    }
+  };
+  container.appendChild(toggleBtn);
+  container.appendChild(padHolder);
+}
+
+/* ---------- BOSS BATTLE HELPERS ---------- */
+
+function monsterFace(hpPct) {
+  if (hpPct <= 0) return "✨";
+  if (hpPct > 66) return "👹";
+  if (hpPct > 33) return "😣";
+  return "😩";
+}
+
+function bossHint(prompt) {
+  if (/round/i.test(prompt)) return "Look at the digit just after the place you're rounding to — 5 or more rounds up.";
+  if (/×|x(?!\w)|\*/.test(prompt)) return "Try turning one number into a friendly round number, multiply, then adjust back.";
+  if (/[-−]/.test(prompt)) return "Try lining the numbers up by place value (Th H T O) and borrow from the next column if needed.";
+  if (/\+/.test(prompt)) return "Look for a 'friendly' number nearby (like 100) to make the addition simpler.";
+  return "Break the number into place value parts — thousands, hundreds, tens, ones — and work through step by step.";
+}
+
+const BOSS_CHEERS = [
+  "🔧 Plank secured! The bridge holds a little stronger.",
+  "⚙️ Nice work — the golem staggers back!",
+  "🪵 Another beam locked in place!",
+  "✨ You're chipping away at it — keep going!"
+];
+
 /* ================================================================
    SCREEN ROUTING (within the Map tab)
    ================================================================ */
@@ -2221,10 +2423,13 @@ function goMission(worldId, missionIndex) {
   screen = "mission"; activeWorldId = worldId; activeMissionIndex = missionIndex; missionStage = 0;
   renderMap();
 }
+const BOSS_MAX_QUESTIONS = 5;
+
 function goBoss(worldId) {
   screen = "boss"; activeWorldId = worldId;
   const world = WORLDS.find(w => w.id === worldId);
-  bossState = { qIndex: 0, hp: 100, hpStep: 100 / world.boss.questions.length, cleared: false };
+  const questions = world.boss.questions.slice(0, BOSS_MAX_QUESTIONS);
+  bossState = { qIndex: 0, hp: 100, hpStep: 100 / questions.length, cleared: false, questions, showHint: false };
   renderMap();
 }
 
@@ -2425,6 +2630,7 @@ function renderMissionStage(box, mission, world) {
     body.appendChild(mkBtn("Next →", () => nextStage(box, mission, world)));
   } else if (missionStage === 5) {
     body.innerHTML = `<p class="stage-text">${mission.challenge.prompt}</p>`;
+    attachScratchpad(body, mission.challenge.prompt);
     const input = document.createElement("input");
     input.type = "text"; input.className = "challenge-input"; input.placeholder = "Your answer";
     body.appendChild(input);
@@ -2441,7 +2647,14 @@ function renderMissionStage(box, mission, world) {
         feedback.innerHTML = `<span class="feedback-retry">${retryFeedback(input.value, mission.challenge.answer)}</span><span class="feedback-hint">🔍 Troubleshooting tip: ${mission.challenge.hint}</span>`;
       }
     });
-    const skipBtn = mkBtn("Show me & continue", () => nextStage(box, mission, world), true);
+    const skipBtn = mkBtn("Show me the answer", () => {
+      input.value = mission.challenge.answer;
+      input.disabled = true;
+      feedback.innerHTML = `<span class="feedback-good">✓ Answer: ${mission.challenge.answer}</span><span class="feedback-hint">🔍 ${mission.challenge.hint}</span>`;
+      checkBtn.disabled = true; checkBtn.style.opacity = "0.5";
+      skipBtn.disabled = true; skipBtn.style.opacity = "0.5";
+      body.appendChild(mkBtn("Continue →", () => nextStage(box, mission, world)));
+    }, true);
     btnRow.appendChild(checkBtn); btnRow.appendChild(skipBtn);
     body.appendChild(btnRow);
   } else if (missionStage === 6) {
@@ -2664,15 +2877,21 @@ function renderGrandChallengeMission(container, world) {
 function renderBossBattle(container) {
   const world = WORLDS.find(w => w.id === activeWorldId);
   const boss = world.boss;
+  const questions = bossState.questions;
   const wrap = document.createElement("div");
   wrap.className = "boss-battle";
   wrap.style.setProperty("--wcolor", world.color);
 
+  const planksHtml = questions.map((q, i) =>
+    `<div class="bridge-plank${i < bossState.qIndex ? " plank-fixed" : ""}">${i < bossState.qIndex ? "🪵" : ""}</div>`
+  ).join("");
+
   wrap.innerHTML = `<button class="back-btn" id="back-to-world">← ${world.name}</button>
     <div class="boss-header">
-      <div class="boss-name">🏰 ${boss.name}</div>
+      <div class="boss-name-row"><div class="boss-name">🏰 ${boss.name}</div><div class="boss-face">${monsterFace(bossState.hp)}</div></div>
       <div class="hp-track"><div class="hp-fill" style="width:${bossState.hp}%"></div></div>
       <div class="hp-label">${Math.round(bossState.hp)} / 100 HP</div>
+      <div class="bridge-track">${planksHtml}</div>
     </div>`;
 
   const box = document.createElement("div");
@@ -2688,8 +2907,18 @@ function renderBossBattle(container) {
     </div>`;
     box.appendChild(mkBtn("Return to Atlas", goAtlas));
   } else {
-    const q = boss.questions[bossState.qIndex];
-    box.innerHTML = `<div class="boss-q-count">Question ${bossState.qIndex + 1} of ${boss.questions.length}</div><p class="stage-text boss-q">${q.prompt}</p>`;
+    const q = questions[bossState.qIndex];
+    box.innerHTML = `<div class="boss-q-count">Question ${bossState.qIndex + 1} of ${questions.length}</div><div class="boss-cheer">${bossState.cheer || ""}</div><p class="stage-text boss-q">${q.prompt}</p>`;
+
+    if (bossState.showHint) {
+      const hintBox = document.createElement("div");
+      hintBox.className = "boss-hint-box";
+      hintBox.textContent = "💡 " + bossHint(q.prompt);
+      box.appendChild(hintBox);
+    }
+
+    attachScratchpad(box, q.prompt);
+
     const input = document.createElement("input");
     input.type = "text"; input.className = "challenge-input"; input.placeholder = "Your answer";
     const feedback = document.createElement("div");
@@ -2700,7 +2929,9 @@ function renderBossBattle(container) {
       if (checkAnswer(input.value, q.answer)) {
         bossState.hp -= bossState.hpStep;
         bossState.qIndex++;
-        if (bossState.qIndex >= boss.questions.length) {
+        bossState.cheer = pickRandom(BOSS_CHEERS);
+        bossState.showHint = false;
+        if (bossState.qIndex >= questions.length) {
           bossState.hp = 0; bossState.cleared = true;
           store.worldStars[world.id] = Math.max(store.worldStars[world.id] || 0, 1);
           saveStore(); addXP(50);
@@ -2710,6 +2941,7 @@ function renderBossBattle(container) {
         feedback.innerHTML = `<span class="feedback-retry">${retryFeedback(input.value, q.answer)}</span>`;
       }
     }));
+    btnRow.appendChild(mkBtn("💡 Hint", () => { bossState.showHint = true; renderMap(); }, true));
     box.appendChild(input);
     box.appendChild(feedback);
     box.appendChild(btnRow);
