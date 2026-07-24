@@ -390,9 +390,21 @@ main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
   padding: 6px 4px;
 }
 .sp-nl-input:focus { outline: 2px solid var(--gold); }
+.sp-nl-input[readonly] { background: var(--gold-tint); color: #8A6D1E; }
 .sp-nl-dot { stroke: #fff; stroke-width: 1.5; }
 .sp-nl-start { fill: var(--sg); }
 .sp-nl-end { fill: var(--cam); }
+
+.sp-bar-note { font-size: 11.5px; color: var(--ink-soft); text-align: center; margin-bottom: 10px; }
+.sp-bar-track { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; margin-bottom: 12px; }
+.sp-bar-box {
+  width: 34px; height: 34px; border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700; color: #fff;
+}
+.sp-bar-inputs { display: flex; justify-content: center; margin-bottom: 8px; }
+.sp-bar-check { font-size: 12px; text-align: center; color: var(--ink-soft); margin-bottom: 6px; min-height: 16px; font-family: 'IBM Plex Mono', monospace; }
+.sp-bar-check.sp-bar-match { color: var(--green); font-weight: 700; }
 
 .algebra-line {
   font-family: 'IBM Plex Mono', monospace;
@@ -2386,17 +2398,55 @@ function isNumberLineQuestion(prompt) {
   return maxAbs <= 30;
 }
 
-function inferLineBounds(prompt) {
-  const nums = (prompt.match(/[−-]?\d+/g) || []).map(s => parseInt(s.replace(/−/g, "-"), 10));
-  let maxAbs = nums.length ? Math.max(...nums.map(Math.abs)) : 10;
-  maxAbs = Math.max(maxAbs, 10);
+function formatSigned(v) {
+  return (v >= 0 ? "+" : "−") + Math.abs(v);
+}
+
+/* Figures out what the question actually gives us:
+   - "points": two explicit positions are stated (distance-between, from A to B, at A rises/drops to B)
+   - "jump": a start value plus a signed change (a + b / a − b, or "starts at A and rises/drops B")
+   Returns null if neither pattern is found, so the caller can fall back to free-entry boxes. */
+function parseLineSpec(promptRaw) {
+  const clean = promptRaw.replace(/−/g, "-").replace(/,/g, "");
+  const num = "-?\\d+(?:\\.\\d+)?";
+  let m;
+
+  m = clean.match(new RegExp(`from[^\\d-]*(${num})[^\\d-]*to[^\\d-]*(${num})`, "i"));
+  if (m) return { mode: "points", a: parseFloat(m[1]), b: parseFloat(m[2]) };
+
+  m = clean.match(new RegExp(`at\\s+(${num})[^\\d-]+(?:rises?|drops?)\\s+to[^\\d-]*(${num})`, "i"));
+  if (m) return { mode: "points", a: parseFloat(m[1]), b: parseFloat(m[2]) };
+
+  m = clean.match(new RegExp(`distance between[^\\d-]*(${num})[^\\d-]*and[^\\d-]*(${num})`, "i"));
+  if (m) return { mode: "points", a: parseFloat(m[1]), b: parseFloat(m[2]) };
+
+  m = clean.match(new RegExp(`starts?\\s+at\\s+(${num})[^\\d-]*(rises?|drops?)\\s+(?:by\\s+)?(${num})`, "i"));
+  if (m) {
+    const dir = /rise/i.test(m[2]) ? 1 : -1;
+    return { mode: "jump", start: parseFloat(m[1]), jump: dir * Math.abs(parseFloat(m[3])) };
+  }
+
+  m = clean.match(new RegExp(`\\(?(${num})\\)?\\s*([+-])\\s*\\(?(${num})\\)?`));
+  if (m) {
+    const a = parseFloat(m[1]), op = m[2], b = parseFloat(m[3]);
+    return { mode: "jump", start: a, jump: op === "+" ? b : -b };
+  }
+
+  return null;
+}
+
+function inferLineBoundsFromSpec(spec) {
+  const vals = [0];
+  if (spec.mode === "points") vals.push(spec.a, spec.b);
+  else if (spec.mode === "jump") vals.push(spec.start, spec.start + spec.jump);
+  const maxAbs = Math.max(10, ...vals.map(v => Math.abs(v)));
   const bound = Math.ceil((maxAbs * 1.3) / 5) * 5;
-  const step = bound <= 20 ? 5 : 10;
-  return { min: -bound, max: bound, step };
+  return { min: -bound, max: bound, step: bound <= 20 ? 5 : 10 };
 }
 
 function buildNumberLineScratchpad(prompt) {
-  const { min, max, step } = inferLineBounds(prompt);
+  const spec = parseLineSpec(prompt);
+  const { min, max, step } = spec ? inferLineBoundsFromSpec(spec) : { min: -20, max: 20, step: 5 };
   const width = 300, height = 76, pad = 20, axisY = 40;
   const scale = (width - pad * 2) / (max - min);
   const xPos = v => pad + (v - min) * scale;
@@ -2450,39 +2500,186 @@ function buildNumberLineScratchpad(prompt) {
 
   const note = document.createElement("div");
   note.className = "sp-nl-note";
-  note.textContent = `Line runs from ${min} to ${max}. Fill in your start and end points to draw the jump.`;
   wrap.appendChild(note);
 
   const row = document.createElement("div");
   row.className = "sp-nl-inputs";
-  row.innerHTML = `
-    <label class="sp-nl-label">Start point<input class="sp-nl-input" type="number" placeholder="?"></label>
-    <label class="sp-nl-label">End point<input class="sp-nl-input" type="number" placeholder="?"></label>`;
   wrap.appendChild(row);
-  const [startInput, endInput] = row.querySelectorAll(".sp-nl-input");
 
-  function update() {
-    const s = parseFloat(startInput.value), e = parseFloat(endInput.value);
-    const validS = !isNaN(s) && s >= min && s <= max;
-    const validE = !isNaN(e) && e >= min && e <= max;
-    startDot.style.display = validS ? "block" : "none";
-    endDot.style.display = validE ? "block" : "none";
-    if (validS) startDot.setAttribute("cx", xPos(s));
-    if (validE) endDot.setAttribute("cx", xPos(e));
-    if (validS && validE) {
-      const x1 = xPos(s), x2 = xPos(e);
-      arc.setAttribute("d", `M ${x1} ${axisY} Q ${(x1 + x2) / 2} ${axisY - 26} ${x2} ${axisY}`);
-      arc.style.display = "block";
-    } else {
-      arc.style.display = "none";
-    }
+  const placePoint = (dot, v) => { dot.setAttribute("cx", xPos(v)); dot.style.display = "block"; };
+  const hidePoint = dot => { dot.style.display = "none"; };
+  const drawArc = (v1, v2) => {
+    const x1 = xPos(v1), x2 = xPos(v2);
+    arc.setAttribute("d", `M ${x1} ${axisY} Q ${(x1 + x2) / 2} ${axisY - 26} ${x2} ${axisY}`);
+    arc.style.display = "block";
+  };
+  const hideArc = () => { arc.style.display = "none"; };
+
+  let clearBtn = null;
+
+  if (spec && spec.mode === "points") {
+    // Both positions are stated in the question — show them as given, so he just reads off the gap.
+    note.textContent = "Both points are given below. Count the steps between them for your answer.";
+    row.innerHTML = `
+      <label class="sp-nl-label">Point A<input class="sp-nl-input" type="text" value="${spec.a}" readonly></label>
+      <label class="sp-nl-label">Point B<input class="sp-nl-input" type="text" value="${spec.b}" readonly></label>`;
+    placePoint(startDot, spec.a);
+    placePoint(endDot, spec.b);
+    drawArc(spec.a, spec.b);
+  } else if (spec && spec.mode === "jump") {
+    // Only the start and the jump (size + direction) are given — landing point is what he has to work out.
+    note.textContent = "Start and jump are given. Work out where you land, then mark it below.";
+    row.innerHTML = `
+      <label class="sp-nl-label">Start<input class="sp-nl-input" type="text" value="${spec.start}" readonly></label>
+      <label class="sp-nl-label">Jump<input class="sp-nl-input" type="text" value="${formatSigned(spec.jump)}" readonly></label>
+      <label class="sp-nl-label">Land on<input class="sp-nl-input sp-nl-editable" type="number" placeholder="?"></label>`;
+    placePoint(startDot, spec.start);
+    const landInput = row.querySelector(".sp-nl-editable");
+    const updateLand = () => {
+      const v = parseFloat(landInput.value);
+      if (!isNaN(v) && v >= min && v <= max) { placePoint(endDot, v); drawArc(spec.start, v); }
+      else { hidePoint(endDot); hideArc(); }
+    };
+    landInput.addEventListener("input", updateLand);
+    clearBtn = mkBtn("Clear", () => { landInput.value = ""; updateLand(); }, true);
+  } else {
+    // Couldn't parse the question — fall back to fully free-entry boxes.
+    note.textContent = `Line runs from ${min} to ${max}. Fill in your start and end points to draw the jump.`;
+    row.innerHTML = `
+      <label class="sp-nl-label">Start point<input class="sp-nl-input" type="number" placeholder="?"></label>
+      <label class="sp-nl-label">End point<input class="sp-nl-input" type="number" placeholder="?"></label>`;
+    const [startInput, endInput] = row.querySelectorAll(".sp-nl-input");
+    const update = () => {
+      const s = parseFloat(startInput.value), e = parseFloat(endInput.value);
+      const validS = !isNaN(s) && s >= min && s <= max;
+      const validE = !isNaN(e) && e >= min && e <= max;
+      validS ? placePoint(startDot, s) : hidePoint(startDot);
+      validE ? placePoint(endDot, e) : hidePoint(endDot);
+      (validS && validE) ? drawArc(s, e) : hideArc();
+    };
+    startInput.addEventListener("input", update);
+    endInput.addEventListener("input", update);
+    clearBtn = mkBtn("Clear", () => { startInput.value = ""; endInput.value = ""; update(); }, true);
   }
-  startInput.addEventListener("input", update);
-  endInput.addEventListener("input", update);
+
+  if (clearBtn) {
+    const clearRow = document.createElement("div");
+    clearRow.className = "sp-clear-row";
+    clearBtn.classList.add("sp-clear-btn");
+    clearRow.appendChild(clearBtn);
+    wrap.appendChild(clearRow);
+  }
+
+  return wrap;
+}
+
+/* ---------- BAR MODEL scratchpad (for "cut into equal parts" / ratio / comparison questions) ---------- */
+
+function parseBarSpec(promptRaw) {
+  const p = promptRaw;
+  let m;
+
+  // "$X shared/split/divided in ratio A:B(:C)" — total stated before the ratio
+  m = p.match(/\$?(\d+(?:\.\d+)?)\s*(?:is\s+)?(?:shared|split|divided)\s+in\s+(?:the\s+)?ratio\s+(\d+)\s*:\s*(\d+)(?:\s*:\s*(\d+))?/i);
+  if (m) {
+    const groups = [parseInt(m[2], 10), parseInt(m[3], 10)];
+    if (m[4]) groups.push(parseInt(m[4], 10));
+    return { groups, total: parseFloat(m[1]) };
+  }
+
+  // "ratio A:B(:C) ... sum S"
+  m = p.match(/ratio\s+(\d+)\s*:\s*(\d+)(?:\s*:\s*(\d+))?[^\d]*?sum\s+(\d+(?:\.\d+)?)/i);
+  if (m) {
+    const groups = [parseInt(m[1], 10), parseInt(m[2], 10)];
+    if (m[3]) groups.push(parseInt(m[3], 10));
+    return { groups, total: parseFloat(m[4]) };
+  }
+
+  // "K times as many ... together/total T"
+  m = p.match(/(\d+)\s+times\s+as\s+many[^\d]*?(?:together|total)[^\d]*?(\d+(?:\.\d+)?)/i);
+  if (m) return { groups: [1, parseInt(m[1], 10)], total: parseFloat(m[2]) };
+
+  // "ax + bx = T"
+  m = p.match(/(\d*)x\s*\+\s*(\d*)x\s*=\s*(\d+(?:\.\d+)?)/i);
+  if (m) {
+    const a = m[1] === "" ? 1 : parseInt(m[1], 10);
+    const b = m[2] === "" ? 1 : parseInt(m[2], 10);
+    return { groups: [a, b], total: parseFloat(m[3]) };
+  }
+
+  // "Nx = T"
+  m = p.match(/(\d+)x\s*=\s*(\d+(?:\.\d+)?)\b/i);
+  if (m) return { groups: [parseInt(m[1], 10)], total: parseFloat(m[2]) };
+
+  // "a bar of N boxes = T"
+  m = p.match(/bar\s+of\s+(\d+)\s+boxes?\s*=\s*(\d+(?:\.\d+)?)/i);
+  if (m) return { groups: [parseInt(m[1], 10)], total: parseFloat(m[2]) };
+
+  // "N equal boxes, total T"
+  m = p.match(/(\d+)\s+equal\s+boxes?,?\s*total\s+(\d+(?:\.\d+)?)/i);
+  if (m) return { groups: [parseInt(m[1], 10)], total: parseFloat(m[2]) };
+
+  // "<total> ... cut/split/divided into N equal parts/boxes"
+  m = p.match(/(\d+(?:\.\d+)?)[^\d]{0,25}(?:cut|split|divided)\s+into\s+(\d+)\s+equal/i);
+  if (m) return { groups: [parseInt(m[2], 10)], total: parseFloat(m[1]) };
+
+  // "<total> [unit] in N hours" (constant-rate sharing, e.g. distance/time)
+  m = p.match(/(\d+(?:\.\d+)?)\s*(?:km|m|miles?|litres?|l)?\s+in\s+(\d+)\s+hours?/i);
+  if (m) return { groups: [parseInt(m[2], 10)], total: parseFloat(m[1]) };
+
+  return null;
+}
+
+function buildBarModelScratchpad(spec) {
+  const totalBoxes = spec.groups.reduce((s, n) => s + n, 0);
+  const wrap = document.createElement("div");
+
+  const note = document.createElement("div");
+  note.className = "sp-bar-note";
+  note.textContent = `Total = ${spec.total} · cut into ${totalBoxes} equal box${totalBoxes === 1 ? "" : "es"}`;
+  wrap.appendChild(note);
+
+  const track = document.createElement("div");
+  track.className = "sp-bar-track";
+  const boxes = [];
+  spec.groups.forEach((count, gi) => {
+    for (let i = 0; i < count; i++) {
+      const box = document.createElement("div");
+      box.className = "sp-bar-box " + (gi % 2 === 0 ? "bar-sg" : "bar-cam");
+      track.appendChild(box);
+      boxes.push(box);
+    }
+  });
+  wrap.appendChild(track);
+
+  const inputRow = document.createElement("div");
+  inputRow.className = "sp-bar-inputs";
+  inputRow.innerHTML = `<label class="sp-nl-label">Value of 1 box<input class="sp-nl-input" type="number" placeholder="?"></label>`;
+  wrap.appendChild(inputRow);
+  const valInput = inputRow.querySelector("input");
+
+  const check = document.createElement("div");
+  check.className = "sp-bar-check";
+  wrap.appendChild(check);
+
+  const update = () => {
+    const v = parseFloat(valInput.value);
+    if (isNaN(v)) {
+      boxes.forEach(b => b.textContent = "");
+      check.textContent = "";
+      check.classList.remove("sp-bar-match");
+      return;
+    }
+    boxes.forEach(b => b.textContent = v);
+    const computed = totalBoxes * v;
+    check.textContent = `${totalBoxes} × ${v} = ${computed}` + (computed === spec.total ? " ✓ matches the total!" : ` (target ${spec.total})`);
+    check.classList.toggle("sp-bar-match", computed === spec.total);
+  };
+  valInput.addEventListener("input", update);
 
   const clearRow = document.createElement("div");
   clearRow.className = "sp-clear-row";
-  const clearBtn = mkBtn("Clear", () => { startInput.value = ""; endInput.value = ""; update(); }, true);
+  const clearBtn = mkBtn("Clear", () => { valInput.value = ""; update(); }, true);
   clearBtn.classList.add("sp-clear-btn");
   clearRow.appendChild(clearBtn);
   wrap.appendChild(clearRow);
@@ -2491,8 +2688,9 @@ function buildNumberLineScratchpad(prompt) {
 }
 
 function attachScratchpad(container, prompt, forceLine) {
-  const isLine = forceLine || isNumberLineQuestion(prompt);
-  const icon = isLine ? "📏" : "🧮";
+  const barSpec = parseBarSpec(prompt);
+  const isLine = !barSpec && (forceLine || isNumberLineQuestion(prompt));
+  const icon = barSpec ? "🧱" : (isLine ? "📏" : "🧮");
   const toggleBtn = mkBtn(`${icon} Working Space`, null, true);
   toggleBtn.classList.add("scratchpad-toggle");
   const padHolder = document.createElement("div");
@@ -2502,8 +2700,9 @@ function attachScratchpad(container, prompt, forceLine) {
       padHolder.innerHTML = "";
       const titled = document.createElement("div");
       titled.className = "scratchpad";
-      titled.innerHTML = `<div class="scratchpad-title">${isLine ? "Number line — mark your jump" : "Th · H · T · O — work it out here"}</div>`;
-      titled.appendChild(isLine ? buildNumberLineScratchpad(prompt) : buildScratchpadGrid(prompt));
+      const title = barSpec ? "Cut the bar — work it out here" : (isLine ? "Number line — mark your jump" : "Th · H · T · O — work it out here");
+      titled.innerHTML = `<div class="scratchpad-title">${title}</div>`;
+      titled.appendChild(barSpec ? buildBarModelScratchpad(barSpec) : (isLine ? buildNumberLineScratchpad(prompt) : buildScratchpadGrid(prompt)));
       padHolder.appendChild(titled);
       padHolder.style.display = "block";
       toggleBtn.textContent = `${icon} Hide Working Space`;
@@ -2724,6 +2923,7 @@ function renderMissionStage(box, mission, world) {
     body.appendChild(btn);
   } else if (missionStage === 1) {
     body.innerHTML = `<p class="stage-text">${mission.thinking.prompt}</p>`;
+    if (mission.picture) body.appendChild(renderPicture(mission.picture));
     const choiceWrap = document.createElement("div");
     choiceWrap.className = "choice-list";
     const nextBtn = mkBtn("Next →", () => nextStage(box, mission, world));
