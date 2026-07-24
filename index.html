@@ -380,6 +380,20 @@ main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
 .sp-clear-row { text-align: center; margin-top: 8px; }
 .sp-clear-btn { font-size: 11.5px; padding: 6px 10px; }
 
+.sp-nl-note { font-size: 11.5px; color: var(--ink-soft); text-align: center; margin: 2px 0 10px; }
+.sp-nl-inputs { display: flex; justify-content: center; gap: 16px; }
+.sp-nl-label { font-size: 11px; font-weight: 700; color: var(--ink-soft); display: flex; flex-direction: column; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.02em; }
+.sp-nl-input {
+  width: 64px; text-align: center;
+  font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 700;
+  color: var(--ink); background: var(--paper); border: 1.5px solid var(--line); border-radius: 5px;
+  padding: 6px 4px;
+}
+.sp-nl-input:focus { outline: 2px solid var(--gold); }
+.sp-nl-dot { stroke: #fff; stroke-width: 1.5; }
+.sp-nl-start { fill: var(--sg); }
+.sp-nl-end { fill: var(--cam); }
+
 .algebra-line {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 19px; font-weight: 700;
@@ -2359,8 +2373,127 @@ function buildScratchpadGrid(prompt) {
   return wrap;
 }
 
-function attachScratchpad(container, prompt) {
-  const toggleBtn = mkBtn("🧮 Working Space", null, true);
+/* ---------- NUMBER LINE detection + builder (for directed-number / jump questions) ---------- */
+
+function isNumberLineQuestion(prompt) {
+  const lineWords = /floor|temperature|rises?\b|drops?\b|lift\b|submarine|diver|distance between|number ?line|sea level|elevation/i;
+  if (lineWords.test(prompt)) return true;
+  if (/\bx\b|\d+x\b|x\d+|\bsolve\b|\bexpand\b/i.test(prompt)) return false; // algebra, not a number-line concept
+  const hasSignedNumber = /(?:^|[^0-9])[−-]\s?\d/.test(prompt);
+  if (!hasSignedNumber) return false;
+  const nums = (prompt.match(/-?\d+/g) || []).map(n => Math.abs(parseInt(n, 10)));
+  const maxAbs = nums.length ? Math.max(...nums) : 0;
+  return maxAbs <= 30;
+}
+
+function inferLineBounds(prompt) {
+  const nums = (prompt.match(/[−-]?\d+/g) || []).map(s => parseInt(s.replace(/−/g, "-"), 10));
+  let maxAbs = nums.length ? Math.max(...nums.map(Math.abs)) : 10;
+  maxAbs = Math.max(maxAbs, 10);
+  const bound = Math.ceil((maxAbs * 1.3) / 5) * 5;
+  const step = bound <= 20 ? 5 : 10;
+  return { min: -bound, max: bound, step };
+}
+
+function buildNumberLineScratchpad(prompt) {
+  const { min, max, step } = inferLineBounds(prompt);
+  const width = 300, height = 76, pad = 20, axisY = 40;
+  const scale = (width - pad * 2) / (max - min);
+  const xPos = v => pad + (v - min) * scale;
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("class", "numberline-svg");
+
+  const axis = document.createElementNS(svgNS, "line");
+  axis.setAttribute("x1", pad); axis.setAttribute("x2", width - pad);
+  axis.setAttribute("y1", axisY); axis.setAttribute("y2", axisY);
+  axis.setAttribute("class", "nl-axis");
+  svg.appendChild(axis);
+
+  for (let v = min; v <= max; v += step) {
+    const tick = document.createElementNS(svgNS, "line");
+    tick.setAttribute("x1", xPos(v)); tick.setAttribute("x2", xPos(v));
+    tick.setAttribute("y1", axisY - 4); tick.setAttribute("y2", axisY + 4);
+    tick.setAttribute("class", "nl-tick");
+    svg.appendChild(tick);
+    const t = document.createElementNS(svgNS, "text");
+    t.setAttribute("x", xPos(v)); t.setAttribute("y", axisY + 18);
+    t.setAttribute("class", "nl-num"); t.setAttribute("text-anchor", "middle");
+    t.textContent = v;
+    svg.appendChild(t);
+  }
+
+  const uid = "sp" + Math.random().toString(36).slice(2, 8);
+  const defs = document.createElementNS(svgNS, "defs");
+  defs.innerHTML = `<marker id="${uid}-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" class="nl-arrowhead"/></marker>`;
+  svg.appendChild(defs);
+
+  const arc = document.createElementNS(svgNS, "path");
+  arc.setAttribute("class", "nl-arc");
+  arc.setAttribute("marker-end", `url(#${uid}-arrow)`);
+  arc.style.display = "none";
+  svg.appendChild(arc);
+
+  const startDot = document.createElementNS(svgNS, "circle");
+  startDot.setAttribute("r", 4.5); startDot.setAttribute("cy", axisY); startDot.setAttribute("class", "sp-nl-dot sp-nl-start");
+  startDot.style.display = "none";
+  svg.appendChild(startDot);
+
+  const endDot = document.createElementNS(svgNS, "circle");
+  endDot.setAttribute("r", 4.5); endDot.setAttribute("cy", axisY); endDot.setAttribute("class", "sp-nl-dot sp-nl-end");
+  endDot.style.display = "none";
+  svg.appendChild(endDot);
+
+  const wrap = document.createElement("div");
+  wrap.appendChild(svg);
+
+  const note = document.createElement("div");
+  note.className = "sp-nl-note";
+  note.textContent = `Line runs from ${min} to ${max}. Fill in your start and end points to draw the jump.`;
+  wrap.appendChild(note);
+
+  const row = document.createElement("div");
+  row.className = "sp-nl-inputs";
+  row.innerHTML = `
+    <label class="sp-nl-label">Start point<input class="sp-nl-input" type="number" placeholder="?"></label>
+    <label class="sp-nl-label">End point<input class="sp-nl-input" type="number" placeholder="?"></label>`;
+  wrap.appendChild(row);
+  const [startInput, endInput] = row.querySelectorAll(".sp-nl-input");
+
+  function update() {
+    const s = parseFloat(startInput.value), e = parseFloat(endInput.value);
+    const validS = !isNaN(s) && s >= min && s <= max;
+    const validE = !isNaN(e) && e >= min && e <= max;
+    startDot.style.display = validS ? "block" : "none";
+    endDot.style.display = validE ? "block" : "none";
+    if (validS) startDot.setAttribute("cx", xPos(s));
+    if (validE) endDot.setAttribute("cx", xPos(e));
+    if (validS && validE) {
+      const x1 = xPos(s), x2 = xPos(e);
+      arc.setAttribute("d", `M ${x1} ${axisY} Q ${(x1 + x2) / 2} ${axisY - 26} ${x2} ${axisY}`);
+      arc.style.display = "block";
+    } else {
+      arc.style.display = "none";
+    }
+  }
+  startInput.addEventListener("input", update);
+  endInput.addEventListener("input", update);
+
+  const clearRow = document.createElement("div");
+  clearRow.className = "sp-clear-row";
+  const clearBtn = mkBtn("Clear", () => { startInput.value = ""; endInput.value = ""; update(); }, true);
+  clearBtn.classList.add("sp-clear-btn");
+  clearRow.appendChild(clearBtn);
+  wrap.appendChild(clearRow);
+
+  return wrap;
+}
+
+function attachScratchpad(container, prompt, forceLine) {
+  const isLine = forceLine || isNumberLineQuestion(prompt);
+  const icon = isLine ? "📏" : "🧮";
+  const toggleBtn = mkBtn(`${icon} Working Space`, null, true);
   toggleBtn.classList.add("scratchpad-toggle");
   const padHolder = document.createElement("div");
   padHolder.style.display = "none";
@@ -2369,14 +2502,14 @@ function attachScratchpad(container, prompt) {
       padHolder.innerHTML = "";
       const titled = document.createElement("div");
       titled.className = "scratchpad";
-      titled.innerHTML = `<div class="scratchpad-title">Th · H · T · O — work it out here</div>`;
-      titled.appendChild(buildScratchpadGrid(prompt));
+      titled.innerHTML = `<div class="scratchpad-title">${isLine ? "Number line — mark your jump" : "Th · H · T · O — work it out here"}</div>`;
+      titled.appendChild(isLine ? buildNumberLineScratchpad(prompt) : buildScratchpadGrid(prompt));
       padHolder.appendChild(titled);
       padHolder.style.display = "block";
-      toggleBtn.textContent = "🧮 Hide Working Space";
+      toggleBtn.textContent = `${icon} Hide Working Space`;
     } else {
       padHolder.style.display = "none";
-      toggleBtn.textContent = "🧮 Working Space";
+      toggleBtn.textContent = `${icon} Working Space`;
     }
   };
   container.appendChild(toggleBtn);
@@ -2630,7 +2763,7 @@ function renderMissionStage(box, mission, world) {
     body.appendChild(mkBtn("Next →", () => nextStage(box, mission, world)));
   } else if (missionStage === 5) {
     body.innerHTML = `<p class="stage-text">${mission.challenge.prompt}</p>`;
-    attachScratchpad(body, mission.challenge.prompt);
+    attachScratchpad(body, mission.challenge.prompt, mission.picture && mission.picture.type === "line");
     const input = document.createElement("input");
     input.type = "text"; input.className = "challenge-input"; input.placeholder = "Your answer";
     body.appendChild(input);
@@ -2917,7 +3050,7 @@ function renderBossBattle(container) {
       box.appendChild(hintBox);
     }
 
-    attachScratchpad(box, q.prompt);
+    attachScratchpad(box, q.prompt, world.id === 2);
 
     const input = document.createElement("input");
     input.type = "text"; input.className = "challenge-input"; input.placeholder = "Your answer";
