@@ -1359,41 +1359,41 @@ const WORLDS = [
         challenge: { prompt: "Your turn: a train travels 240 km in 4 hours. Find the speed.", answer: "60", hint: "4x = 240" }
       },
       {
-        id: "3-4", title: "Ratio bar — 1 : 2",
-        warmup: "Two bars, one twice the length of the other.",
-        thinking: { prompt: "Two numbers are in ratio 1 : 2 and their sum is 36. What is the smallest part worth?", choices: ["Draw 1 box and 2 boxes, then share 36 between 3 boxes total", "Split 36 exactly in half", "Multiply 36 by 2"] },
+        id: "3-4", title: "🚢 Engine Room — Ratio 1 : 2",
+        warmup: "An ocean liner has two boiler rooms. Room B always burns twice the coal of Room A — that's a ratio bar: 1 box and 2 boxes.",
+        thinking: { prompt: "Step 1 is just the drawing. Room A and Room B share 36 tonnes of coal in ratio 1 : 2. What's your first move?", choices: ["Draw 1 box for Room A and 2 boxes for Room B, then share 36 tonnes across all 3 boxes", "Split 36 exactly in half", "Multiply 36 by 2"] },
         toolChoice: {
-          prompt: "Which tool turns this ratio into a number?",
+          prompt: "Which tool turns this coal ratio into real tonnes?",
           options: ["draw_diagram", "simplify", "guess_check"],
-          note: "Once you can see 3 total boxes, the sum splits into a simple division — the ratio does the hard thinking for you."
+          note: "Once you can see 3 total boxes, the tonnage splits into a simple division — the ratio bar does the hard thinking for you."
         },
-        picture: { type: "bar", bars: [{ label: "", units: 1, color: "sg" }, { label: "", units: 2, color: "cam" }], totalLabel: "36" },
+        picture: { type: "bar", bars: [{ label: "Room A", units: 1, color: "sg" }, { label: "Room B", units: 2, color: "cam" }], totalLabel: "36 tonnes" },
         algebra: "x + 2x = 36",
-        working: ["smaller = x, larger = 2x", "x + 2x = 36", "3x = 36", "x = 12", "numbers are 12 and 24"],
-        challenge: { prompt: "Your turn: ratio 1 : 3, sum 48. Find the two numbers (smaller one).", answer: "12", hint: "4x = 48" }
+        working: ["Room A = x, Room B = 2x", "x + 2x = 36", "3x = 36", "x = 12", "Room A = 12 t, Room B = 24 t"],
+        challenge: { prompt: "Your turn, engineer: two fuel tanks are in ratio 1 : 3, total 48 tonnes. Find the smaller tank (tonnes).", answer: "12", hint: "4x = 48" }
       },
       {
-        id: "3-5", title: "Comparison bar — 'more than'",
-        warmup: "Two bars where one is a fixed amount longer, not a multiple.",
-        thinking: { prompt: "Ali has 45 stamps. Ben has 18 more than Ali. How should you draw Ben's bar?", choices: ["Draw Ben's bar the same length as Ali's, plus an extra 18 chunk", "Draw Ben's bar exactly 18 units long", "Draw Ben's bar twice as long as Ali's"] },
-        picture: { type: "bar", bars: [{ label: "Ali", units: 1, color: "sg", plusNumber: 0 }, { label: "Ben", units: 1, color: "cam", plusNumber: 18 }], totalLabel: "Ali = 45" },
-        algebra: "Ben = 45 + 18",
-        working: ["Ali = 45", "Ben = Ali + 18", "Ben = 45 + 18", "Ben = 63"],
-        challenge: { prompt: "Your turn: Mia has 32 stickers. Leo has 15 more than Mia. How many does Leo have?", answer: "47", hint: "32 + 15" }
+        id: "3-5", title: "🚢 Cabin Count — 'more than'",
+        warmup: "Not every bar is a multiple. Sometimes one deck just has a fixed number of extra cabins — same length bar, plus a chunk.",
+        thinking: { prompt: "First class deck has 45 cabins. Second class deck has 18 more cabins than first class. Step 1: how do you draw second class's bar?", choices: ["Draw it the same length as first class's bar, plus an extra 18-cabin chunk", "Draw it exactly 18 units long", "Draw it twice as long as first class"] },
+        picture: { type: "bar", bars: [{ label: "1st class", units: 1, color: "sg", plusNumber: 0 }, { label: "2nd class", units: 1, color: "cam", plusNumber: 18 }], totalLabel: "1st class = 45" },
+        algebra: "2nd class = 45 + 18",
+        working: ["1st class = 45", "2nd class = 1st class + 18", "2nd class = 45 + 18", "2nd class = 63 cabins"],
+        challenge: { prompt: "Your turn: the cargo deck stores 32 crates. The engine deck stores 15 more crates than the cargo deck. How many on the engine deck?", answer: "47", hint: "32 + 15" }
       },
       {
-        id: "3-6", title: "Three-part ratio bar",
-        warmup: "Not every bar splits into just two parts — some split into three.",
-        thinking: { prompt: "$100 is shared in the ratio 2 : 3 : 5 between three friends. How many boxes total?", choices: ["Add 2 + 3 + 5 to find the total number of boxes first", "Just divide 100 by 3 (the number of friends)", "Multiply 2 × 3 × 5"] },
+        id: "3-6", title: "🧪 Coolant Mix — Three-part ratio bar",
+        warmup: "Not every bar splits into just two parts. The ship's chief engineer mixes coolant from 3 chemicals — that's a 3-part bar.",
+        thinking: { prompt: "100 litres of coolant are mixed in the ratio 2 : 3 : 5 (water : glycol : additive). Step 1: what do you find first?", choices: ["Add 2 + 3 + 5 to find the total number of boxes first", "Just divide 100 by 3 (the number of chemicals)", "Multiply 2 × 3 × 5"] },
         toolChoice: {
-          prompt: "Three shares instead of two — which tool helps you organise this?",
+          prompt: "Three ingredients instead of two — which tool helps you organise the mix?",
           options: ["draw_diagram", "make_table", "simplify"],
           note: "A 3-part bar makes the 'total boxes' step visible before you divide, instead of juggling three numbers in your head."
         },
-        picture: { type: "bar", bars: [{ label: "", units: 2, color: "sg" }, { label: "", units: 3, color: "cam" }, { label: "", units: 5, color: "sg" }], totalLabel: "100" },
+        picture: { type: "bar", bars: [{ label: "water", units: 2, color: "sg" }, { label: "glycol", units: 3, color: "cam" }, { label: "additive", units: 5, color: "sg" }], totalLabel: "100 L" },
         algebra: "2x + 3x + 5x = 100",
-        working: ["total boxes = 2 + 3 + 5 = 10", "10x = 100", "x = 10", "shares = 20, 30, 50"],
-        challenge: { prompt: "Your turn: $60 shared in ratio 1:2:3. Find the smallest share.", answer: "10", hint: "1+2+3=6 boxes, 6x=60" }
+        working: ["total boxes = 2 + 3 + 5 = 10", "10x = 100", "x = 10", "water = 20 L, glycol = 30 L, additive = 50 L"],
+        challenge: { prompt: "Your turn, chemist: 60 L of fuel additive is mixed in ratio 1 : 2 : 3. Find the smallest ingredient (litres).", answer: "10", hint: "1+2+3=6 boxes, 6x=60" }
       }
     ],
     boss: {
@@ -1562,45 +1562,45 @@ const WORLDS = [
   {
     id: 6, chain: 5, code: "W6", icon: "⚖️", name: "Ratio & Proportion Bridge",
     color: "#3E8E4F", status: "ready",
-    tagline: "Ratio bars → scale, percentage, recipes & maps",
+    tagline: "Ratio bars → charts, power meters, boilers & coin trades",
     missions: [
       {
-        id: "6-1", title: "Ratio 1 : 2",
-        warmup: "One bar, and a second bar twice as long.",
-        thinking: { prompt: "In a ratio bar, what does the smallest part always equal?", choices: ["Draw 1 box and 2 boxes, share 36 between 3 boxes", "Split 36 exactly in half", "Multiply 36 by 2"] },
+        id: "6-1", title: "🍄 Warp Pipe Coins — Ratio 1 : 2",
+        warmup: "Mario finds coins in two Warp Pipes. Pipe B always drops out twice as many coins as Pipe A. One bar, and a second bar twice as long.",
+        thinking: { prompt: "Step 1: in a ratio bar, what does the smallest part always equal?", choices: ["Draw 1 box for Pipe A and 2 boxes for Pipe B, share 36 coins between the 3 boxes", "Split 36 exactly in half", "Multiply 36 by 2"] },
         toolChoice: {
-          prompt: "Which tool would help you turn this ratio into a number?",
+          prompt: "Which tool would help you turn this coin ratio into a number?",
           options: ["draw_diagram", "work_backward", "guess_check"],
           note: "Bar models turn ratio problems into a simple share-out division, once you know the total number of boxes."
         },
-        picture: { type: "bar", bars: [{ label: "", units: 1, color: "sg" }, { label: "", units: 2, color: "cam" }], totalLabel: "36" },
+        picture: { type: "bar", bars: [{ label: "Pipe A", units: 1, color: "sg" }, { label: "Pipe B", units: 2, color: "cam" }], totalLabel: "36 coins" },
         algebra: "x : 2x  → 3x = 36",
-        working: ["smaller part = x", "larger part = 2x", "if total = 36: 3x = 36", "x = 12 → parts are 12 and 24"],
-        challenge: { prompt: "Your turn: ratio 2 : 5, total 63. Find the smaller part.", answer: "18", hint: "2x + 5x = 63" }
+        working: ["Pipe A = x", "Pipe B = 2x", "if total = 36: 3x = 36", "x = 12 → Pipe A = 12 coins, Pipe B = 24 coins"],
+        challenge: { prompt: "Your turn: two piranha plant pipes drop coins in ratio 2 : 5, total 63 coins. Find the smaller pipe's coins.", answer: "18", hint: "2x + 5x = 63" }
       },
       {
-        id: "6-2", title: "Recipe scaling",
-        warmup: "A recipe for 4 people needs scaling for 10 people.",
-        thinking: { prompt: "If 4 people need 200 g of rice, what should you find first?", choices: ["Find how much 1 person needs first, then multiply by 10", "Multiply 200 by 10 directly", "Divide 200 by 10"] },
-        picture: { type: "steps", steps: ["4 people → 200 g", "1 person → 200 ÷ 4 = 50 g", "10 people → 50 × 10"] },
+        id: "6-2", title: "⚙️ Boiler Fuel Mix — Scaling Up", 
+        warmup: "The ship's engineer has a fuel formula for 4 boilers, but the liner just added more boilers. Time to scale the recipe.",
+        thinking: { prompt: "If 4 boilers need 200 kg of coal, what should you find first?", choices: ["Find how much 1 boiler needs first, then multiply by 10", "Multiply 200 by 10 directly", "Divide 200 by 10"] },
+        picture: { type: "steps", steps: ["4 boilers → 200 kg", "1 boiler → 200 ÷ 4 = 50 kg", "10 boilers → 50 × 10"] },
         algebra: "200 ÷ 4 × 10",
-        working: ["1 person needs 200 ÷ 4 = 50 g", "10 people need 50 × 10 = 500 g"],
-        challenge: { prompt: "Your turn: 3 people need 90 g. How much for 7 people?", answer: "210", hint: "1 person = 90 ÷ 3" },
+        working: ["1 boiler needs 200 ÷ 4 = 50 kg", "10 boilers need 50 × 10 = 500 kg"],
+        challenge: { prompt: "Your turn, engineer: 3 boilers need 90 kg of coal. How much for 7 boilers?", answer: "210", hint: "1 boiler = 90 ÷ 3" },
         strategies: [
-          { id: "s1", label: "Unitary method: find 1 person, then ×10", steps: ["200 ÷ 4 = 50 (1 person)", "50 × 10 = 500"], opCount: 2 },
+          { id: "s1", label: "Unitary method: find 1 boiler, then ×10", steps: ["200 ÷ 4 = 50 (1 boiler)", "50 × 10 = 500"], opCount: 2 },
           { id: "s2", label: "Set up a proportion and cross-multiply", steps: ["4/200 = 10/x", "4x = 2000", "x = 500"], opCount: 3 },
-          { id: "s3", label: "Repeated addition, one person at a time", steps: ["add 50 g, once for each of the 10 people"], opCount: 10 }
+          { id: "s3", label: "Repeated addition, one boiler at a time", steps: ["add 50 kg, once for each of the 10 boilers"], opCount: 10 }
         ],
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "6-3", title: "Map scale",
-        warmup: "A map scale of 1 : 100,000 means 1 cm on paper is a lot in real life.",
-        thinking: { prompt: "If 1 cm = 100,000 cm in real life, how many metres is that?", choices: ["Convert 1 cm to real-life cm first, then to metres", "Just use 100,000 as the answer in metres", "Divide 100,000 by 1,000,000"] },
-        picture: { type: "steps", steps: ["scale 1 : 100,000", "1 cm on map = 100,000 cm real life", "100,000 cm ÷ 100 = metres"] },
+        id: "6-3", title: "🧭 Nautical Chart Scale",
+        warmup: "The navigator's chart for the Atlantic crossing uses a scale of 1 : 100,000 — 1 cm on paper is a lot of real ocean.",
+        thinking: { prompt: "If 1 cm on the chart = 100,000 cm at sea, how many metres is that?", choices: ["Convert 1 cm to real-life cm first, then to metres", "Just use 100,000 as the answer in metres", "Divide 100,000 by 1,000,000"] },
+        picture: { type: "steps", steps: ["chart scale 1 : 100,000", "1 cm on chart = 100,000 cm at sea", "100,000 cm ÷ 100 = metres"] },
         algebra: "100,000 cm ÷ 100 = 1000 m",
-        working: ["1 cm represents 100,000 cm", "100,000 cm = 1000 m", "so 3 cm on the map = 3000 m"],
-        challenge: { prompt: "Your turn: scale 1 : 50,000. How many metres does 2 cm represent?", answer: "1000", hint: "2 × 50,000 cm, then ÷ 100" },
+        working: ["1 cm represents 100,000 cm", "100,000 cm = 1000 m", "so 3 cm on the chart = 3000 m"],
+        challenge: { prompt: "Your turn, navigator: chart scale 1 : 50,000. How many metres does 2 cm represent?", answer: "1000", hint: "2 × 50,000 cm, then ÷ 100" },
         strategies: [
           { id: "s1", label: "Convert cm straight to m (÷100)", steps: ["100,000 cm ÷ 100 = 1000 m"], opCount: 1 },
           { id: "s2", label: "Go via km, then convert back to m", steps: ["100,000 cm = 1 km", "1 km × 1000 = 1000 m"], opCount: 2 }
@@ -1608,13 +1608,13 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "6-4", title: "Percentage of an amount",
-        warmup: "Percent means 'out of 100' — a special kind of fraction.",
-        thinking: { prompt: "20% of 150 — what's a clear first step?", choices: ["Find 10% first (÷10), then double it for 20%", "Multiply 150 by 20 directly", "Add 20 to 150"] },
-        picture: { type: "steps", steps: ["20% of 150", "→ 10% of 150 = 15", "→ 20% is double that: 15 × 2"] },
+        id: "6-4", title: "🍄 Power Meter — Percentage of an amount",
+        warmup: "Percent means 'out of 100' — like a Star Power meter that fills up in chunks of 10.",
+        thinking: { prompt: "Mario's level has 150 coins total. He's collected 20% so far — what's a clear first step?", choices: ["Find 10% first (÷10), then double it for 20%", "Multiply 150 by 20 directly", "Add 20 to 150"] },
+        picture: { type: "steps", steps: ["20% of 150 coins", "→ 10% of 150 = 15 coins", "→ 20% is double that: 15 × 2"] },
         algebra: "20% of 150 = (150 ÷ 10) × 2",
-        working: ["10% of 150 = 15", "20% = 2 × 15", "= 30"],
-        challenge: { prompt: "Your turn: find 30% of 200.", answer: "60", hint: "10% of 200 = 20, then × 3" },
+        working: ["10% of 150 = 15", "20% = 2 × 15", "= 30 coins"],
+        challenge: { prompt: "Your turn: a level has 200 coins. Find 30% of them.", answer: "60", hint: "10% of 200 = 20, then × 3" },
         strategies: [
           { id: "s1", label: "Find 10% first, then double", steps: ["150 ÷ 10 = 15", "15 × 2 = 30"], opCount: 2 },
           { id: "s2", label: "Convert to a fraction (20/100)", steps: ["20/100 × 150", "= 3000/100", "= 30"], opCount: 3 },
@@ -1623,13 +1623,13 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "6-5", title: "Currency exchange",
-        warmup: "Exchange rates are just a ratio between two currencies.",
-        thinking: { prompt: "£1 = $1.30. How would you find the dollar value of £20?", choices: ["Multiply 20 by the exchange rate 1.30", "Divide 20 by 1.30", "Add 1.30 to 20"] },
-        picture: { type: "steps", steps: ["£1 = $1.30", "£20 = 20 × $1.30", "= $26"] },
+        id: "6-5", title: "🪙 Toad's Trading Post",
+        warmup: "At Toad's Trading Post, 1 Gold Coin trades for 1.30 Star Coins. Exchange rates are just a ratio between two currencies.",
+        thinking: { prompt: "1 Gold Coin = 1.30 Star Coins. How would you find the Star Coin value of 20 Gold Coins?", choices: ["Multiply 20 by the exchange rate 1.30", "Divide 20 by 1.30", "Add 1.30 to 20"] },
+        picture: { type: "steps", steps: ["1 Gold = 1.30 Star", "20 Gold = 20 × 1.30", "= 26 Star Coins"] },
         algebra: "20 × 1.30",
-        working: ["£1 = $1.30", "£20 = 20 × 1.30", "= $26"],
-        challenge: { prompt: "Your turn: £1 = $1.30. How many dollars for £50?", answer: "65", hint: "50 × 1.30" },
+        working: ["1 Gold = 1.30 Star", "20 Gold = 20 × 1.30", "= 26 Star Coins"],
+        challenge: { prompt: "Your turn: 1 Gold Coin = 1.30 Star Coins. How many Star Coins for 50 Gold Coins?", answer: "65", hint: "50 × 1.30" },
         strategies: [
           { id: "s1", label: "Multiply directly by the rate", steps: ["20 × 1.30 = 26"], opCount: 1 },
           { id: "s2", label: "Split the rate into 1 + 0.30", steps: ["20 × 1 = 20", "20 × 0.30 = 6", "20 + 6 = 26"], opCount: 3 }
@@ -1641,11 +1641,11 @@ const WORLDS = [
       name: "The Proportion Serpent", hp: 100,
       questions: [
         { prompt: "Ratio 3 : 4, total 70. Find the smaller part.", answer: "30" },
-        { prompt: "Exchange rate: £1 = $1.30. How many $ for £20?", answer: "26" },
-        { prompt: "20% of 150 = ?", answer: "30" },
-        { prompt: "5 people need 150 g each — total for 5?", answer: "750" },
-        { prompt: "Find 40% of 90.", answer: "36" },
-        { prompt: "£1 = $1.30. How many dollars for £10?", answer: "13" }
+        { prompt: "Toad's rate: 1 Gold = 1.30 Star Coins. How many Star Coins for 20 Gold?", answer: "26" },
+        { prompt: "20% of 150 coins = ?", answer: "30" },
+        { prompt: "5 boilers need 150 kg of coal each — total for 5?", answer: "750" },
+        { prompt: "Find 40% of 90 coins.", answer: "36" },
+        { prompt: "1 Gold = 1.30 Star Coins. How many Star Coins for 10 Gold?", answer: "13" }
       ]
     }
   },
@@ -3170,13 +3170,13 @@ function parseBarSpec(promptRaw) {
   let m;
 
   // "$X shared/split/divided in ratio A:B(:C)" — total stated before the ratio
-  m = p.match(/\$?(\d+(?:\.\d+)?)\s*(?:is\s+)?(?:shared|split|divided)\s+in\s+(?:the\s+)?ratio\s+(\d+)\s*:\s*(\d+)(?:\s*:\s*(\d+))?/i);
+  m = p.match(/\$?(\d+(?:\.\d+)?)[^\d]{0,40}?(?:shared|split|divided|mixed|combined)\s+in\s+(?:the\s+)?ratio\s+(\d+)\s*:\s*(\d+)(?:\s*:\s*(\d+))?/i);
   if (m) {
     const groups = [parseInt(m[2], 10), parseInt(m[3], 10)];
     if (m[4]) groups.push(parseInt(m[4], 10));
     return { groups, total: parseFloat(m[1]) };
   }
-  m = p.match(/ratio\s+(\d+)\s*:\s*(\d+)(?:\s*:\s*(\d+))?[^\d]*?sum\s+(\d+(?:\.\d+)?)/i);
+  m = p.match(/ratio\s+(\d+)\s*:\s*(\d+)(?:\s*:\s*(\d+))?[^\d]*?(?:sum|total)\s+(?:is\s+)?(\d+(?:\.\d+)?)/i);
   if (m) {
     const groups = [parseInt(m[1], 10), parseInt(m[2], 10)];
     if (m[3]) groups.push(parseInt(m[3], 10));
