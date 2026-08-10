@@ -1087,16 +1087,16 @@ const WORLDS = [
   {
     id: 1, chain: 0, code: "W1", icon: "🔢", name: "Number Thinking Bridge",
     color: "#3B82C4", status: "ready",
-    tagline: "Number bonds & compensation → written arithmetic",
+    tagline: "Number bonds & compensation → rivets, coins, and lab measurements",
     missions: [
       {
-        id: "1-1", title: "499 + 87",
-        warmup: "Try to solve 499 + 87 in your head. Give yourself 10 seconds before you look at the trick.",
+        id: "1-1", title: "🚢 499 Rivets + 87 More",
+        warmup: "The shipyard has already fitted 499 rivets into the hull. The crew is adding 87 more today. Try 499 + 87 in your head — give yourself 10 seconds before you look at the trick.",
         thinking: { prompt: "In Singapore Math you might round 499 up to 500 to make it friendly, then fix it after. Which way would you think about it?", choices: ["Round 499 up to 500, then take away 1 at the end", "Add the numbers directly without rounding", "Count up from 499 one by one"] },
         picture: { type: "steps", steps: ["499 + 87", "→ round 499 up to 500 (add 1)", "→ 500 + 87 = 587", "→ take away the extra 1"] },
         algebra: "499 + 87 = (500 + 87) − 1",
         working: ["499 + 87", "= (500 + 87) − 1", "= 587 − 1", "= 586"],
-        challenge: { prompt: "Your turn — use the same trick: 298 + 76 = ?", answer: "374", hint: "Round 298 up to 300, add 76, then subtract 2." },
+        challenge: { prompt: "Your turn, engineer — use the same trick: 298 crates + 76 more crates = ?", answer: "374", hint: "Round 298 up to 300, add 76, then subtract 2." },
         strategies: [
           { id: "s1", label: "Round 499 up to 500, adjust after", steps: ["500 + 87 = 587", "587 − 1 = 586"], opCount: 2 },
           { id: "s2", label: "Column addition with carrying", steps: ["9 + 7 = 16, write 6 carry 1", "9 + 8 + 1 = 18, write 8 carry 1", "4 + 0 + 1 = 5 → 586"], opCount: 3 }
@@ -1104,13 +1104,13 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "1-2", title: "603 − 198",
-        warmup: "603 − 198 looks hard. Is there a friendlier number near 198?",
+        id: "1-2", title: "🧪 603 mL − 198 mL",
+        warmup: "A lab beaker holds 603 mL of solution. A student pours out 198 mL for an experiment. 603 − 198 looks hard — is there a friendlier number near 198?",
         thinking: { prompt: "198 is close to 200. What happens if you subtract 200 instead of 198?", choices: ["Round 198 up to 200, then add back 2", "Subtract 198 directly, column by column", "Count backwards from 603 one by one"] },
         picture: { type: "steps", steps: ["603 − 198", "→ 198 is close to 200", "→ 603 − 200 = 403", "→ you subtracted 2 too many, so add it back"] },
         algebra: "603 − 198 = (603 − 200) + 2",
         working: ["603 − 198", "= (603 − 200) + 2", "= 403 + 2", "= 405"],
-        challenge: { prompt: "Your turn: 802 − 297 = ?", answer: "505", hint: "297 is close to 300." },
+        challenge: { prompt: "Your turn, chemist: a tank holds 802 L, and 297 L is drained for testing. 802 − 297 = ?", answer: "505", hint: "297 is close to 300." },
         strategies: [
           { id: "s1", label: "Round 198 up to 200, add back 2", steps: ["603 − 200 = 403", "403 + 2 = 405"], opCount: 2 },
           { id: "s2", label: "Column subtraction with borrowing", steps: ["3 − 8: borrow, 13 − 8 = 5", "borrow again for tens and hundreds", "→ 405"], opCount: 3 }
@@ -1118,8 +1118,8 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "1-3", title: "Round 3,482 to the nearest 100",
-        warmup: "Picture 3,482 on a number line between 3,400 and 3,500.",
+        id: "1-3", title: "🍄 Round Mario's Score",
+        warmup: "Mario's score is 3,482 points. Picture 3,482 on a number line between 3,400 and 3,500 — where does it belong on the scoreboard?",
         thinking: { prompt: "Which hundred is 3,482 closer to — 3,400 or 3,500?", choices: ["Compare 3,482 to the halfway point, 3,450", "Just look at the last digit", "Guess based on how the number looks"] },
         toolChoice: {
           prompt: "Which tool makes it easy to see which hundred is closer?",
@@ -1129,16 +1129,16 @@ const WORLDS = [
         picture: { type: "line", from: 3482, to: 3500, min: 3400, max: 3500 },
         algebra: "3,482 → 3,500 (nearest 100)",
         working: ["3,482 is between 3,400 and 3,500", "the tens digit (8) tells us it's past the halfway point (3,450)", "so 3,482 rounds up to 3,500"],
-        challenge: { prompt: "Your turn: round 6,241 to the nearest 100", answer: "6200", hint: "Is 6,241 closer to 6,200 or 6,300?" }
+        challenge: { prompt: "Your turn: Luigi's score is 6,241. Round it to the nearest 100.", answer: "6200", hint: "Is 6,241 closer to 6,200 or 6,300?" }
       },
       {
-        id: "1-4", title: "25 × 4 × 17 — friendly numbers",
-        warmup: "Multiplication can be done in any order. Which two of these numbers make a really friendly pair?",
+        id: "1-4", title: "🚢 25 × 4 × 17 — Rivet Rows",
+        warmup: "A hull plate has 25 rows of rivets, 4 rivets per row, repeated across 17 plates. Multiplication can be done in any order — which two of these numbers make a really friendly pair?",
         thinking: { prompt: "25 × 4 is a well-known friendly pair. What does it equal?", choices: ["Multiply 25 × 4 first because it's a friendly pair", "Multiply in the order given: 25 × 4 × 17 straight through", "Multiply 4 × 17 first"] },
         picture: { type: "steps", steps: ["25 × 4 × 17", "→ group the friendly pair: (25 × 4) × 17", "→ 25 × 4 = 100", "→ 100 × 17"] },
         algebra: "25 × 4 × 17 = (25 × 4) × 17",
         working: ["25 × 4 × 17", "= (25 × 4) × 17", "= 100 × 17", "= 1700"],
-        challenge: { prompt: "Your turn: 4 × 37 × 25 = ?", answer: "3700", hint: "Group 4 × 25 first." },
+        challenge: { prompt: "Your turn, engineer: 4 × 37 × 25 rivets = ?", answer: "3700", hint: "Group 4 × 25 first." },
         strategies: [
           { id: "s1", label: "Group the friendly pair (25×4)", steps: ["(25 × 4) × 17", "100 × 17 = 1700"], opCount: 2 },
           { id: "s2", label: "Group 4 × 17 first", steps: ["25 × (4 × 17)", "25 × 68 = 1700"], opCount: 3 },
@@ -1147,13 +1147,13 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "1-5", title: "64 + 36 — number bonds to 100",
-        warmup: "Some number pairs are special because they make a round 100.",
+        id: "1-5", title: "🧪 64 mL + 36 mL — the Perfect Batch",
+        warmup: "A chemistry kit needs exactly 100 mL of solution to work. You've measured 64 mL — some number pairs are special because they make a round 100.",
         thinking: { prompt: "64 and 36 — do you recognise this pair?", choices: ["They're a number bond to 100, so they add to exactly 100", "They need to be added digit by digit", "One of them should be rounded first"] },
         picture: { type: "steps", steps: ["64 + 36", "→ 64 needs 36 to reach 100", "→ 36 is exactly that amount", "→ they're a number bond to 100"] },
         algebra: "64 + 36 = 100",
         working: ["64 + 36", "64 is 36 away from 100", "36 + 64 = 100"],
-        challenge: { prompt: "Your turn: 47 + 53 = ?", answer: "100", hint: "Does 47 need 53 to reach 100?" },
+        challenge: { prompt: "Your turn: you've measured 47 mL. How much more to fill exactly 100 mL? 47 + 53 = ?", answer: "100", hint: "Does 47 need 53 to reach 100?" },
         strategies: [
           { id: "s1", label: "Recognise the number bond to 100", steps: ["64 + 36 = 100 (memorised bond)"], opCount: 1 },
           { id: "s2", label: "Column addition", steps: ["4 + 6 = 10, write 0 carry 1", "6 + 3 + 1 = 10 → 100"], opCount: 2 }
@@ -1161,8 +1161,8 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "1-6", title: "234 + 152 — place value columns",
-        warmup: "Break both numbers into hundreds, tens, and ones before adding.",
+        id: "1-6", title: "🚢 234 + 152 Passengers Boarding",
+        warmup: "234 passengers board through the forward gangway, 152 through the aft gangway. Break both numbers into hundreds, tens, and ones before adding.",
         thinking: { prompt: "234 + 152 — what's a clear way to add using place value?", choices: ["Add hundreds, then tens, then ones, and combine", "Add the numbers right to left without separating place value", "Round both numbers first"] },
         toolChoice: {
           prompt: "Which tool helps you keep hundreds, tens, and ones organised?",
@@ -1172,16 +1172,16 @@ const WORLDS = [
         picture: { type: "steps", steps: ["234 + 152", "→ hundreds: 200 + 100 = 300", "→ tens: 30 + 50 = 80", "→ ones: 4 + 2 = 6"] },
         algebra: "234 + 152 = (200+100) + (30+50) + (4+2)",
         working: ["234 + 152", "= (200 + 100) + (30 + 50) + (4 + 2)", "= 300 + 80 + 6", "= 386"],
-        challenge: { prompt: "Your turn: 341 + 226 = ?", answer: "567", hint: "300+200, 40+20, 1+6" }
+        challenge: { prompt: "Your turn: 341 crew members + 226 more crew members = ?", answer: "567", hint: "300+200, 40+20, 1+6" }
       },
       {
-        id: "1-7", title: "98 × 5 — friendly multiplication",
-        warmup: "98 is very close to 100 — a friendly number to multiply by.",
+        id: "1-7", title: "🍄 98 Coins × 5 Levels",
+        warmup: "Mario collects 98 coins per level, across 5 levels. 98 is very close to 100 — a friendly number to multiply by.",
         thinking: { prompt: "How could you use 100 to make 98 × 5 easier?", choices: ["Work out 100 × 5, then subtract 2 × 5", "Multiply 98 × 5 digit by digit", "Round 5 up to 10 instead"] },
         picture: { type: "steps", steps: ["98 × 5", "→ 100 × 5 = 500", "→ 98 is 2 less than 100, so subtract 2 × 5", "→ 500 − 10"] },
         algebra: "98 × 5 = (100 − 2) × 5",
         working: ["98 × 5", "= (100 − 2) × 5", "= 500 − 10", "= 490"],
-        challenge: { prompt: "Your turn: 97 × 4 = ?", answer: "388", hint: "100 × 4 − 3 × 4" },
+        challenge: { prompt: "Your turn: Luigi collects 97 coins per level across 4 levels. 97 × 4 = ?", answer: "388", hint: "100 × 4 − 3 × 4" },
         strategies: [
           { id: "s1", label: "Round to 100, subtract 2 fives", steps: ["100 × 5 = 500", "500 − 10 = 490"], opCount: 2 },
           { id: "s2", label: "Split 98 into 90 + 8", steps: ["90 × 5 = 450", "8 × 5 = 40", "450 + 40 = 490"], opCount: 3 },
@@ -1240,13 +1240,13 @@ const WORLDS = [
     boss: {
       name: "The Compensation Golem", hp: 100,
       questions: [
-        { prompt: "199 + 56 = ?", answer: "255" },
-        { prompt: "701 − 199 = ?", answer: "502" },
-        { prompt: "Round 4,758 to the nearest 100", answer: "4800" },
+        { prompt: "199 rivets + 56 more rivets = ?", answer: "255" },
+        { prompt: "701 coins − 199 spent = ?", answer: "502" },
+        { prompt: "Round Mario's score, 4,758, to the nearest 100", answer: "4800" },
         { prompt: "2 × 37 × 50 = ?", answer: "3700" },
-        { prompt: "998 + 347 = ?", answer: "1345" },
+        { prompt: "998 mL + 347 mL = ?", answer: "1345" },
         { prompt: "58 + 42 = ? (number bond)", answer: "100" },
-        { prompt: "312 + 156 = ? (use place value)", answer: "468" },
+        { prompt: "312 passengers + 156 more = ? (use place value)", answer: "468" },
         { prompt: "96 × 4 = ? (use 100 − 4)", answer: "384" }
       ]
     }
@@ -1254,12 +1254,12 @@ const WORLDS = [
   {
     id: 2, chain: 1, code: "W2", icon: "↔️", name: "Number Line Universe",
     color: "#7B4FC9", status: "ready",
-    tagline: "Jump strategy & negative numbers → directed numbers",
+    tagline: "Jump strategy & negative numbers → submersibles, freezers, and level maps",
     missions: [
       {
-        id: "2-1", title: "A submarine rises",
-        warmup: "Imagine a number line running from deep underwater to the surface.",
-        thinking: { prompt: "A submarine is at −5 m and rises to 8 m. Which direction does it jump, and how far?", choices: ["Count the jump from −5 up to 8 on the number line", "Add −5 and 8 together without thinking about direction", "Subtract 8 from −5"] },
+        id: "2-1", title: "🚢 A Submersible Rises from the Wreck",
+        warmup: "A deep-sea submersible is surveying the Titanic wreck site. Imagine a number line running from deep underwater to the surface.",
+        thinking: { prompt: "The submersible is at −5 m and rises to 8 m. Which direction does it jump, and how far?", choices: ["Count the jump from −5 up to 8 on the number line", "Add −5 and 8 together without thinking about direction", "Subtract 8 from −5"] },
         toolChoice: {
           prompt: "Which tool helps you find the distance of the jump?",
           options: ["draw_diagram", "work_backward", "guess_check"],
@@ -1271,26 +1271,26 @@ const WORLDS = [
         challenge: { prompt: "Your turn: a diver at −12 m rises to 3 m. How far did they rise?", answer: "15", hint: "3 − (−12)" }
       },
       {
-        id: "2-2", title: "Temperature drop",
-        warmup: "Start at 0 on the number line.",
+        id: "2-2", title: "🧊 Iceberg Water Temperature Drop",
+        warmup: "The North Atlantic water temperature starts at 0°C near the ship, then drops sharply near an iceberg. Start at 0 on the number line.",
         thinking: { prompt: "The temperature starts at 0°C and drops 3°C. Which way do you jump?", choices: ["Start at 0 and move 3 steps left", "Start at 0 and move 3 steps right", "Add 3 to 0"] },
         picture: { type: "line", from: 0, to: -3, min: -6, max: 6 },
         algebra: "0 − 3 = x",
         working: ["0 − 3 = x", "x = −3°C"],
-        challenge: { prompt: "Your turn: temperature starts at 2°C and drops 7°C. What is the new temperature?", answer: "-5", hint: "2 − 7" }
+        challenge: { prompt: "Your turn: the water starts at 2°C and drops 7°C near the iceberg. What is the new temperature?", answer: "-5", hint: "2 − 7" }
       },
       {
-        id: "2-3", title: "Adding two negative jumps",
-        warmup: "Two jumps left in a row, both below zero.",
+        id: "2-3", title: "🧪 Freezer Test, Two Cool-Downs",
+        warmup: "A lab sample is cooled twice in a row in the freezer — two jumps left in a row, both below zero.",
         thinking: { prompt: "−4 + (−6) — what happens when you combine two negative jumps?", choices: ["Both jumps go left, so you move left a total of 10", "The two negatives cancel out to zero", "You jump right because two negatives make a positive"] },
         picture: { type: "line", from: -4, to: -10, min: -12, max: 4 },
         algebra: "−4 + (−6) = x",
         working: ["−4 + (−6)", "both jumps move left", "= −10"],
-        challenge: { prompt: "Your turn: −7 + (−5) = ?", answer: "-12", hint: "Both jumps move further left." }
+        challenge: { prompt: "Your turn: the sample cools by −7°C, then another −5°C. −7 + (−5) = ?", answer: "-12", hint: "Both jumps move further left." }
       },
       {
-        id: "2-4", title: "Distance between two points",
-        warmup: "The distance between two points is always positive, even if one point is negative.",
+        id: "2-4", title: "🍄 Distance Between Two Warp Points",
+        warmup: "On Mario's level map, a coin sits at −3 and the flagpole sits at 5. The distance between two points is always positive, even if one point is negative.",
         thinking: { prompt: "What is the distance between −3 and 5 on the number line?", choices: ["Count all the steps from −3 across to 5", "Just subtract the two numbers without counting steps", "Add −3 and 5 together"] },
         toolChoice: {
           prompt: "Which tool makes the distance easy to count?",
@@ -1300,7 +1300,7 @@ const WORLDS = [
         picture: { type: "line", from: -3, to: 5, min: -6, max: 8 },
         algebra: "distance = 5 − (−3)",
         working: ["distance = 5 − (−3)", "= 5 + 3", "= 8"],
-        challenge: { prompt: "Your turn: find the distance between −6 and 2.", answer: "8", hint: "2 − (−6)" }
+        challenge: { prompt: "Your turn: find the distance between the pipe at −6 and the star at 2.", answer: "8", hint: "2 − (−6)" }
       }
     ],
     boss: {
@@ -1308,11 +1308,11 @@ const WORLDS = [
       questions: [
         { prompt: "−4 + 9 = ?", answer: "5" },
         { prompt: "6 − 10 = ?", answer: "-4" },
-        { prompt: "A lift goes from floor −2 to floor 5. How many floors did it rise?", answer: "7" },
+        { prompt: "A lift on the ship goes from deck −2 to deck 5. How many decks did it rise?", answer: "7" },
         { prompt: "−15 + 15 = ?", answer: "0" },
         { prompt: "−3 − 3 = ?", answer: "-6" },
         { prompt: "−8 + (−2) = ?", answer: "-10" },
-        { prompt: "Find the distance between −5 and 4.", answer: "9" }
+        { prompt: "Find the distance between the wreck at −5 m and the surface marker at 4 m.", answer: "9" }
       ]
     }
   },
@@ -1413,25 +1413,25 @@ const WORLDS = [
   {
     id: 4, chain: 3, code: "W4", icon: "🔍", name: "Word Problem Translator",
     color: "#1E9E8B", status: "ready",
-    tagline: "Numbers → Keywords → Model → Equation → Answer",
+    tagline: "Numbers → Keywords → Model → Equation → Answer (shipyard, lab & Mushroom Kingdom stories)",
     isWordProblemWorld: true,
     missions: [
       {
         id: "4-1",
-        text: "Ali and Mei share 84 stickers altogether. Ali has 3 times as many stickers as Mei. How many stickers does Mei have?",
+        text: "Two shipyard workers, Priya and Sam, share 84 rivets altogether. Priya has 3 times as many rivets as Sam. How many rivets does Sam have?",
         toolChoice: {
           prompt: "Which tool would help you start this problem?",
           options: ["draw_diagram", "guess_check", "make_table"],
-          note: "Drawing 1 box for Mei and 3 boxes for Ali turns 'how many stickers?' into a simple division of 84 into 4 boxes."
+          note: "Drawing 1 box for Sam and 3 boxes for Priya turns 'how many rivets?' into a simple division of 84 into 4 boxes."
         },
-        picture: { type: "bar", bars: [{ label: "Mei", units: 1, color: "sg" }, { label: "Ali", units: 3, color: "cam" }], totalLabel: "84" },
+        picture: { type: "bar", bars: [{ label: "Sam", units: 1, color: "sg" }, { label: "Priya", units: 3, color: "cam" }], totalLabel: "84" },
         algebra: "x + 3x = 84",
-        working: ["Let Mei = x, Ali = 3x", "x + 3x = 84", "4x = 84", "x = 21"],
-        answer: "Mei has 21 stickers."
+        working: ["Let Sam = x, Priya = 3x", "x + 3x = 84", "4x = 84", "x = 21"],
+        answer: "Sam has 21 rivets."
       },
       {
         id: "4-2",
-        text: "A water tank holds 60 litres. After 25 litres are used, how many litres remain?",
+        text: "A ship's boiler feed tank holds 60 litres of water. After 25 litres are used to fire the boilers, how many litres remain?",
         picture: { type: "bar", bars: [{ label: "tank", units: 1, color: "sg", plusNumber: null }], totalLabel: "60 litres, 25 used" },
         algebra: "60 − 25 = x",
         working: ["60 − 25 = x", "x = 35"],
@@ -1439,74 +1439,74 @@ const WORLDS = [
       },
       {
         id: "4-3",
-        text: "Emma has twice as many books as Noah. Together they have 45 books. How many books does Noah have?",
+        text: "Mario has twice as many coins as Luigi. Together they have 45 coins. How many coins does Luigi have?",
         toolChoice: {
           prompt: "Which tool would help you start this problem?",
           options: ["draw_diagram", "work_backward", "simplify"],
-          note: "Drawing 1 box for Noah and 2 boxes for Emma makes the total number of boxes (3) visible before you divide."
+          note: "Drawing 1 box for Luigi and 2 boxes for Mario makes the total number of boxes (3) visible before you divide."
         },
-        picture: { type: "bar", bars: [{ label: "Noah", units: 1, color: "sg" }, { label: "Emma", units: 2, color: "cam" }], totalLabel: "45" },
+        picture: { type: "bar", bars: [{ label: "Luigi", units: 1, color: "sg" }, { label: "Mario", units: 2, color: "cam" }], totalLabel: "45" },
         algebra: "x + 2x = 45",
-        working: ["Let Noah = x, Emma = 2x", "x + 2x = 45", "3x = 45", "x = 15"],
-        answer: "Noah has 15 books."
+        working: ["Let Luigi = x, Mario = 2x", "x + 2x = 45", "3x = 45", "x = 15"],
+        answer: "Luigi has 15 coins."
       },
       {
         id: "4-4",
-        text: "Liam scored 15 more points than Zara. Zara scored 27 points. How many points did Liam score?",
+        text: "In the lab, Zara measured 27 mL of solution. Liam measured 15 mL more than Zara. How many mL did Liam measure?",
         picture: { type: "bar", bars: [{ label: "Zara", units: 1, color: "sg" }, { label: "Liam", units: 1, color: "cam", plusNumber: 15 }], totalLabel: "Zara = 27" },
         algebra: "Liam = 27 + 15",
         working: ["Zara = 27", "Liam = Zara + 15", "Liam = 27 + 15", "Liam = 42"],
-        answer: "Liam scored 42 points."
+        answer: "Liam measured 42 mL."
       },
       {
         id: "4-5",
-        text: "A florist has 120 roses. She shares them equally into 8 bunches. How many roses are in each bunch?",
+        text: "A chemistry lab has 120 mL of a reagent. It is shared equally into 8 test tubes. How many mL are in each tube?",
         toolChoice: {
           prompt: "Which tool would help you start this problem?",
           options: ["draw_diagram", "guess_check", "work_backward"],
-          note: "Drawing 8 equal boxes for 120 roses turns the problem straight into a division — no guessing needed."
+          note: "Drawing 8 equal boxes for 120 mL turns the problem straight into a division — no guessing needed."
         },
-        picture: { type: "bar", bars: [{ label: "roses", units: 8, color: "sg" }], totalLabel: "120" },
+        picture: { type: "bar", bars: [{ label: "reagent", units: 8, color: "sg" }], totalLabel: "120" },
         algebra: "8x = 120",
-        working: ["Let 1 bunch = x roses", "8x = 120", "x = 15"],
-        answer: "Each bunch has 15 roses."
+        working: ["Let 1 test tube = x mL", "8x = 120", "x = 15"],
+        answer: "Each test tube has 15 mL."
       }
     ],
     boss: {
       name: "The Riddle Sphinx", hp: 100,
       questions: [
         { prompt: "\"Twice as many\" means multiply by...?", answer: "2" },
-        { prompt: "A shop has 90 apples, sells some, 34 remain. How many sold?", answer: "56" },
-        { prompt: "Sam has half as many pens as Jo (Jo has 24). How many does Sam have?", answer: "12" },
+        { prompt: "A cargo hold has 90 crates, some are unloaded, 34 remain. How many were unloaded?", answer: "56" },
+        { prompt: "Toad has half as many coins as Peach (Peach has 24). How many does Toad have?", answer: "12" },
         { prompt: "\"Altogether\" is usually a clue to which operation? (add/subtract)", answer: "add" },
-        { prompt: "Three friends share 45 sweets equally. How many each?", answer: "15" },
-        { prompt: "Noah has 12 more marbles than Priya. Priya has 20. How many does Noah have?", answer: "32" },
-        { prompt: "84 pencils shared equally into 6 boxes. How many per box?", answer: "14" }
+        { prompt: "Three engineers share 45 bolts equally. How many each?", answer: "15" },
+        { prompt: "Noah has 12 more coins than Priya. Priya has 20. How many does Noah have?", answer: "32" },
+        { prompt: "84 test tubes of reagent shared equally into 6 trays. How many per tray?", answer: "14" }
       ]
     }
   },
   {
     id: 5, chain: 4, code: "W5", icon: "🍕", name: "Fraction Bridge",
     color: "#D6407A", status: "ready",
-    tagline: "Pizza & chocolate bars → improper fractions & operations",
+    tagline: "Mario blocks, ship decks & lab beakers → improper fractions & operations",
     missions: [
       {
-        id: "5-1", title: "3 out of 4 slices",
-        warmup: "Picture a pizza cut into 4 equal slices.",
-        thinking: { prompt: "If 3 of the 4 slices are eaten, what fraction is that?", choices: ["Count how many of the 4 slices are shaded", "Count how many slices are NOT shaded", "Guess the fraction by eye"] },
-        picture: { type: "bar", bars: [{ label: "pizza", units: 4, color: "sg", shaded: 3 }], totalLabel: "3 shaded of 4" },
+        id: "5-1", title: "🍄 3 out of 4 Question Blocks",
+        warmup: "Picture a row of 4 Question Blocks. Mario has already hit 3 of them.",
+        thinking: { prompt: "If 3 of the 4 blocks are hit, what fraction is that?", choices: ["Count how many of the 4 blocks are shaded", "Count how many blocks are NOT shaded", "Guess the fraction by eye"] },
+        picture: { type: "bar", bars: [{ label: "blocks", units: 4, color: "sg", shaded: 3 }], totalLabel: "3 shaded of 4" },
         algebra: "3/4",
-        working: ["4 equal slices total", "3 slices shaded", "fraction eaten = 3/4"],
-        challenge: { prompt: "Your turn: a bar has 5 equal parts, 2 are shaded. What fraction is shaded?", answer: "2/5", hint: "shaded parts / total parts" }
+        working: ["4 blocks total", "3 blocks shaded (hit)", "fraction hit = 3/4"],
+        challenge: { prompt: "Your turn: a row has 5 equal blocks, 2 are hit. What fraction is that?", answer: "2/5", hint: "shaded parts / total parts" }
       },
       {
-        id: "5-2", title: "3/4 of a number is 60",
-        warmup: "If 3 boxes out of 4 equal boxes = 60, what does 1 box equal?",
+        id: "5-2", title: "🚢 3/4 of the Crew (60 Sailors) On Deck",
+        warmup: "If 3 boxes out of 4 equal boxes = 60 sailors on deck, what does 1 box equal?",
         thinking: { prompt: "Find the value of 1 part first, then the whole bar. What's the best order?", choices: ["Find what 1 part is worth first, then find all 4 parts", "Multiply 60 by 3/4", "Divide 60 by 4 only"] },
         picture: { type: "bar", bars: [{ label: "", units: 4, color: "sg", shaded: 3 }], totalLabel: "3 parts = 60" },
         algebra: "(3/4)x = 60",
-        working: ["3 parts = 60", "1 part = 60 ÷ 3 = 20", "4 parts (whole) = 20 × 4 = 80"],
-        challenge: { prompt: "Your turn: 2/5 of a number is 40. Find the number.", answer: "100", hint: "1 part = 40 ÷ 2, then × 5" },
+        working: ["3 parts = 60", "1 part = 60 ÷ 3 = 20", "4 parts (whole crew) = 20 × 4 = 80"],
+        challenge: { prompt: "Your turn: 2/5 of the crew is 40 sailors. Find the total crew.", answer: "100", hint: "1 part = 40 ÷ 2, then × 5" },
         strategies: [
           { id: "s1", label: "Unitary method: find 1 part, then the whole", steps: ["60 ÷ 3 = 20 (1 part)", "20 × 4 = 80 (whole)"], opCount: 2 },
           { id: "s2", label: "Multiply by the reciprocal (4/3)", steps: ["60 × 4/3", "= 240/3", "= 80"], opCount: 3 },
@@ -1515,22 +1515,22 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "5-3", title: "Improper fraction",
-        warmup: "7 quarter-slices of pizza — more than one whole pizza!",
+        id: "5-3", title: "🧪 Improper Fraction — 7 Quarter-Litre Beakers",
+        warmup: "The lab has 7 quarter-litre beakers full of solution — more than one whole litre!",
         thinking: { prompt: "7 quarters is the same as how many wholes and how many quarters left over?", choices: ["Count how many full groups of 4 fit into 7", "Just write 7/4 as it is", "Turn it into a decimal instead"] },
-        picture: { type: "bar", bars: [{ label: "pizza A", units: 4, color: "sg", shaded: 4 }, { label: "pizza B", units: 4, color: "cam", shaded: 3 }], totalLabel: "7/4" },
+        picture: { type: "bar", bars: [{ label: "beaker set A", units: 4, color: "sg", shaded: 4 }, { label: "beaker set B", units: 4, color: "cam", shaded: 3 }], totalLabel: "7/4" },
         algebra: "7/4 = 1¾",
-        working: ["7/4 means 7 quarters", "4 quarters = 1 whole, leaving 3 quarters", "7/4 = 1 whole and 3/4 = 1¾"],
+        working: ["7/4 means 7 quarter-litres", "4 quarters = 1 whole litre, leaving 3 quarters", "7/4 = 1 whole and 3/4 = 1¾ litres"],
         challenge: { prompt: "Your turn: write 9/2 as a mixed number.", answer: "4 1/2", hint: "How many whole 2's fit into 9?" }
       },
       {
-        id: "5-4", title: "Adding fractions, same denominator",
-        warmup: "Two bars with the same number of equal parts.",
+        id: "5-4", title: "🍄 Adding Coin Fractions, Same Denominator",
+        warmup: "Two levels, each split into 5 equal coin zones.",
         thinking: { prompt: "1/5 + 2/5 — what stays the same and what do you add?", choices: ["Keep the denominator the same, just add the shaded parts (numerators)", "Add both the top and bottom numbers", "Multiply the two fractions together"] },
         toolChoice: {
           prompt: "Which tool helps you see what actually changes here?",
           options: ["draw_diagram", "simplify", "guess_check"],
-          note: "Shading the bars shows the denominator (the size of each slice) never changes — only the number of shaded slices adds up."
+          note: "Shading the bars shows the denominator (the size of each coin zone) never changes — only the number of shaded zones adds up."
         },
         picture: { type: "bar", bars: [{ label: "1/5", units: 5, color: "sg", shaded: 1 }, { label: "2/5", units: 5, color: "cam", shaded: 2 }], totalLabel: "" },
         algebra: "1/5 + 2/5",
@@ -1538,9 +1538,9 @@ const WORLDS = [
         challenge: { prompt: "Your turn: 2/7 + 3/7 = ?", answer: "5/7", hint: "Add just the top numbers." }
       },
       {
-        id: "5-5", title: "Equivalent fractions",
-        warmup: "The same amount of pizza, cut into different numbers of slices.",
-        thinking: { prompt: "1/2 of a pizza is the same amount as how many quarters?", choices: ["Cut each half into 2, so 1/2 = 2/4", "1/2 is always smaller than any quarter amount", "1/2 can't be written any other way"] },
+        id: "5-5", title: "🚢 Equivalent Fractions — Lifeboat Capacity",
+        warmup: "The same fraction of lifeboat capacity, split into a different number of equal seats.",
+        thinking: { prompt: "1/2 of a lifeboat's capacity is the same amount as how many quarters?", choices: ["Cut each half into 2, so 1/2 = 2/4", "1/2 is always smaller than any quarter amount", "1/2 can't be written any other way"] },
         picture: { type: "bar", bars: [{ label: "1/2", units: 2, color: "sg", shaded: 1 }, { label: "2/4", units: 4, color: "cam", shaded: 2 }], totalLabel: "" },
         algebra: "1/2 = 2/4",
         working: ["1/2", "multiply top and bottom by 2", "= 2/4"],
@@ -1550,10 +1550,10 @@ const WORLDS = [
     boss: {
       name: "The Fraction Djinn", hp: 100,
       questions: [
-        { prompt: "5/8 of 40 = ?", answer: "25" },
+        { prompt: "5/8 of 40 coins = ?", answer: "25" },
         { prompt: "Write 11/3 as a mixed number (e.g. 3 2/3)", answer: "3 2/3" },
         { prompt: "1/2 + 1/4 = ? (as a fraction, e.g. 3/4)", answer: "3/4" },
-        { prompt: "3/5 of a number is 24. Find the number.", answer: "40" },
+        { prompt: "3/5 of the crew is 24 sailors. Find the total crew.", answer: "40" },
         { prompt: "3/8 + 2/8 = ?", answer: "5/8" },
         { prompt: "Write 2/3 as an equivalent fraction with denominator 9.", answer: "6/9" }
       ]
@@ -1652,12 +1652,12 @@ const WORLDS = [
   {
     id: 7, chain: 6, code: "W7", icon: "🔤", name: "Algebra Translator",
     color: "#C23B3B", status: "ready",
-    tagline: "The most important world — Picture → Boxes → Letters → Solve",
+    tagline: "The most important world — Picture → Boxes → Letters → Solve (Mario blocks, ship crates & lab flasks)",
     isAlgebraLadder: true,
     missions: [
       {
-        id: "7-1", title: "Picture to boxes",
-        warmup: "Two boxes of unknown size, plus 5, makes 17.",
+        id: "7-1", title: "🍄 Two Question Blocks + 5 Coins",
+        warmup: "Two Question Blocks, each hiding the same number of coins, plus 5 coins already on the ground, makes 17 coins total.",
         thinking: { prompt: "Draw two empty boxes, then + 5 = 17. What would you call the size of one box?", choices: ["Draw 2 boxes and call the box size x", "Just guess a number for x", "Add 5 and 17 together first"] },
         toolChoice: {
           prompt: "Which tool turns this picture into an equation?",
@@ -1667,11 +1667,11 @@ const WORLDS = [
         picture: { type: "bar", bars: [{ label: "x", units: 2, color: "sg", plusNumber: 5 }], totalLabel: "17" },
         algebra: "□ + □ + 5 = 17   →   2x + 5 = 17",
         working: ["□ + □ + 5 = 17", "call the box size x: 2x + 5 = 17"],
-        challenge: { prompt: "Your turn: three boxes plus 4 makes 19. Write the equation using x.", answer: "3x+4=19", hint: "3 boxes = 3x" }
+        challenge: { prompt: "Your turn: three Question Blocks plus 4 coins makes 19 coins. Write the equation using x.", answer: "3x+4=19", hint: "3 boxes = 3x" }
       },
       {
-        id: "7-2", title: "Solving 2x + 5 = 17",
-        warmup: "You already wrote the equation — now solve it.",
+        id: "7-2", title: "🍄 Solving 2x + 5 = 17",
+        warmup: "You already wrote the equation for the coin blocks — now solve it.",
         thinking: { prompt: "What's the first step to get x alone?", choices: ["Subtract 5 from both sides first, then divide by 2", "Divide by 2 first, then subtract 5", "Guess and check numbers"] },
         picture: { type: "steps", steps: ["2x + 5 = 17", "→ subtract 5 from both sides", "→ 2x = 12", "→ divide both sides by 2"] },
         algebra: "2x + 5 = 17",
@@ -1679,8 +1679,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: solve 3x + 4 = 19", answer: "5", hint: "3x = 15" }
       },
       {
-        id: "7-3", title: "Expanding brackets",
-        warmup: "2(x + 3) means 2 groups of (x + 3).",
+        id: "7-3", title: "🚢 Expanding Brackets — Lifeboat Crates",
+        warmup: "2 lifeboats each carry a crate of (x + 3) supplies. 2(x + 3) means 2 groups of (x + 3).",
         thinking: { prompt: "If you have 2 groups of (x + 3), what do you get when you share the 2 into the bracket?", choices: ["Multiply 2 by both x and 3 separately", "Only multiply 2 by x", "Only multiply 2 by 3"] },
         toolChoice: {
           prompt: "Which tool shows why the 2 multiplies both terms?",
@@ -1693,8 +1693,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: expand 3(x + 4)", answer: "3x+12", hint: "3 × x and 3 × 4" }
       },
       {
-        id: "7-4", title: "Factorising",
-        warmup: "Factorising is expanding backwards — find the common factor.",
+        id: "7-4", title: "🧪 Factorising — Common Reagent Amount",
+        warmup: "Factorising is expanding backwards — find what 3x flasks and 9 spare flasks have in common.",
         thinking: { prompt: "3x + 9 — what number divides into both 3x and 9?", choices: ["Find the number that divides both 3x and 9", "Add 3x and 9 together", "Divide 3x by 9"] },
         picture: { type: "steps", steps: ["3x + 9", "both terms share a factor of 3", "3x + 9 = 3(x + 3)"] },
         algebra: "3x + 9 = 3(x + 3)",
@@ -1702,8 +1702,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: factorise 4x + 20", answer: "4(x+5)", hint: "common factor is 4" }
       },
       {
-        id: "7-5", title: "Solving with brackets",
-        warmup: "This mission combines everything so far: expand, then solve.",
+        id: "7-5", title: "🚢 Solving with Brackets — Coal Crates",
+        warmup: "3 coal crates, each holding (x + 2) tonnes, total 21 tonnes. This mission combines everything so far: expand, then solve.",
         thinking: { prompt: "3(x + 2) = 21 — what's your first move?", choices: ["Expand the bracket first, then solve like a normal equation", "Divide 21 by 3 first without expanding", "Guess and check numbers"] },
         picture: { type: "steps", steps: ["3(x + 2) = 21", "→ expand: 3x + 6 = 21", "→ subtract 6: 3x = 15", "→ divide by 3"] },
         algebra: "3(x + 2) = 21",
@@ -1717,8 +1717,8 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "7-6", title: "x on both sides",
-        warmup: "This time x appears on both sides of the equals sign.",
+        id: "7-6", title: "🍄 x on Both Sides — Coin Scale",
+        warmup: "On a balance scale, 5x − 3 coins sit on one side and 2x + 9 coins on the other, perfectly balanced.",
         thinking: { prompt: "5x − 3 = 2x + 9 — what's a sensible first move?", choices: ["Move the smaller x-term (2x) to the other side first", "Solve the left side and right side separately", "Ignore the x's on the right side"] },
         picture: { type: "steps", steps: ["5x − 3 = 2x + 9", "→ subtract 2x from both sides: 3x − 3 = 9", "→ add 3 to both sides: 3x = 12", "→ divide by 3"] },
         algebra: "5x − 3 = 2x + 9",
@@ -1743,11 +1743,11 @@ const WORLDS = [
   {
     id: 8, chain: 7, code: "W8", icon: "📐", name: "Geometry Visualization",
     color: "#5B7DB1", status: "ready",
-    tagline: "Angles, area, volume, Pythagoras",
+    tagline: "Angles, area, volume, Pythagoras — rigging, decks, cargo holds & masts",
     missions: [
       {
-        id: "8-1", title: "Angles on a straight line",
-        warmup: "A straight line always measures 180°, no matter how it's split.",
+        id: "8-1", title: "🚢 Rigging Angle on the Mast",
+        warmup: "A taut rigging cable runs straight from bow to stern along the deck rail — a straight line always measures 180°, no matter how it's split.",
         thinking: { prompt: "One angle on a straight line is 110°. What must the other one be?", choices: ["180° − 110°, since the two angles must add to 180°", "110° × 2, since angles double on a line", "Just guess a number less than 110°"] },
         toolChoice: {
           prompt: "Which tool helps you find the missing angle?",
@@ -1760,8 +1760,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: one angle on a straight line is 65°. Find the other.", answer: "115", hint: "180 − 65" }
       },
       {
-        id: "8-2", title: "Angles around a point",
-        warmup: "A full turn around a point is 360°.",
+        id: "8-2", title: "🍄 Spinning Platform — Angles Around a Point",
+        warmup: "A rotating platform in Mario's level completes a full turn — 360° around its centre point.",
         thinking: { prompt: "Three angles meet at a point: 120°, 150°, and x. What equation can you write?", choices: ["120 + 150 + x = 360, since angles around a point sum to 360°", "120 + 150 + x = 180", "Just x = 360"] },
         picture: { type: "angle", startAngle: 0, sectors: [{ deg: 120, label: "120°", known: true }, { deg: 150, label: "150°", known: true }, { deg: 90, label: "?", known: false }] },
         algebra: "120 + 150 + x = 360",
@@ -1769,8 +1769,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: angles 100°, 95°, and x meet at a point. Find x.", answer: "165", hint: "360 − 100 − 95" }
       },
       {
-        id: "8-3", title: "Area of a rectangle",
-        warmup: "Area counts how many unit squares fit inside a shape.",
+        id: "8-3", title: "🚢 Deck Tile Area",
+        warmup: "The ship's promenade deck is being tiled. Area counts how many unit squares fit inside a shape.",
         thinking: { prompt: "A rectangle is 4 units wide and 3 units tall. How do you find the area?", choices: ["Multiply width × height: 4 × 3", "Add width + height: 4 + 3", "Count only the outside edge (perimeter)"] },
         picture: { type: "areagrid", rows: 3, cols: 4 },
         algebra: "Area = 4 × 3",
@@ -1778,8 +1778,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: a rectangle is 6 units by 5 units. Find its area.", answer: "30", hint: "6 × 5" }
       },
       {
-        id: "8-4", title: "Area of a right triangle",
-        warmup: "A right triangle is exactly half of a rectangle.",
+        id: "8-4", title: "🚢 Triangular Sail Area",
+        warmup: "A triangular sail is exactly half of the rectangular sailcloth it was cut from.",
         thinking: { prompt: "A right triangle has base 6 and height 4. What's a quick way to find its area?", choices: ["Find the rectangle area (6×4), then halve it", "Just multiply base × height with no halving", "Add base + height"] },
         toolChoice: {
           prompt: "Which tool connects a new shape (triangle) back to one you already know (rectangle)?",
@@ -1792,8 +1792,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: base 8, height 5. Find the triangle's area.", answer: "20", hint: "(8×5)÷2" }
       },
       {
-        id: "8-5", title: "Volume of a cuboid",
-        warmup: "Volume counts how many unit cubes fill a box, layer by layer.",
+        id: "8-5", title: "🚢 Cargo Hold Volume",
+        warmup: "Volume counts how many unit cubes fill the cargo hold, layer by layer.",
         thinking: { prompt: "A box is 3 wide, 2 deep, and 2 tall. What's a clear way to find the volume?", choices: ["Find one layer's area (3×2), then multiply by the height (2 layers)", "Just add 3+2+2", "Multiply only two of the three numbers"] },
         picture: { type: "areagrid", rows: 2, cols: 3 },
         algebra: "Volume = (3 × 2) × 2",
@@ -1801,8 +1801,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: a box is 4 wide, 3 deep, 2 tall. Find the volume.", answer: "24", hint: "(4×3)×2" }
       },
       {
-        id: "8-6", title: "Pythagoras' theorem",
-        warmup: "In a right triangle, the two shorter sides are the legs; the longest side is the hypotenuse.",
+        id: "8-6", title: "🚢 Mast Height — Pythagoras' Theorem",
+        warmup: "A support cable runs from the top of the mast to the deck. In a right triangle, the two shorter sides are the legs; the longest side is the hypotenuse.",
         thinking: { prompt: "A right triangle has legs 3 and 4. How does Pythagoras find the hypotenuse?", choices: ["Square both legs, add them, then square root the result", "Add the two legs together directly", "Multiply the two legs together"] },
         toolChoice: {
           prompt: "Which tool helps you keep the three steps (square, add, root) in order?",
@@ -1830,12 +1830,12 @@ const WORLDS = [
   {
     id: 9, chain: 8, code: "W9", icon: "🔁", name: "Pattern Explorer",
     color: "#3A8F8A", status: "ready",
-    tagline: "Sequences, nth term, and function machines",
+    tagline: "Sequences, nth term, and function machines — coal logs, crystals & coin counts",
     hasPatternLibrary: true,
     missions: [
       {
-        id: "9-1", title: "Next term in a sequence",
-        warmup: "Look at the jumps between terms to find the pattern.",
+        id: "9-1", title: "🚢 Coal Loaded Each Day",
+        warmup: "The crew logs coal loaded each day: 3, 7, 11, 15 tonnes. Look at the jumps between terms to find the pattern.",
         thinking: { prompt: "3, 7, 11, 15, ... what's the pattern?", choices: ["Each term adds 4 to the one before", "Each term doubles", "Each term adds a different amount each time"] },
         toolChoice: {
           prompt: "Which tool helps you spot the rule behind these numbers?",
@@ -1848,8 +1848,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: 5, 9, 13, 17, ... find the next term.", answer: "21", hint: "17 + 4" }
       },
       {
-        id: "9-2", title: "Square numbers pattern",
-        warmup: "Some patterns come from multiplying a number by itself.",
+        id: "9-2", title: "🧪 Crystal Grid Pattern",
+        warmup: "A chemist grows crystals in square grids: 1, 4, 9, 16... Some patterns come from multiplying a number by itself.",
         thinking: { prompt: "1, 4, 9, 16, ... — what's special about these numbers?", choices: ["Each one is a whole number multiplied by itself (1×1, 2×2, 3×3...)", "Each one adds 3 to the last", "Each one is double the last"] },
         picture: { type: "areagrid", rows: 4, cols: 4 },
         algebra: "4th term = 4 × 4",
@@ -1857,8 +1857,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: what is the 6th square number?", answer: "36", hint: "6×6" }
       },
       {
-        id: "9-3", title: "Finding the nth term",
-        warmup: "The nth term is a formula that gives any term instantly, without counting up.",
+        id: "9-3", title: "🍄 Coins Per Level — the nth Term",
+        warmup: "Mario's coin count per level goes 5, 9, 13, 17... The nth term is a formula that gives any level's coins instantly, without counting up.",
         thinking: { prompt: "5, 9, 13, 17, ... each term adds 4. What's the nth term rule?", choices: ["Start with 4n, then adjust so the 1st term matches (4×1=4, need +1)", "Just use 4n with no adjustment", "Use the term number as the answer"] },
         picture: { type: "sequence", terms: [5, 9, 13, 17], diff: 4 },
         algebra: "nth term = 4n + 1",
@@ -1866,8 +1866,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: sequence 2, 5, 8, 11 (+3 each time). Find the nth term.", answer: "3n-1", hint: "3n, then adjust so n=1 gives 2" }
       },
       {
-        id: "9-4", title: "Function machines",
-        warmup: "A function machine takes an input, applies steps in order, and gives an output.",
+        id: "9-4", title: "⚙️ Engine Function Machine",
+        warmup: "The engine room's control system takes an input, applies steps in order, and gives an output — just like a function machine.",
         thinking: { prompt: "Input 5 → add 3 → multiply by 2 → output. What happens first?", choices: ["Add 3 to the input before multiplying", "Multiply first, then add 3", "Add 3 and multiply 2 at the same time"] },
         picture: { type: "chain", items: [{ type: "value", text: "5" }, { type: "op", text: "+3" }, { type: "value", text: "8" }, { type: "op", text: "×2" }, { type: "value", text: "16" }] },
         algebra: "output = (5 + 3) × 2",
@@ -1875,8 +1875,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: input 6 → add 3 → multiply by 2 → output?", answer: "18", hint: "(6+3)×2" }
       },
       {
-        id: "9-5", title: "Missing term in a sequence",
-        warmup: "Sometimes a term is missing from the middle, not the end.",
+        id: "9-5", title: "🚢 Missing Rivet Count",
+        warmup: "The rivet log shows 6, 11, __, 21, 26 for five hull sections. Sometimes a term is missing from the middle, not the end.",
         thinking: { prompt: "6, 11, __, 21, 26 — the pattern adds 5 each time. What's missing?", choices: ["11 + 5, since the pattern adds 5 between each term", "21 − 6, the difference between the ends", "Just guess a number between 11 and 21"] },
         toolChoice: {
           prompt: "Which tool helps you fill in a missing term without counting one by one?",
@@ -1904,25 +1904,25 @@ const WORLDS = [
   {
     id: 10, chain: 9, code: "W10", icon: "📊", name: "Data & Probability",
     color: "#B15B7D", status: "ready",
-    tagline: "Tables, graphs, mean, median, and probability",
+    tagline: "Tables, graphs, mean, median, and probability — cargo counts, lab readings & item blocks",
     missions: [
       {
-        id: "10-1", title: "Reading a bar chart",
+        id: "10-1", title: "🚢 Coal Loaded by Four Crews",
         warmup: "A bar chart turns a table of data into a picture you can compare at a glance.",
-        thinking: { prompt: "Four friends' book counts: Ali 5, Bo 8, Chen 3, Dee 6. How do you find the total?", choices: ["Add all the values together: 5+8+3+6", "Multiply all the values together", "Just use the biggest number"] },
-        picture: { type: "barchart", categories: [{ label: "Ali", value: 5 }, { label: "Bo", value: 8 }, { label: "Chen", value: 3 }, { label: "Dee", value: 6 }] },
+        thinking: { prompt: "Four crews' coal tonnes today: Crew A 5, Crew B 8, Crew C 3, Crew D 6. How do you find the total?", choices: ["Add all the values together: 5+8+3+6", "Multiply all the values together", "Just use the biggest number"] },
+        picture: { type: "barchart", categories: [{ label: "Crew A", value: 5 }, { label: "Crew B", value: 8 }, { label: "Crew C", value: 3 }, { label: "Crew D", value: 6 }] },
         algebra: "total = 5 + 8 + 3 + 6",
         working: ["5 + 8 + 3 + 6", "= 22"],
-        challenge: { prompt: "Your turn: values 4, 9, 2, 7. Find the total.", answer: "22", hint: "4+9+2+7" }
+        challenge: { prompt: "Your turn: crews load 4, 9, 2, 7 tonnes. Find the total.", answer: "22", hint: "4+9+2+7" }
       },
       {
-        id: "10-2", title: "Finding the mean",
+        id: "10-2", title: "🧪 Mean Temperature Reading",
         warmup: "The mean shares the total equally among all the data points.",
-        thinking: { prompt: "Scores: 4, 8, 6, 2. How do you find the mean?", choices: ["Add them all up, then divide by how many there are", "Just pick the middle value", "Multiply them all together"] },
+        thinking: { prompt: "Lab temperature readings (°C): 4, 8, 6, 2. How do you find the mean?", choices: ["Add them all up, then divide by how many there are", "Just pick the middle value", "Multiply them all together"] },
         picture: { type: "datapoints", min: 0, max: 10, points: [4, 8, 6, 2] },
         algebra: "mean = (4+8+6+2) ÷ 4",
         working: ["total = 4+8+6+2 = 20", "there are 4 values", "mean = 20 ÷ 4 = 5"],
-        challenge: { prompt: "Your turn: scores 3, 7, 5, 9. Find the mean.", answer: "6", hint: "(3+7+5+9)÷4" },
+        challenge: { prompt: "Your turn: readings 3, 7, 5, 9°C. Find the mean.", answer: "6", hint: "(3+7+5+9)÷4" },
         strategies: [
           { id: "s1", label: "Add all, then divide by the count", steps: ["4+8+6+2 = 20", "20 ÷ 4 = 5"], opCount: 2 },
           { id: "s2", label: "Guess a mean, check the deviations balance", steps: ["guess mean = 5: find each deviation (−1, +3, +1, −3)", "check the deviations sum to 0", "confirmed: mean = 5"], opCount: 3 }
@@ -1930,9 +1930,9 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "10-3", title: "Finding the median",
+        id: "10-3", title: "🚢 Median Cargo Crate Weight",
         warmup: "The median is the middle value once the data is in order.",
-        thinking: { prompt: "Data: 7, 2, 9, 4, 5. What's the first step to find the median?", choices: ["Sort the numbers from smallest to largest first", "Add all the numbers together", "Find the biggest number"] },
+        thinking: { prompt: "Crate weights (tonnes): 7, 2, 9, 4, 5. What's the first step to find the median?", choices: ["Sort the numbers from smallest to largest first", "Add all the numbers together", "Find the biggest number"] },
         toolChoice: {
           prompt: "Which tool makes the middle value easy to spot?",
           options: ["make_table", "find_pattern", "case_analysis"],
@@ -1941,25 +1941,25 @@ const WORLDS = [
         picture: { type: "datapoints", min: 0, max: 10, points: [2, 4, 5, 7, 9] },
         algebra: "sorted: 2, 4, 5, 7, 9",
         working: ["sort: 2, 4, 5, 7, 9", "5 values, so the middle one is the 3rd", "median = 5"],
-        challenge: { prompt: "Your turn: data 8, 3, 6, 1, 9. Find the median.", answer: "6", hint: "sort first: 1,3,6,8,9" }
+        challenge: { prompt: "Your turn: crate weights 8, 3, 6, 1, 9. Find the median.", answer: "6", hint: "sort first: 1,3,6,8,9" }
       },
       {
-        id: "10-4", title: "Simple probability",
+        id: "10-4", title: "🍄 Probability — Item Block",
         warmup: "Probability compares favourable outcomes to all possible outcomes.",
-        thinking: { prompt: "A bag has 3 red balls and 5 blue balls. What's the probability of picking red?", choices: ["favourable (3) out of total (8): 3/8", "favourable (3) out of blue (5): 3/5", "Just use the difference: 5-3"] },
+        thinking: { prompt: "An item block has 3 Fire Flowers and 5 Mushrooms. What's the probability of getting a Fire Flower?", choices: ["favourable (3) out of total (8): 3/8", "favourable (3) out of Mushrooms (5): 3/5", "Just use the difference: 5-3"] },
         toolChoice: {
           prompt: "Which tool helps you avoid mixing up 'total' with 'the other group'?",
           options: ["make_table", "case_analysis", "logical_elimination"],
-          note: "Listing every ball as its own outcome (a table of 8 balls) makes it clear the total is 8, not 5 — the count of blue balls only matters for a different question."
+          note: "Listing every item as its own outcome (a table of 8 items) makes it clear the total is 8, not 5 — the count of Mushrooms only matters for a different question."
         },
-        picture: { type: "steps", steps: ["3 red + 5 blue = 8 total balls", "P(red) = red balls ÷ total balls", "P(red) = 3/8"] },
-        algebra: "P(red) = 3/8",
-        working: ["total balls = 3 + 5 = 8", "P(red) = 3/8"],
-        challenge: { prompt: "Your turn: 4 red, 6 blue. Find P(red).", answer: "4/10", hint: "4 out of 10 total" }
+        picture: { type: "steps", steps: ["3 Fire Flowers + 5 Mushrooms = 8 total items", "P(Fire Flower) = Fire Flowers ÷ total items", "P(Fire Flower) = 3/8"] },
+        algebra: "P(Fire Flower) = 3/8",
+        working: ["total items = 3 + 5 = 8", "P(Fire Flower) = 3/8"],
+        challenge: { prompt: "Your turn: 4 Fire Flowers, 6 Mushrooms. Find P(Fire Flower).", answer: "4/10", hint: "4 out of 10 total" }
       },
       {
-        id: "10-5", title: "Probability tree",
-        warmup: "A probability tree shows every possible outcome of two events, one after another.",
+        id: "10-5", title: "🍄 Lucky Coin Probability Tree",
+        warmup: "A probability tree shows every possible outcome of two events, one after another. Toad flips his lucky coin twice.",
         thinking: { prompt: "Flip a coin twice. What are the two possible outcomes on each flip?", choices: ["Heads or Tails, each with probability 1/2", "Only Heads is possible", "The two flips must match"] },
         picture: { type: "tree", stage1: [{ label: "H", prob: "1/2" }, { label: "T", prob: "1/2" }], stage2: [{ label: "H", prob: "1/2" }, { label: "T", prob: "1/2" }] },
         algebra: "P(H,H) = 1/2 × 1/2",
@@ -1970,23 +1970,23 @@ const WORLDS = [
     boss: {
       name: "The Probability Phantom", hp: 100,
       questions: [
-        { prompt: "Values 6, 2, 9, 3. Find the total.", answer: "20" },
-        { prompt: "Scores 5, 9, 4, 2. Find the mean.", answer: "5" },
-        { prompt: "Data 10, 3, 7, 1, 5. Find the median (sort first).", answer: "5" },
-        { prompt: "Bag has 2 red, 6 blue. Find P(red).", answer: "2/8" },
+        { prompt: "Coal tonnes 6, 2, 9, 3. Find the total.", answer: "20" },
+        { prompt: "Temperature readings 5, 9, 4, 2°C. Find the mean.", answer: "5" },
+        { prompt: "Crate weights 10, 3, 7, 1, 5. Find the median (sort first).", answer: "5" },
+        { prompt: "Item block has 2 Fire Flowers, 6 Mushrooms. Find P(Fire Flower).", answer: "2/8" },
         { prompt: "A coin is flipped twice. Find P(Heads then Tails).", answer: "1/4" },
-        { prompt: "Values 12, 15, 9, 14. Find the total.", answer: "50" }
+        { prompt: "Coal tonnes 12, 15, 9, 14. Find the total.", answer: "50" }
       ]
     }
   },
   {
     id: 11, chain: 10, code: "W11", icon: "🎓", name: "Cambridge Exam Translator",
     color: "#1F3A5F", status: "ready",
-    tagline: "How Cambridge gives marks",
+    tagline: "How Cambridge gives marks — rivets, beakers & the exam marker's logbook",
     missions: [
       {
-        id: "11-1", title: "35 × 19, mental to formal",
-        warmup: "Round 19 up to 20, then adjust.",
+        id: "11-1", title: "🚢 35 Rivets × 19 Rows",
+        warmup: "A hull section has 35 rivets per row, across 19 rows. Round 19 up to 20, then adjust.",
         thinking: { prompt: "How would you tackle 35 × 19 in your head?", choices: ["Round 19 up to 20, then subtract one group of 35", "Multiply 35 × 19 directly, digit by digit", "Round 35 up to 40 instead"] },
         picture: { type: "steps", steps: ["35 × 19", "→ 35 × 20 − 35", "→ 700 − 35"] },
         algebra: "35 × 19 = 35 × (20 − 1)",
@@ -2000,8 +2000,8 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "11-2", title: "Where do the marks come from?",
-        warmup: "A Cambridge marker reads your working line by line, not your final answer alone.",
+        id: "11-2", title: "⚙️ Where Do the Marks Come From?",
+        warmup: "A Cambridge marker reads your working line by line, like an inspector checking a ship's logbook — not just your final answer.",
         thinking: { prompt: "In the working for 35 × 19 above, which line shows the method, and which line shows the final answer?", choices: ["The method lines earn M1, the final answer earns A1", "Only the final answer matters for marks", "Neat handwriting earns the most marks"] },
         picture: { type: "steps", steps: ["M1 = marks for a correct method shown", "A1 = marks for an accurate final answer", "B1 = marks for a stated fact, independent of method"] },
         algebra: "M1 + M1 + A1",
@@ -2009,8 +2009,8 @@ const WORLDS = [
         challenge: { prompt: "If you write only \"665\" with no working, would you likely get full marks? (yes/no)", answer: "no", hint: "Markers reward the method, not just the answer." }
       },
       {
-        id: "11-3", title: "47 × 9, mental to formal",
-        warmup: "9 is very close to 10 — a friendly number to multiply by.",
+        id: "11-3", title: "🧪 47 mL × 9 Beakers",
+        warmup: "A lab needs 47 mL in each of 9 beakers. 9 is very close to 10 — a friendly number to multiply by.",
         thinking: { prompt: "How could you use 10 to make 47 × 9 easier?", choices: ["Work out 47 × 10, then subtract one group of 47", "Multiply 47 × 9 digit by digit", "Round 47 up to 50 instead"] },
         picture: { type: "steps", steps: ["47 × 9", "→ 47 × 10 − 47", "→ 470 − 47"] },
         algebra: "47 × 9 = 47 × (10 − 1)",
@@ -2024,8 +2024,8 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "11-4", title: "1000 − 463, compensation subtraction",
-        warmup: "Subtracting from 1000 is easier than it looks with the right trick.",
+        id: "11-4", title: "🚢 1000 L Fuel Tank − 463 L Used",
+        warmup: "A 1000 L fuel tank has 463 L used. Subtracting from 1000 is easier than it looks with the right trick.",
         thinking: { prompt: "1000 − 463 — what's a clean way to work this out?", choices: ["Subtract from each digit as if borrowing from 999, then add 1", "Subtract 463 from 1000 column by column with lots of borrowing", "Round 463 to 500 first"] },
         picture: { type: "steps", steps: ["1000 − 463", "→ 999 − 463 = 536 (no borrowing needed)", "→ add the 1 back: 536 + 1"] },
         algebra: "1000 − 463 = (999 − 463) + 1",
@@ -2057,21 +2057,21 @@ const WORLDS = [
     isGrandChallenge: true,
     missions: [
       {
-        id: "12-1", title: "Tom & Sam, together 96",
-        text: "Tom has some marbles. Sam has 3 times as many as Tom. Together they have 96 marbles. How many marbles does each person have?",
+        id: "12-1", title: "🍄 Mario & Luigi, Together 96 Coins",
+        text: "Mario has some coins. Luigi has 3 times as many as Mario. Together they have 96 coins. How many coins does each have?",
         toolChoice: {
           prompt: "Which tool would help you start this quest?",
           options: ["draw_diagram", "guess_check", "make_table"],
-          note: "Drawing 1 box for Tom and 3 boxes for Sam turns 96 marbles into a simple division across 4 boxes."
+          note: "Drawing 1 box for Mario and 3 boxes for Luigi turns 96 coins into a simple division across 4 boxes."
         },
-        picture: { type: "bar", bars: [{ label: "Tom", units: 1, color: "sg" }, { label: "Sam", units: 3, color: "cam" }], totalLabel: "96" },
+        picture: { type: "bar", bars: [{ label: "Mario", units: 1, color: "sg" }, { label: "Luigi", units: 3, color: "cam" }], totalLabel: "96" },
         algebra: "x + 3x = 96",
-        working: ["Let Tom's marbles = x", "Sam's marbles = 3x", "x + 3x = 96", "4x = 96", "x = 24", "Tom = 24,  Sam = 72"],
-        answer: "Tom = 24, Sam = 72"
+        working: ["Let Mario's coins = x", "Luigi's coins = 3x", "x + 3x = 96", "4x = 96", "x = 24", "Mario = 24,  Luigi = 72"],
+        answer: "Mario = 24, Luigi = 72"
       },
       {
-        id: "12-2", title: "Box notation",
-        text: "Two boxes of unknown size, plus 5, makes 17. Find the size of one box.",
+        id: "12-2", title: "🍄 Box Notation — Question Blocks",
+        text: "Two Question Blocks of unknown coin value, plus 5 coins on the ground, makes 17. Find the value of one block.",
         toolChoice: {
           prompt: "Which tool turns this picture into an equation?",
           options: ["draw_diagram", "simplify", "work_backward"],
@@ -2083,8 +2083,8 @@ const WORLDS = [
         answer: "x = 6"
       },
       {
-        id: "12-3", title: "Ratio 1 : 2",
-        text: "Two numbers are in the ratio 1 : 2. Their sum is 36. Find the two numbers.",
+        id: "12-3", title: "🚢 Engine Room Ratio 1 : 2",
+        text: "Two boiler rooms share coal in the ratio 1 : 2. The sum is 36 tonnes. Find the two amounts.",
         toolChoice: {
           prompt: "Which tool turns this ratio into two numbers?",
           options: ["draw_diagram", "simplify", "guess_check"],
@@ -2092,12 +2092,12 @@ const WORLDS = [
         },
         picture: { type: "bar", bars: [{ label: "", units: 1, color: "sg" }, { label: "", units: 2, color: "cam" }], totalLabel: "36" },
         algebra: "x + 2x = 36",
-        working: ["Let the smaller number = x", "the larger number = 2x", "x + 2x = 36", "3x = 36", "x = 12", "numbers are 12 and 24"],
+        working: ["Let the smaller amount = x", "the larger amount = 2x", "x + 2x = 36", "3x = 36", "x = 12", "amounts are 12 and 24 tonnes"],
         answer: "12 and 24"
       },
       {
-        id: "12-4", title: "Submarine rise",
-        text: "A submarine is at −5 m. It rises to 8 m. How far did it rise?",
+        id: "12-4", title: "🚢 Submersible Rise from the Wreck",
+        text: "A deep-sea submersible surveying the Titanic wreck is at −5 m. It rises to 8 m. How far did it rise?",
         toolChoice: {
           prompt: "Which tool helps you find the distance of the rise?",
           options: ["draw_diagram", "work_backward", "guess_check"],
@@ -2109,8 +2109,8 @@ const WORLDS = [
         answer: "13 m"
       },
       {
-        id: "12-5", title: "Mental to formal: 52 × 19",
-        text: "Calculate 52 × 19 by rounding 19 up to 20 and adjusting.",
+        id: "12-5", title: "🚢 Mental to Formal: 52 Rivets × 19 Rows",
+        text: "Calculate 52 rivets × 19 rows by rounding 19 up to 20 and adjusting.",
         picture: { type: "steps", steps: ["52 × 19", "→ 52 × 20 − 52", "→ 1040 − 52"] },
         algebra: "52 × 19 = 52 × (20 − 1)",
         working: ["52 × 19", "= 52 × (20 − 1)", "= 52 × 20 − 52 × 1", "= 1040 − 52", "= 988"],
@@ -2123,8 +2123,8 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "12-6", title: "3/4 of a number is 60",
-        text: "3/4 of a number is 60. Find the number.",
+        id: "12-6", title: "🚢 3/4 of the Crew is 60 Sailors",
+        text: "3/4 of the crew is 60 sailors. Find the total crew.",
         picture: { type: "bar", bars: [{ label: "", units: 4, color: "sg", shaded: 3 }], totalLabel: "3 parts = 60" },
         algebra: "(3/4)x = 60",
         working: ["3 parts = 60", "1 part = 60 ÷ 3 = 20", "4 parts (whole) = 20 × 4 = 80"],
@@ -2137,17 +2137,17 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "12-7", title: "Age problem",
-        text: "Mary is 3 times as old as her son. In 5 years, she will be twice as old as him. Find their current ages.",
+        id: "12-7", title: "🚢 Captain & Cabin Boy — Age Problem",
+        text: "The captain is 3 times as old as the cabin boy. In 5 years, the captain will be twice as old as him. Find their current ages.",
         toolChoice: {
           prompt: "Age problems change over time — which tool helps you track that?",
           options: ["make_table", "work_backward", "case_analysis"],
           note: "A quick table of 'now' vs 'in 5 years' for both people keeps the two moments in time from getting mixed up."
         },
-        picture: { type: "bar", bars: [{ label: "son (now)", units: 1, color: "sg" }, { label: "Mary (now)", units: 3, color: "cam" }], totalLabel: "" },
+        picture: { type: "bar", bars: [{ label: "cabin boy (now)", units: 1, color: "sg" }, { label: "captain (now)", units: 3, color: "cam" }], totalLabel: "" },
         algebra: "3x + 5 = 2(x + 5)",
-        working: ["Let son = x, Mary = 3x", "in 5 years: 3x + 5 = 2(x + 5)", "3x + 5 = 2x + 10", "x = 5", "son = 5, Mary = 15"],
-        answer: "Son = 5, Mary = 15"
+        working: ["Let cabin boy = x, captain = 3x", "in 5 years: 3x + 5 = 2(x + 5)", "3x + 5 = 2x + 10", "x = 5", "cabin boy = 5, captain = 15"],
+        answer: "Cabin boy = 5, Captain = 15"
       }
     ],
     boss: {
@@ -2158,7 +2158,7 @@ const WORLDS = [
         { prompt: "Ratio 1:2, sum 36 — find the smaller part.", answer: "12" },
         { prompt: "8 − (−5) = ?", answer: "13" },
         { prompt: "52 × 19 = ?", answer: "988" },
-        { prompt: "3/4 of a number is 60. Find the number.", answer: "80" },
+        { prompt: "3/4 of the crew is 60. Find the total crew.", answer: "80" },
         { prompt: "3(x + 2) = 21. Find x.", answer: "5" }
       ]
     }
