@@ -3483,12 +3483,145 @@ function buildEquationScratchpad(spec) {
   return wrap;
 }
 
+function gcdTwo(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a; }
+
+/* "Factorise: 6x + 18" / "Factorise 4x - 20" */
+function parseFactoriseSpec(promptRaw) {
+  const p = promptRaw.replace(/−/g, "-");
+  const m = p.match(/factori[sz]e?:?\s*(\d+)x\s*([+-])\s*(\d+)/i);
+  if (!m) return null;
+  return { a: parseInt(m[1], 10), sign: m[2], b: parseInt(m[3], 10) };
+}
+
+function buildFactoriseScratchpad(spec) {
+  const wrap = document.createElement("div");
+  const g = gcdTwo(spec.a, spec.b);
+  let claimed = false;
+
+  const exprRow = document.createElement("div");
+  exprRow.className = "eq-cambridge";
+  exprRow.innerHTML = `<span class="eq-row-label">🧮</span><span class="eq-cambridge-text">${spec.a}x ${spec.sign} ${spec.b}</span>`;
+  wrap.appendChild(exprRow);
+
+  const stepNote = document.createElement("div");
+  stepNote.className = "section-sub";
+  stepNote.style.margin = "6px 0";
+  stepNote.textContent = "Step 1: find the biggest number that divides evenly into both terms.";
+  wrap.appendChild(stepNote);
+
+  const gcfRow = document.createElement("div");
+  gcfRow.className = "eq-row";
+  gcfRow.innerHTML = `<span class="eq-row-label">GCF</span><input class="sp-nl-input eq-input" id="fac-gcf-input" type="number" placeholder="?">`;
+  wrap.appendChild(gcfRow);
+
+  const resultRow = document.createElement("div");
+  resultRow.className = "eq-cambridge";
+  wrap.appendChild(resultRow);
+
+  const checkMsg = document.createElement("div");
+  checkMsg.className = "eq-check-msg";
+
+  function renderResult() {
+    const gcfVal = parseInt(wrap.querySelector("#fac-gcf-input").value, 10);
+    if (gcfVal > 0) {
+      resultRow.innerHTML = `<span class="eq-row-label">=</span><span class="eq-cambridge-text">${gcfVal} ( x ${spec.sign} <input class="sp-nl-input eq-input" id="fac-inner-input" type="number" placeholder="?" style="width:52px"> )</span>`;
+    } else {
+      resultRow.innerHTML = "";
+    }
+  }
+  wrap.querySelector("#fac-gcf-input").oninput = renderResult;
+
+  const checkRow = document.createElement("div");
+  checkRow.className = "sp-clear-row";
+  const checkBtn = mkBtn("Check my factorising", () => {
+    const gcfInput = wrap.querySelector("#fac-gcf-input");
+    const innerInput = wrap.querySelector("#fac-inner-input");
+    const gcfVal = gcfInput ? parseInt(gcfInput.value, 10) : NaN;
+    const innerVal = innerInput ? parseInt(innerInput.value, 10) : NaN;
+    if (gcfVal === g && innerVal === spec.b / g) {
+      checkMsg.textContent = claimed ? "✓ That's fully factorised!" : "✓ That's fully factorised! +5 XP";
+      checkMsg.classList.add("eq-check-good");
+      if (!claimed) { claimed = true; addXP(5); }
+    } else {
+      checkMsg.textContent = "Not quite yet — check your GCF divides both numbers exactly.";
+      checkMsg.classList.remove("eq-check-good");
+    }
+  }, true);
+  checkRow.appendChild(checkBtn);
+  wrap.appendChild(checkMsg);
+  wrap.appendChild(checkRow);
+  return wrap;
+}
+
+/* "Solve: 2(x + 4) = 20" */
+function parseExpandSolveSpec(promptRaw) {
+  const p = promptRaw.replace(/−/g, "-");
+  const m = p.match(/(\d+)\s*\(\s*x\s*([+-])\s*(\d+)\s*\)\s*=\s*(-?\d+)/i);
+  if (!m) return null;
+  return { n: parseInt(m[1], 10), sign: m[2], c: parseInt(m[3], 10), t: parseInt(m[4], 10) };
+}
+
+function buildExpandSolveScratchpad(spec) {
+  const wrap = document.createElement("div");
+  let expandClaimed = false;
+
+  const exprRow = document.createElement("div");
+  exprRow.className = "eq-cambridge";
+  exprRow.innerHTML = `<span class="eq-row-label">🧮</span><span class="eq-cambridge-text">${spec.n}(x ${spec.sign} ${spec.c}) = ${spec.t}</span>`;
+  wrap.appendChild(exprRow);
+
+  const stepNote = document.createElement("div");
+  stepNote.className = "section-sub";
+  stepNote.style.margin = "6px 0";
+  stepNote.textContent = `Step 1: expand the bracket — what is ${spec.n} × ${spec.c}?`;
+  wrap.appendChild(stepNote);
+
+  const expandRow = document.createElement("div");
+  expandRow.className = "eq-row";
+  expandRow.innerHTML = `<span class="eq-row-label">${spec.n}x ${spec.sign}</span><input class="sp-nl-input eq-input" id="exp-c-input" type="number" placeholder="?"><span class="eq-sign">= ${spec.t}</span>`;
+  wrap.appendChild(expandRow);
+
+  const checkMsg = document.createElement("div");
+  checkMsg.className = "eq-check-msg";
+  wrap.appendChild(checkMsg);
+
+  const eqHolder = document.createElement("div");
+  wrap.appendChild(eqHolder);
+
+  const checkRow = document.createElement("div");
+  checkRow.className = "sp-clear-row";
+  const checkBtn = mkBtn("Check my expansion", () => {
+    const val = parseInt(wrap.querySelector("#exp-c-input").value, 10);
+    if (val === spec.n * spec.c) {
+      checkMsg.textContent = expandClaimed ? "✓ Expanded! Now solve it below." : "✓ Expanded! Now solve it below. +5 XP";
+      checkMsg.classList.add("eq-check-good");
+      if (!expandClaimed) { expandClaimed = true; addXP(5); }
+      if (!eqHolder.hasChildNodes()) {
+        const stepNote2 = document.createElement("div");
+        stepNote2.className = "section-sub";
+        stepNote2.style.margin = "10px 0 6px";
+        stepNote2.textContent = "Step 2: solve the simplified equation, same as before.";
+        eqHolder.appendChild(stepNote2);
+        eqHolder.appendChild(buildEquationScratchpad({ n: spec.n, op: spec.sign, c: spec.n * spec.c, t: spec.t }));
+      }
+    } else {
+      checkMsg.textContent = `Not quite yet — recheck ${spec.n} × ${spec.c}.`;
+      checkMsg.classList.remove("eq-check-good");
+    }
+  }, true);
+  checkRow.appendChild(checkBtn);
+  wrap.appendChild(checkRow);
+  return wrap;
+}
+
 function attachScratchpad(container, prompt, forceLine, autoOpen, forceFraction) {
   const barSpec = parseBarSpec(prompt);
-  const eqSpec = !barSpec ? parseEquationSpec(prompt) : null;
-  const isFraction = !barSpec && !eqSpec && (forceFraction || isFractionQuestion(prompt));
-  const isLine = !barSpec && !eqSpec && !isFraction && (forceLine || isNumberLineQuestion(prompt));
-  const icon = barSpec ? "🧱" : eqSpec ? "🔤" : isFraction ? "🥧" : (isLine ? "📏" : "🧮");
+  const facSpec = !barSpec ? parseFactoriseSpec(prompt) : null;
+  const expSpec = !barSpec && !facSpec ? parseExpandSolveSpec(prompt) : null;
+  const eqSpec = !barSpec && !facSpec && !expSpec ? parseEquationSpec(prompt) : null;
+  const isFraction = !barSpec && !facSpec && !expSpec && !eqSpec && (forceFraction || isFractionQuestion(prompt));
+  const isLine = !barSpec && !facSpec && !expSpec && !eqSpec && !isFraction && (forceLine || isNumberLineQuestion(prompt));
+  const icon = barSpec ? "🧱" : facSpec ? "🧩" : expSpec ? "🔤" : eqSpec ? "🔤" : isFraction ? "🥧" : (isLine ? "📏" : "🧮");
   const toggleBtn = mkBtn(`${icon} Working Space`, null, true);
   toggleBtn.classList.add("scratchpad-toggle");
   const padHolder = document.createElement("div");
@@ -3498,9 +3631,9 @@ function attachScratchpad(container, prompt, forceLine, autoOpen, forceFraction)
     padHolder.innerHTML = "";
     const titled = document.createElement("div");
     titled.className = "scratchpad";
-    const title = barSpec ? "Cut the bar — work it out here" : eqSpec ? "Boxes → equation — build it here" : isFraction ? "Fraction pies — tap to shade" : (isLine ? "Number line — mark your jump" : "Th · H · T · O — work it out here");
+    const title = barSpec ? "Cut the bar — work it out here" : facSpec ? "Pull out the common factor — work it out here" : expSpec ? "Expand, then solve — work it out here" : eqSpec ? "Boxes → equation — build it here" : isFraction ? "Fraction pies — tap to shade" : (isLine ? "Number line — mark your jump" : "Th · H · T · O — work it out here");
     titled.innerHTML = `<div class="scratchpad-title">${title}</div>`;
-    titled.appendChild(barSpec ? buildBarModelScratchpad(barSpec) : eqSpec ? buildEquationScratchpad(eqSpec) : isFraction ? buildPieScratchpad(prompt) : (isLine ? buildNumberLineScratchpad(prompt) : buildScratchpadGrid(prompt)));
+    titled.appendChild(barSpec ? buildBarModelScratchpad(barSpec) : facSpec ? buildFactoriseScratchpad(facSpec) : expSpec ? buildExpandSolveScratchpad(expSpec) : eqSpec ? buildEquationScratchpad(eqSpec) : isFraction ? buildPieScratchpad(prompt) : (isLine ? buildNumberLineScratchpad(prompt) : buildScratchpadGrid(prompt)));
     padHolder.appendChild(titled);
   }
 
@@ -3531,6 +3664,30 @@ function monsterFace(hpPct) {
   if (hpPct > 66) return "👹";
   if (hpPct > 33) return "😣";
   return "😩";
+}
+
+function structuredHint(prompt) {
+  const facSpec = parseFactoriseSpec(prompt);
+  if (facSpec) {
+    const g = gcdTwo(facSpec.a, facSpec.b);
+    return `${facSpec.a}x ${facSpec.sign} ${facSpec.b} = ${g}( x ${facSpec.sign} ${facSpec.b / g} ) — fill in that last blank using the Working Space above.`;
+  }
+  const expSpec = parseExpandSolveSpec(prompt);
+  if (expSpec) {
+    const nc = expSpec.n * expSpec.c;
+    return `${expSpec.n}(x ${expSpec.sign} ${expSpec.c}) = ${expSpec.t}  →  expands to  ${expSpec.n}x ${expSpec.sign} ${nc} = ${expSpec.t}. Use the Working Space above to finish solving for x.`;
+  }
+  const eqSpec = parseEquationSpec(prompt);
+  if (eqSpec) {
+    const opWord = eqSpec.op === "+" ? "subtract" : "add";
+    return `${eqSpec.n}x ${eqSpec.op} ${eqSpec.c} = ${eqSpec.t}  →  first ${opWord} ${eqSpec.c} from both sides, then divide by ${eqSpec.n}.`;
+  }
+  const barSpec = parseBarSpec(prompt);
+  if (barSpec) {
+    const totalBoxes = barSpec.groups.reduce((s, n) => s + n, 0);
+    return `Total boxes = ${barSpec.groups.join(" + ")} = ${totalBoxes}. Each box = ${barSpec.total} ÷ ${totalBoxes}.`;
+  }
+  return null;
 }
 
 function bossHint(prompt) {
@@ -4566,7 +4723,7 @@ function renderBossBattle(container) {
     if (bossState.hintLevel >= 1) {
       const hintBox = document.createElement("div");
       hintBox.className = "boss-hint-box";
-      hintBox.textContent = "💡 " + bossHint(q.prompt);
+      hintBox.textContent = "💡 " + (structuredHint(q.prompt) || bossHint(q.prompt));
       box.appendChild(hintBox);
     }
     if (bossState.hintLevel >= 2) {
