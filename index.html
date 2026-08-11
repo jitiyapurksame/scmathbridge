@@ -716,6 +716,7 @@ mark { padding: 1px 3px; border-radius: 3px; font-weight: 700; }
 .boss-q-count { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 6px; }
 .boss-q { font-size: 16px; font-weight: 600; }
 .boss-hint-box { background: var(--gold-tint); color: #8A6D1E; border-radius: 7px; padding: 9px 11px; font-size: 12.5px; font-weight: 600; margin: 4px 0 12px; }
+.boss-hint-answer { background: #E4EFE2; color: #2F5D34; }
 .boss-cheer { font-size: 12.5px; font-weight: 700; color: var(--green); margin-bottom: 8px; min-height: 16px; }
 
 .victory-box { text-align: center; padding: 10px 0; }
@@ -2053,7 +2054,7 @@ const WORLDS = [
   {
     id: 12, chain: 11, code: "W12", icon: "👑", name: "Grand Bridge Challenge",
     color: "#4B2E83", status: "ready",
-    tagline: "The final gauntlet — cross the last bridge to rescue Princess Cambridge",
+    tagline: "The final gauntlet — cross the last bridge to rescue Princess Anna",
     isGrandChallenge: true,
     missions: [
       {
@@ -2338,10 +2339,7 @@ function xpIntoLevel() { return store.xp % 100; }
 
 function isWorldUnlocked(world) {
   if (world.status === "soon") return false;
-  const idx = UNLOCK_CHAIN.indexOf(world.id);
-  if (idx <= 0) return true;
-  const prevId = UNLOCK_CHAIN[idx - 1];
-  return (store.worldStars[prevId] || 0) >= 1;
+  return true; // all worlds unlocked — J.J. can jump to any world even after a cache clear
 }
 
 function showToast(msg) {
@@ -2978,9 +2976,9 @@ function buildScratchpadGrid(prompt) {
 /* ---------- NUMBER LINE detection + builder (for directed-number / jump questions) ---------- */
 
 function isNumberLineQuestion(prompt) {
-  const lineWords = /floor|temperature|rises?\b|drops?\b|lift\b|submarine|diver|distance between|number ?line|sea level|elevation/i;
+  if (/\bx\b|\d+x\b|x\d+|\bsolve\b|\bexpand\b|\bfactori[sz]e?\b/i.test(prompt)) return false; // algebra, not a number-line concept — checked first so substrings like "facto-rise" can't slip through below
+  const lineWords = /\bfloor\b|\btemperature\b|\brises?\b|\bdrops?\b|\blift\b|\bsubmarine\b|\bsubmersible\b|\bdiver\b|distance between|number ?line|\bsea level\b|\belevation\b/i;
   if (lineWords.test(prompt)) return true;
-  if (/\bx\b|\d+x\b|x\d+|\bsolve\b|\bexpand\b/i.test(prompt)) return false; // algebra, not a number-line concept
   const hasSignedNumber = /(?:^|[^0-9])[−-]\s?\d/.test(prompt);
   if (!hasSignedNumber) return false;
   const nums = (prompt.match(/-?\d+/g) || []).map(n => Math.abs(parseInt(n, 10)));
@@ -3536,8 +3534,31 @@ function monsterFace(hpPct) {
 }
 
 function bossHint(prompt) {
+  // Algebra
+  if (/\bfactori[sz]e?\b/i.test(prompt)) return "Find the biggest number that divides evenly into every term, then pull it out front.";
+  if (/\bexpand\b/i.test(prompt)) return "Multiply the number outside the bracket by each term inside, one at a time.";
+  if (/x\s*(?:on both sides|.*=.*x)/i.test(prompt) || /\d?x[^=]*=.*\d?x/i.test(prompt)) return "Move the smaller x-term to the other side first, so x only appears once.";
+  if (/\bsolve\b|=.*x|\bx\b.*=/i.test(prompt)) return "Get x alone: undo addition/subtraction first, then undo multiplication/division.";
+  // Geometry
+  if (/hypotenuse|pythagoras/i.test(prompt)) return "Square both known legs, add them together, then take the square root.";
+  if (/angle.*(line|straight)/i.test(prompt)) return "Angles on a straight line always add up to 180°.";
+  if (/angle.*point/i.test(prompt)) return "Angles all the way around a point always add up to 360°.";
+  if (/\barea\b.*triangle|triangle.*\barea\b/i.test(prompt)) return "Find the area of the full rectangle first, then take half.";
+  if (/\barea\b/i.test(prompt)) return "Multiply width × height to count how many unit squares fit inside.";
+  if (/\bvolume\b/i.test(prompt)) return "Find the area of one layer first, then multiply by how many layers there are.";
+  // Ratio & fractions
+  if (/ratio\s+\d+\s*:\s*\d+/i.test(prompt)) return "Add up all the ratio numbers to find the total number of boxes, then share the total between them.";
+  if (/\d\s*\/\s*\d|\bfraction\b|shared equally|\beach\b/i.test(prompt)) return "Find what 1 part is worth first, then work out how many parts you actually need.";
+  // Sequences & patterns
+  if (/nth term|next term|missing term|sequence/i.test(prompt)) return "Find the constant difference between terms first — that's the key to the whole pattern.";
+  if (/square number/i.test(prompt)) return "Square numbers come from multiplying a whole number by itself: 1×1, 2×2, 3×3...";
+  // Data & probability
+  if (/\bmean\b/i.test(prompt)) return "Add every value together, then divide by how many values there are.";
+  if (/\bmedian\b/i.test(prompt)) return "Sort the values from smallest to largest first — the middle one is the median.";
+  if (/\bprobability\b|P\(/i.test(prompt)) return "Probability = favourable outcomes ÷ total outcomes. Count both carefully.";
+  // Plain arithmetic (mental-math worlds)
   if (/round/i.test(prompt)) return "Look at the digit just after the place you're rounding to — 5 or more rounds up.";
-  if (/×|x(?!\w)|\*/.test(prompt)) return "Try turning one number into a friendly round number, multiply, then adjust back.";
+  if (/×|\*/.test(prompt)) return "Try turning one number into a friendly round number, multiply, then adjust back.";
   if (/[-−]/.test(prompt)) return "Try lining the numbers up by place value (Th H T O) and borrow from the next column if needed.";
   if (/\+/.test(prompt)) return "Look for a 'friendly' number nearby (like 100) to make the addition simpler.";
   return "Break the number into place value parts — thousands, hundreds, tens, ones — and work through step by step.";
@@ -3592,7 +3613,7 @@ function goBoss(worldId) {
   screen = "boss"; activeWorldId = worldId;
   const world = WORLDS.find(w => w.id === worldId);
   const questions = world.boss.questions.slice(0, BOSS_MAX_QUESTIONS);
-  bossState = { qIndex: 0, hp: 100, hpStep: 100 / questions.length, cleared: false, questions, showHint: false };
+  bossState = { qIndex: 0, hp: 100, hpStep: 100 / questions.length, cleared: false, questions, hintLevel: 0 };
   renderMap();
 }
 
@@ -3621,7 +3642,7 @@ function renderAtlas(container) {
 
   const narrative = document.createElement("div");
   narrative.className = "atlas-narrative";
-  narrative.textContent = "🔧 Repair every bridge, defeat the monster guarding it, and reach Castle Cambridge to rescue Princess Cambridge!";
+  narrative.textContent = "🔧 Repair every bridge, defeat the monster guarding it, and reach Castle Cambridge to rescue Princess Anna!";
   wrap.appendChild(narrative);
 
   const grid = document.createElement("div");
@@ -3671,19 +3692,13 @@ function renderWorldDetail(container) {
   missionGrid.className = "mission-grid";
   world.missions.forEach((m, i) => {
     const done = store.completedMissions.includes(m.id);
-    const prevDone = i === 0 || store.completedMissions.includes(world.missions[i - 1].id);
     const tile = document.createElement("button");
     let stateClass, symbol;
     if (done) { stateClass = "tile-done"; symbol = "✓"; }
-    else if (prevDone) { stateClass = "tile-unlocked"; symbol = "❓"; }
-    else { stateClass = "tile-locked"; symbol = "🔒"; }
+    else { stateClass = "tile-unlocked"; symbol = "❓"; }
     tile.className = "mission-tile " + stateClass;
     tile.innerHTML = `<div class="tile-badge">${i + 1}</div><div class="tile-symbol">${symbol}</div>`;
-    if (done || prevDone) {
-      tile.onclick = () => goMission(world.id, i);
-    } else {
-      tile.onclick = () => showToast(`🔒 Finish Mission ${i} first to unlock this one!`);
-    }
+    tile.onclick = () => goMission(world.id, i);
     missionGrid.appendChild(tile);
   });
   wrap.appendChild(missionGrid);
@@ -3691,15 +3706,13 @@ function renderWorldDetail(container) {
   const allMissionsDone = world.missions.every(m => store.completedMissions.includes(m.id));
   const bossTile = document.createElement("button");
   const bossDone = (store.worldStars[world.id] || 0) >= 1;
-  bossTile.className = "boss-tile" + (bossDone ? " boss-done" : "") + (!allMissionsDone ? " boss-locked" : "");
-  bossTile.innerHTML = allMissionsDone
-    ? `<div class="boss-tile-icon">🏰</div><div class="boss-tile-text">Boss Battle: ${world.boss.name}${bossDone ? " — Cleared!" : ""}</div>`
-    : `<div class="boss-tile-icon">🔒</div><div class="boss-tile-text">Boss Battle: ${world.boss.name} — finish all missions to unlock</div>`;
-  bossTile.onclick = allMissionsDone ? () => goBoss(world.id) : () => showToast("🔒 Finish every mission in this world to challenge the boss!");
+  bossTile.className = "boss-tile" + (bossDone ? " boss-done" : "");
+  bossTile.innerHTML = `<div class="boss-tile-icon">🏰</div><div class="boss-tile-text">Boss Battle: ${world.boss.name}${bossDone ? " — Cleared!" : ""}</div>`;
+  bossTile.onclick = () => goBoss(world.id);
   wrap.appendChild(bossTile);
 
   if (world.competitionMissions) {
-    if (bossDone) {
+    if (true) {
       const compHeading = document.createElement("div");
       compHeading.className = "section-heading";
       compHeading.style.marginTop = "22px";
@@ -3726,19 +3739,13 @@ function renderWorldDetail(container) {
         setMissions.forEach((m) => {
           const globalIndex = world.competitionMissions.indexOf(m);
           const done = store.completedMissions.includes(m.id);
-          const prevDone = globalIndex === 0 || store.completedMissions.includes(world.competitionMissions[globalIndex - 1].id);
           const tile = document.createElement("button");
           let stateClass, symbol;
           if (done) { stateClass = "tile-done"; symbol = "✓"; }
-          else if (prevDone) { stateClass = "tile-unlocked"; symbol = "⭐"; }
-          else { stateClass = "tile-locked"; symbol = "🔒"; }
+          else { stateClass = "tile-unlocked"; symbol = "⭐"; }
           tile.className = "mission-tile " + stateClass;
           tile.innerHTML = `<div class="tile-badge">${globalIndex + 1}</div><div class="tile-symbol">${symbol}</div>`;
-          if (done || prevDone) {
-            tile.onclick = () => goCompetitionMission(world.id, globalIndex);
-          } else {
-            tile.onclick = () => showToast(`🔒 Finish the mission before this one first!`);
-          }
+          tile.onclick = () => goCompetitionMission(world.id, globalIndex);
           compGrid.appendChild(tile);
         });
         wrap.appendChild(compGrid);
@@ -4547,7 +4554,7 @@ function renderBossBattle(container) {
     box.innerHTML = `<div class="victory-box">
       <div class="victory-title">🏆 ${world.id === 12 ? "Bridge Complete!" : "Victory!"}</div>
       <p class="stage-text">${world.id === 12
-        ? `You defeated ${boss.name} and repaired the final bridge into Castle Cambridge — Princess Cambridge is rescued! 👸🎉`
+        ? `You defeated ${boss.name} and repaired the final bridge into Castle Cambridge — Princess Anna is rescued! 👸🎉`
         : `You repaired the bridge and defeated ${boss.name}, earning a star for ${world.name}!`}</p>
       <div class="victory-star">${world.id === 12 ? "👸" : "⭐"}</div>
     </div>`;
@@ -4556,14 +4563,20 @@ function renderBossBattle(container) {
     const q = questions[bossState.qIndex];
     box.innerHTML = `<div class="boss-q-count">Question ${bossState.qIndex + 1} of ${questions.length}</div><div class="boss-cheer">${bossState.cheer || ""}</div><p class="stage-text boss-q">${q.prompt}</p>`;
 
-    if (bossState.showHint) {
+    if (bossState.hintLevel >= 1) {
       const hintBox = document.createElement("div");
       hintBox.className = "boss-hint-box";
       hintBox.textContent = "💡 " + bossHint(q.prompt);
       box.appendChild(hintBox);
     }
+    if (bossState.hintLevel >= 2) {
+      const answerBox = document.createElement("div");
+      answerBox.className = "boss-hint-box boss-hint-answer";
+      answerBox.textContent = "🔑 The answer is " + q.answer + " — type it in below to fix the bridge!";
+      box.appendChild(answerBox);
+    }
 
-    attachScratchpad(box, q.prompt, world.id === 2, bossState.showHint, world.id === 5);
+    attachScratchpad(box, q.prompt, world.id === 2, bossState.hintLevel >= 1, world.id === 5);
 
     const input = document.createElement("input");
     input.type = "text"; input.className = "challenge-input"; input.placeholder = "Your answer";
@@ -4576,7 +4589,7 @@ function renderBossBattle(container) {
         bossState.hp -= bossState.hpStep;
         bossState.qIndex++;
         bossState.cheer = pickRandom(BOSS_CHEERS);
-        bossState.showHint = false;
+        bossState.hintLevel = 0;
         if (bossState.qIndex >= questions.length) {
           bossState.hp = 0; bossState.cleared = true;
           store.worldStars[world.id] = Math.max(store.worldStars[world.id] || 0, 1);
@@ -4587,7 +4600,11 @@ function renderBossBattle(container) {
         feedback.innerHTML = `<span class="feedback-retry">${retryFeedback(input.value, q.answer)}</span>`;
       }
     }));
-    btnRow.appendChild(mkBtn("💡 Hint", () => { bossState.showHint = true; renderMap(); }, true));
+    btnRow.appendChild(mkBtn(
+      bossState.hintLevel === 0 ? "💡 Hint" : bossState.hintLevel === 1 ? "🔑 Show Answer" : "🔑 Answer Shown",
+      () => { if (bossState.hintLevel < 2) { bossState.hintLevel++; renderMap(); } },
+      true
+    ));
     box.appendChild(input);
     box.appendChild(feedback);
     box.appendChild(btnRow);
