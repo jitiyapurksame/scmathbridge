@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>SC Bridge — Singapore → Cambridge</title>
+<title>Math Mission Bridge — Mission Control</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap');
 
 :root {
-  --map-bg: #E4D9B8;
-  --map-bg2: #D8CA9F;
-  --ink: #2A2013;
-  --ink-soft: #5C5138;
+  --map-bg: #131C35;
+  --map-bg2: #060A18;
+  --ink: #161B2E;
+  --ink-soft: #4A5578;
   --paper: #FBF7EA;
   --paper-raised: #FFFDF6;
   --line: #C9BB8E;
@@ -24,7 +24,7 @@
   --green: #3E8E4F;
   --green-tint: #DCEBE1;
   --red-hp: #D3402A;
-  --shadow-pixel: 0 3px 0 rgba(42,32,19,0.35);
+  --shadow-pixel: 0 3px 0 rgba(6,10,24,0.45);
 }
 
 * { box-sizing: border-box; }
@@ -40,11 +40,19 @@ html, body {
 body {
   padding-bottom: 84px;
   min-height: 100vh;
-  background: var(--map-bg);
-  background-image: linear-gradient(180deg, var(--map-bg), var(--map-bg2));
+  background-color: var(--map-bg2);
+  background-image:
+    radial-gradient(1.6px 1.6px at 22px 34px, rgba(255,255,255,0.55), transparent 100%),
+    radial-gradient(1.2px 1.2px at 96px 82px, rgba(255,255,255,0.4), transparent 100%),
+    radial-gradient(1.6px 1.6px at 152px 46px, rgba(255,255,255,0.35), transparent 100%),
+    radial-gradient(1.2px 1.2px at 64px 128px, rgba(255,255,255,0.5), transparent 100%),
+    radial-gradient(1.4px 1.4px at 178px 138px, rgba(255,255,255,0.3), transparent 100%),
+    linear-gradient(180deg, var(--map-bg), var(--map-bg2));
+  background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat;
+  background-size: 200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px, 100% 100%;
 }
 
-.pixel-font { font-family: 'Press Start 2P', monospace; }
+.pixel-font { font-family: 'Space Grotesk', sans-serif; }
 
 /* ---------- Header ---------- */
 
@@ -55,8 +63,10 @@ header.app-header {
   position: sticky; top: 0; z-index: 20;
 }
 .app-title {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 13px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   display: flex; align-items: center; gap: 8px;
   color: var(--ink);
 }
@@ -80,7 +90,7 @@ nav.bottom-nav {
 }
 .navbtn {
   flex: 1; background: none; border: none;
-  color: #A99C7A;
+  color: #7C88B8;
   font-size: 10.5px; font-weight: 700;
   padding: 10px 4px 12px;
   display: flex; flex-direction: column; align-items: center; gap: 3px;
@@ -113,7 +123,7 @@ main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
 .hero-hud-avatar { font-size: 26px; }
 .hero-hud-mid { flex: 1; }
 .hero-hud-level { font-size: 11px; font-weight: 700; margin-bottom: 3px; color: var(--gold-tint); }
-.xp-track { height: 8px; border-radius: 5px; background: #3A3222; overflow: hidden; border: 1.5px solid #4A4130; }
+.xp-track { height: 8px; border-radius: 5px; background: #232B47; overflow: hidden; border: 1.5px solid #34406B; }
 .xp-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #F0C860); transition: width 0.4s ease; }
 .hero-hud-stars { font-size: 13px; font-weight: 700; color: var(--gold-tint); white-space: nowrap; }
 
@@ -154,7 +164,7 @@ main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
   border-radius: 8px 8px 0 0;
 }
 .world-node-icon { font-size: 30px; margin-top: 4px; }
-.world-node-code { font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--wcolor); margin-top: 6px; }
+.world-node-code { font-family: 'Space Grotesk', sans-serif; font-weight: 700; letter-spacing: 0.04em; font-size: 10px; color: var(--wcolor); margin-top: 6px; }
 .world-node-name { font-size: 12.5px; font-weight: 700; margin-top: 4px; line-height: 1.3; }
 .world-node-stars { margin-top: 6px; font-size: 13px; color: var(--gold); }
 .world-node-soon { margin-top: 6px; font-size: 10.5px; color: var(--ink-soft); font-weight: 600; }
@@ -210,7 +220,7 @@ main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
 .tile-symbol { font-size: 24px; }
 
 .mission-tile.tile-locked {
-  background: #DCD3B6;
+  background: #2A3352;
   border-color: var(--line);
   opacity: 0.65;
   cursor: not-allowed;
@@ -228,6 +238,24 @@ main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
 .mission-tile.tile-done { background: var(--green-tint); border-color: var(--green); }
 .mission-tile.tile-done .tile-symbol { color: var(--green); }
 
+.path-map { position: relative; padding: 14px 0 6px; margin-bottom: 6px; }
+.path-map::before {
+  content: ""; position: absolute; left: 50%; top: 6px; bottom: 6px; width: 3px;
+  background: repeating-linear-gradient(to bottom, var(--gold) 0, var(--gold) 8px, transparent 8px, transparent 15px);
+  transform: translateX(-50%); z-index: 0;
+}
+.path-node-wrap { position: relative; z-index: 1; display: flex; margin-bottom: 6px; }
+.path-node-wrap:last-child { margin-bottom: 0; }
+.path-node-wrap.align-left { justify-content: flex-start; padding-right: 50%; }
+.path-node-wrap.align-right { justify-content: flex-end; padding-left: 50%; }
+.mission-tile.path-node { width: 82px; height: 82px; aspect-ratio: unset; border-radius: 50%; flex-shrink: 0; }
+.mission-tile.path-node .tile-badge { top: auto; bottom: -16px; left: 50%; transform: translateX(-50%); font-size: 10px; }
+.mission-tile.path-node .tile-symbol { font-size: 28px; }
+.path-decoration {
+  position: relative; z-index: 1; display: flex; justify-content: center; align-items: center;
+  height: 34px; font-size: 17px; opacity: 0.6; pointer-events: none;
+}
+
 .boss-tile {
   width: 100%;
   display: flex; align-items: center; gap: 12px;
@@ -239,9 +267,19 @@ main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
   box-shadow: var(--shadow-pixel);
 }
 .boss-tile-icon { font-size: 28px; }
+.boss-portrait {
+  flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #3a2d1a, #1a1408);
+  border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center;
+  font-size: 24px; box-shadow: 0 0 0 3px rgba(217,163,43,0.18);
+}
+.boss-tile-label { font-size: 10.5px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 2px; }
 .boss-tile-text { font-size: 13.5px; font-weight: 700; text-align: left; }
 .boss-tile.boss-done { background: var(--green); }
-.boss-tile.boss-locked { background: #DCD3B6; color: var(--ink-soft); opacity: 0.75; cursor: not-allowed; box-shadow: none; }
+.boss-tile.boss-done .boss-portrait { border-color: #fff; box-shadow: 0 0 0 3px rgba(255,255,255,0.18); }
+.boss-tile.boss-done .boss-tile-label { color: #fff; }
+.boss-tile.boss-locked { background: #2A3352; color: var(--ink-soft); opacity: 0.75; cursor: not-allowed; box-shadow: none; }
+.boss-tile.boss-locked .boss-portrait { border-color: var(--ink-soft); box-shadow: none; filter: grayscale(1); }
 
 /* ================= MISSION PLAYER ================= */
 
@@ -269,6 +307,10 @@ main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
 }
 .stage-heading-big { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--wcolor, var(--gold)); margin-bottom: 10px; }
 .stage-text { font-size: 14.5px; line-height: 1.6; margin-bottom: 14px; }
+.warmup-visual {
+  font-size: 54px; text-align: center; margin: 4px 0 14px;
+  filter: drop-shadow(0 3px 3px rgba(0,0,0,0.3));
+}
 .stage-body { display: flex; flex-direction: column; gap: 4px; }
 
 .choice-list { display: flex; flex-direction: column; gap: 9px; margin-bottom: 14px; }
@@ -503,6 +545,56 @@ main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
 .sp-nl-note { font-size: 11.5px; color: var(--ink-soft); text-align: center; margin: 2px 0 10px; }
 .sp-nl-inputs { display: flex; justify-content: center; gap: 16px; }
 .sp-nl-label { font-size: 11px; font-weight: 700; color: var(--ink-soft); display: flex; flex-direction: column; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.02em; }
+
+/* ---- Rate table (distance / speed / time) ---- */
+.rate-row { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.rate-box { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 78px; padding: 8px 6px; border-radius: 8px; }
+.rate-box-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-soft); }
+.rate-box-value { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; color: #8A6D1E; }
+.rate-box.rate-given { background: var(--gold-tint); }
+.rate-box.rate-blank { background: var(--paper); border: 1.5px dashed var(--line); }
+.rate-answer {
+  width: 66px; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 700;
+  padding: 5px 4px; border: 1.5px solid var(--cam); border-radius: 5px; background: #fff; color: var(--ink);
+}
+.rate-answer:focus { outline: 2px solid var(--gold); }
+.rate-box-unit { font-size: 10.5px; color: var(--ink-soft); font-weight: 600; }
+.rate-op { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 700; color: var(--ink-soft); }
+.rate-helper { font-size: 11px; color: var(--ink-soft); text-align: center; }
+
+/* ---- Unit ladder (unit conversion) ---- */
+.ladder-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.ladder-box { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 84px; padding: 8px 6px; border-radius: 8px; }
+.ladder-box.ladder-given { background: var(--gold-tint); }
+.ladder-box.ladder-blank { background: var(--paper); border: 1.5px dashed var(--line); }
+.ladder-box-value { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; color: #8A6D1E; }
+.ladder-op { display: flex; flex-direction: column; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.ladder-op-arrow { font-size: 16px; }
+.ladder-answer {
+  width: 82px; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 700;
+  padding: 5px 4px; border: 1.5px solid var(--cam); border-radius: 5px; background: #fff; color: var(--ink);
+}
+.ladder-answer:focus { outline: 2px solid var(--gold); }
+.ladder-box-unit { font-size: 10.5px; color: var(--ink-soft); font-weight: 600; }
+.ladder-helper { font-size: 11px; color: var(--ink-soft); text-align: center; }
+
+/* ---- Scientific notation ---- */
+.sci-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.sci-box { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 78px; padding: 8px 6px; border-radius: 8px; }
+.sci-box.sci-given { background: var(--gold-tint); }
+.sci-box.sci-blank { background: var(--paper); border: 1.5px dashed var(--line); }
+.sci-box-value { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; color: #8A6D1E; }
+.sci-box-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-soft); }
+.sci-answer {
+  width: 68px; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 700;
+  padding: 5px 4px; border: 1.5px solid var(--cam); border-radius: 5px; background: #fff; color: var(--ink);
+}
+.sci-answer.sci-answer-narrow { width: 46px; }
+.sci-answer:focus { outline: 2px solid var(--gold); }
+.sci-eq { font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.sci-exp-row { display: flex; align-items: baseline; gap: 3px; }
+.sci-exp-row .sci-answer { align-self: flex-start; }
+.sci-helper { font-size: 11px; color: var(--ink-soft); text-align: center; }
 .sp-nl-input {
   width: 64px; text-align: center;
   font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 700;
@@ -614,6 +706,79 @@ main { max-width: 720px; margin: 0 auto; padding: 16px 14px 10px; }
 .mental-steps { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
 .mental-step { font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; background: var(--paper); padding: 6px 10px; border-radius: 5px; }
 
+/* ---- Interactive build-steps ladder ---- */
+.build-step-given { font-weight: 700; background: var(--gold-tint); color: #6B5314; }
+.build-step-done { color: #23543A; background: var(--green-tint); }
+.build-step-note { font-size: 11.5px; color: var(--ink-soft); font-weight: 500; }
+.build-step-active { background: var(--paper); border: 1.5px dashed var(--line); border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+.build-step-prompt { font-size: 13.5px; margin-bottom: 8px; }
+.build-step-input-row { display: flex; gap: 8px; align-items: center; }
+
+/* ---- Explain-It model recap: tree/branch visual ---- */
+.explain-tree { position: relative; margin: 6px 0 18px; padding-left: 26px; }
+.explain-tree::before {
+  content: ""; position: absolute; left: 9px; top: 14px; bottom: 14px; width: 2px;
+  background: repeating-linear-gradient(to bottom, var(--line) 0, var(--line) 5px, transparent 5px, transparent 9px);
+}
+.explain-tree-node { position: relative; margin-bottom: 12px; }
+.explain-tree-node:last-child { margin-bottom: 0; }
+.explain-tree-node::before {
+  content: ""; position: absolute; left: -17px; top: 15px; width: 15px; height: 2px; background: var(--line);
+}
+.explain-tree-dot {
+  position: absolute; left: -22px; top: 10px; width: 11px; height: 11px; border-radius: 50%;
+  background: var(--cam); border: 2px solid var(--paper); box-shadow: 0 0 0 1px var(--line);
+}
+.explain-tree-dot-root { background: var(--gold); }
+.explain-tree-dot-final { background: var(--green); }
+.explain-tree-box {
+  font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; background: var(--paper);
+  border: 1.5px solid var(--line); border-radius: 8px; padding: 8px 12px; line-height: 1.45;
+}
+.explain-tree-root-box { background: var(--gold-tint); border-color: var(--gold); font-weight: 700; color: #6B5314; }
+.explain-tree-final-box { background: var(--green-tint); border-color: var(--green); color: #23543A; }
+.explain-tree-flip { display: flex; flex-direction: column-reverse; gap: 12px; }
+.explain-tree-flip .explain-tree-node { margin-bottom: 0; }
+.explain-tree-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; opacity: 0.65; margin-bottom: 3px; }
+
+.build-step-input {
+  flex: 1; max-width: 120px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 700;
+  padding: 6px 8px; border: 1.5px solid var(--cam); border-radius: 5px; background: #fff; color: var(--ink);
+}
+.build-step-input:focus { outline: 2px solid var(--gold); }
+
+/* ---- Explain It (mark-point checklist) ---- */
+.explain-scaffold-box {
+  background: var(--cam-tint); border: 1.5px solid var(--cam); border-radius: 8px;
+  padding: 10px 12px; margin-bottom: 10px; font-size: 13px;
+}
+.explain-scaffold-title { font-weight: 700; color: var(--cam); font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 4px; }
+.explain-scaffold-starter { font-family: 'IBM Plex Mono', monospace; font-style: italic; color: var(--ink); margin-bottom: 2px; }
+.explain-scaffold-words { color: var(--ink); line-height: 1.5; }
+.explain-scaffold-words strong { color: var(--cam); }
+.explain-wordbank { margin-bottom: 10px; }
+.explain-wordbank-label { font-size: 12px; font-weight: 700; color: var(--ink-soft); margin: 6px 0 4px; text-transform: uppercase; letter-spacing: 0.02em; }
+.word-pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.word-pill {
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700;
+  background: var(--cam-tint); color: var(--cam); border: 1.5px solid var(--cam);
+  padding: 6px 12px; border-radius: 16px; cursor: pointer;
+}
+.word-pill:active { background: var(--cam); color: #fff; }
+.explain-textarea {
+  width: 100%; box-sizing: border-box; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px;
+  padding: 10px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink);
+  resize: vertical; margin-bottom: 10px;
+}
+.explain-textarea:focus { outline: 2px solid var(--gold); }
+.markpoint-chip {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700;
+  background: var(--paper); color: var(--ink-soft); border: 1.5px solid var(--line);
+  padding: 5px 12px; border-radius: 16px;
+}
+.markpoint-chip.markpoint-achieved { background: var(--green-tint); color: #23543A; border-color: var(--green); }
+.markpoint-chip.markpoint-achieved::before { content: "✓ "; }
+
 /* Crossing-out / regrouping */
 .regroup-block { display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px; }
 .regroup-row { display: flex; gap: 2px; }
@@ -690,6 +855,26 @@ mark { padding: 1px 3px; border-radius: 3px; font-weight: 700; }
 .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
 .num-chip { font-family: 'IBM Plex Mono', monospace; font-weight: 700; background: var(--gold-tint); color: #8A6D1E; padding: 5px 12px; border-radius: 16px; font-size: 14px; }
 
+.stage-subtext { color: var(--ink-soft); font-size: 13.5px; margin: 4px 0 2px; }
+.spot-chip {
+  font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 14px;
+  background: var(--paper); color: var(--ink); border: 2px solid var(--line);
+  padding: 6px 13px; border-radius: 16px; cursor: pointer;
+}
+.spot-chip:active { transform: translateY(1px); }
+.spot-chip.spot-selected { border-color: var(--gold); background: var(--gold-tint); color: #6B5314; }
+.spot-chip.spot-correct { border-color: var(--green); background: var(--green-tint); color: #23543A; }
+.spot-chip.spot-missed { border-color: var(--gold); background: var(--gold-tint); color: #6B5314; }
+.spot-chip.spot-wrong { border-color: var(--red-hp); background: #F7DEDA; color: #8A2A1C; }
+
+.explain-sentence { line-height: 1.7; }
+.explain-blank {
+  display: inline-block; min-width: 64px; text-align: center; font-weight: 700;
+  border-bottom: 2.5px dashed var(--line); color: var(--ink-soft); padding: 0 4px;
+}
+.explain-blank.explain-blank-correct { border-bottom-color: var(--green); border-bottom-style: solid; color: #23543A; }
+.explain-blank.explain-blank-wrong { border-bottom-color: var(--red-hp); border-bottom-style: solid; color: #8A2A1C; }
+
 /* ================= BOSS BATTLE ================= */
 
 .boss-battle { --wcolor: #999; }
@@ -702,13 +887,13 @@ mark { padding: 1px 3px; border-radius: 3px; font-weight: 700; }
 .boss-name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .boss-name { font-size: 14px; font-weight: 700; }
 .boss-face { font-size: 24px; margin-left: auto; transition: transform 0.3s ease; }
-.hp-track { height: 16px; border-radius: 3px; background: #3A3222; border: 2px solid #56492E; overflow: hidden; }
+.hp-track { height: 16px; border-radius: 3px; background: #232B47; border: 2px solid #33406B; overflow: hidden; }
 .hp-fill { height: 100%; background: linear-gradient(90deg, var(--red-hp), #F0705A); transition: width 0.5s ease; }
-.hp-label { font-size: 11px; margin-top: 5px; color: #C9C1A8; font-family: 'IBM Plex Mono', monospace; }
+.hp-label { font-size: 11px; margin-top: 5px; color: #B7C0DE; font-family: 'IBM Plex Mono', monospace; }
 .bridge-track { display: flex; gap: 4px; margin-top: 10px; }
 .bridge-plank {
   flex: 1; height: 14px; border-radius: 2px;
-  background: #56492E; border: 1.5px solid #3A3222;
+  background: #33406B; border: 1.5px solid #232B47;
   display: flex; align-items: center; justify-content: center;
   font-size: 9px; transition: background 0.4s ease;
 }
@@ -720,7 +905,7 @@ mark { padding: 1px 3px; border-radius: 3px; font-weight: 700; }
 .boss-cheer { font-size: 12.5px; font-weight: 700; color: var(--green); margin-bottom: 8px; min-height: 16px; }
 
 .victory-box { text-align: center; padding: 10px 0; }
-.victory-title { font-family: 'Press Start 2P', monospace; font-size: 16px; color: var(--gold); margin-bottom: 10px; }
+.victory-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; letter-spacing: 0.02em; font-size: 18px; color: var(--gold); margin-bottom: 10px; }
 .victory-star { font-size: 44px; animation: popin 0.4s ease; }
 
 /* ================= SPELLBOOK (dictionary) ================= */
@@ -752,7 +937,7 @@ mark { padding: 1px 3px; border-radius: 3px; font-weight: 700; }
 .tag-alt { background: var(--gold-tint); color: #6B5314; }
 .bridge-arrow { color: var(--gold); font-weight: 700; margin: 0 4px; }
 
-/* ================= WORKSHOP (My Bridge) ================= */
+/* ================= WORKSHOP (My Lab) ================= */
 
 .field-block { margin-bottom: 15px; }
 .field-label { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 5px; color: var(--ink-soft); }
@@ -773,7 +958,7 @@ textarea:focus, input:focus { outline: 2.5px solid var(--gold); outline-offset: 
 .mini-btn-remove { color: var(--sg); border-color: var(--sg); }
 .text-btn { background: none; border: none; color: var(--gold); font-weight: 700; font-size: 13px; cursor: pointer; padding: 4px 0; }
 
-/* Number line & pie builders (My Bridge) */
+/* Number line & pie builders (My Lab) */
 .builder-preview { background: var(--paper); border-radius: 8px; padding: 12px; margin-top: 8px; display: flex; flex-direction: column; align-items: center; }
 .nl-builder-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
 .nl-builder-label {
@@ -824,10 +1009,10 @@ hr.divider { border: none; border-top: 2px dashed var(--line); margin: 22px 0 16
   box-shadow: var(--shadow-pixel);
 }
 .hero-panel-avatar { font-size: 48px; }
-.hero-panel-level { font-family: 'Press Start 2P', monospace; font-size: 15px; color: var(--gold-tint); margin-top: 8px; }
-.hero-panel-xptrack { height: 10px; border-radius: 6px; background: #3A3222; overflow: hidden; margin-top: 12px; border: 2px solid #4A4130; }
+.hero-panel-level { font-family: 'Space Grotesk', sans-serif; font-weight: 700; letter-spacing: 0.03em; font-size: 16px; color: var(--gold-tint); margin-top: 8px; }
+.hero-panel-xptrack { height: 10px; border-radius: 6px; background: #232B47; overflow: hidden; margin-top: 12px; border: 2px solid #34406B; }
 .hero-panel-xpfill { height: 100%; background: linear-gradient(90deg, var(--gold), #F0C860); }
-.hero-panel-xplabel { font-size: 11px; margin-top: 6px; color: #C9C1A8; }
+.hero-panel-xplabel { font-size: 11px; margin-top: 6px; color: #B7C0DE; }
 
 .stat-row { display: flex; gap: 10px; margin-bottom: 18px; }
 .stat-card { flex: 1; background: var(--paper-raised); border: 2.5px solid var(--ink); border-radius: 10px; padding: 12px; text-align: center; box-shadow: var(--shadow-pixel); }
@@ -880,11 +1065,11 @@ hr.divider { border: none; border-top: 2px dashed var(--line); margin: 22px 0 16
 <header class="app-header">
   <div class="app-title">
     <span class="flag-chip flag-chip-sg">SG</span>
-    🌉
+    🚀
     <span class="flag-chip flag-chip-cam">CAM</span>
-    SC BRIDGE
+    MATH MISSION BRIDGE
   </div>
-  <div class="app-subtitle">Think Singapore → Write Cambridge → Score Cambridge</div>
+  <div class="app-subtitle">Mission Control: Think Singapore → Write Cambridge → Score Cambridge</div>
 </header>
 
 <main>
@@ -900,9 +1085,9 @@ hr.divider { border: none; border-top: 2px dashed var(--line); margin: 22px 0 16
     <div id="dict-body"></div>
   </section>
 
-  <!-- ============ WORKSHOP (My Bridge) ============ -->
+  <!-- ============ WORKSHOP (My Lab) ============ -->
   <section id="panel-mybridge" class="panel">
-    <div class="section-heading">📐 My Bridge</div>
+    <div class="section-heading">📐 My Lab</div>
     <div class="section-sub">Work through your own question, step by step. Earns XP too!</div>
 
     <div class="field-block">
@@ -977,7 +1162,7 @@ hr.divider { border: none; border-top: 2px dashed var(--line); margin: 22px 0 16
   <section id="panel-hero" class="panel">
     <div class="hero-panel-header">
       <div class="hero-panel-avatar">🏆</div>
-      <div class="hero-panel-level">LEVEL <span id="hero-level">1</span></div>
+      <div class="hero-panel-level">CLEARANCE LEVEL <span id="hero-level">1</span></div>
       <div class="hero-panel-xptrack"><div class="hero-panel-xpfill" id="hero-xp-fill" style="width:0%"></div></div>
       <div class="hero-panel-xplabel" id="hero-xp-label">0 / 100 XP to next level</div>
     </div>
@@ -1025,13 +1210,13 @@ hr.divider { border: none; border-top: 2px dashed var(--line); margin: 22px 0 16
 
 <nav class="bottom-nav">
   <button id="nav-map" class="navbtn active" onclick="switchTab('map')">
-    <span class="navicon">🗺️</span> Map
+    <span class="navicon">🛰️</span> Map
   </button>
   <button id="nav-dict" class="navbtn" onclick="switchTab('dict')">
-    <span class="navicon">📘</span> Manual
+    <span class="navicon">📡</span> Manual
   </button>
   <button id="nav-mybridge" class="navbtn" onclick="switchTab('mybridge')">
-    <span class="navicon">📐</span> My Bridge
+    <span class="navicon">📐</span> My Lab
   </button>
   <button id="nav-hero" class="navbtn" onclick="switchTab('hero')">
     <span class="navicon">🏆</span> Trophies
@@ -1042,7 +1227,7 @@ hr.divider { border: none; border-top: 2px dashed var(--line); margin: 22px 0 16
 
 <script>
 /* ================================================================
-   SC BRIDGE — Singapore → Cambridge Bridge (RPG Edition)
+   MATH MISSION BRIDGE — Mission Control Edition (Singapore → Cambridge)
    ================================================================ */
 
 /* ---------- KEYWORD DICTIONARY (for Word Problem Translator) ---------- */
@@ -1082,19 +1267,52 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+function insertAtCursor(el, text) {
+  el.focus();
+  const start = el.selectionStart != null ? el.selectionStart : el.value.length;
+  const end = el.selectionEnd != null ? el.selectionEnd : el.value.length;
+  const before = el.value.slice(0, start);
+  const after = el.value.slice(end);
+  let insert = text;
+  if (before && !/\s$/.test(before)) insert = " " + insert;
+  if (after && !/^[\s.,!?]/.test(after)) insert = insert + " ";
+  el.value = before + insert + after;
+  const newPos = (before + insert).length;
+  el.selectionStart = el.selectionEnd = newPos;
+}
+
 /* ---------- WORLD DATA ---------- */
 
 const WORLDS = [
   {
-    id: 1, chain: 0, code: "W1", icon: "🔢", name: "Number Thinking Bridge",
+    id: 1, chain: 0, code: "W1", icon: "🚀", name: "Launch Sequence Bridge",
     color: "#3B82C4", status: "ready",
-    tagline: "Number bonds & compensation → rivets, coins, and lab measurements",
+    tagline: "Number bonds & compensation → the pre-launch mental math checks before every mission",
     missions: [
       {
-        id: "1-1", title: "🚢 499 Rivets + 87 More",
-        warmup: "The shipyard has already fitted 499 rivets into the hull. The crew is adding 87 more today. Try 499 + 87 in your head — give yourself 10 seconds before you look at the trick.",
+        id: "1-1", title: "🚀 499 Bolts + 87 More",
+        warmup: "Mission Control has already fitted 499 bolts into the rocket's hull. The crew is adding 87 more today. Try 499 + 87 in your head — give yourself 10 seconds before you look at the trick.",
         thinking: { prompt: "In Singapore Math you might round 499 up to 500 to make it friendly, then fix it after. Which way would you think about it?", choices: ["Round 499 up to 500, then take away 1 at the end", "Add the numbers directly without rounding", "Count up from 499 one by one"] },
-        picture: { type: "steps", steps: ["499 + 87", "→ round 499 up to 500 (add 1)", "→ 500 + 87 = 587", "→ take away the extra 1"] },
+        picture: {
+          type: "buildSteps",
+          given: "499 + 87",
+          steps: [
+            { prompt: "Round 499 up to the nearest hundred. What do you get?", answer: "500", note: "that's 1 more than 499" },
+            { prompt: "Now add: 500 + 87 = ?", answer: "587" },
+            { prompt: "You added 1 too many. Take it away: 587 − 1 = ?", answer: "586" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did rounding help you solve 499 + 87?",
+          markPoints: [
+            { terms: ["round", "rounded", "rounding"], label: "rounding" },
+            { terms: ["adjust", "subtract", "take away", "minus", "extra"], label: "adjusting back" }
+          ],
+          hintSequence: [
+            "Try mentioning that you rounded one of the numbers first.",
+            "Now mention that you had to adjust (subtract) afterward to fix the rounding."
+          ]
+        },
         algebra: "499 + 87 = (500 + 87) − 1",
         working: ["499 + 87", "= (500 + 87) − 1", "= 587 − 1", "= 586"],
         challenge: { prompt: "Your turn, engineer — use the same trick: 298 crates + 76 more crates = ?", answer: "374", hint: "Round 298 up to 300, add 76, then subtract 2." },
@@ -1108,7 +1326,26 @@ const WORLDS = [
         id: "1-2", title: "🧪 603 mL − 198 mL",
         warmup: "A lab beaker holds 603 mL of solution. A student pours out 198 mL for an experiment. 603 − 198 looks hard — is there a friendlier number near 198?",
         thinking: { prompt: "198 is close to 200. What happens if you subtract 200 instead of 198?", choices: ["Round 198 up to 200, then add back 2", "Subtract 198 directly, column by column", "Count backwards from 603 one by one"] },
-        picture: { type: "steps", steps: ["603 − 198", "→ 198 is close to 200", "→ 603 − 200 = 403", "→ you subtracted 2 too many, so add it back"] },
+        picture: {
+          type: "buildSteps",
+          given: "603 − 198",
+          steps: [
+            { prompt: "Round 198 up to the nearest hundred. What do you get?", answer: "200", note: "that's 2 more than 198" },
+            { prompt: "Now subtract: 603 − 200 = ?", answer: "403" },
+            { prompt: "You subtracted 2 too many. Add it back: 403 + 2 = ?", answer: "405" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did rounding 198 help you solve 603 − 198?",
+          markPoints: [
+            { terms: ["round", "rounded", "rounding"], label: "rounding" },
+            { terms: ["add back", "add it back", "adjust", "add 2", "too many"], label: "adjusting back" }
+          ],
+          hintSequence: [
+            "Try mentioning that you rounded 198 up to 200 first.",
+            "Now mention that you had to add the extra amount back afterward to fix the rounding."
+          ]
+        },
         algebra: "603 − 198 = (603 − 200) + 2",
         working: ["603 − 198", "= (603 − 200) + 2", "= 403 + 2", "= 405"],
         challenge: { prompt: "Your turn, chemist: a tank holds 802 L, and 297 L is drained for testing. 802 − 297 = ?", answer: "505", hint: "297 is close to 300." },
@@ -1128,18 +1365,47 @@ const WORLDS = [
           note: "A number line makes the halfway point (3,450) visible — once you see it, rounding is just 'which side of the halfway mark?'"
         },
         picture: { type: "line", from: 3482, to: 3500, min: 3400, max: 3500 },
+        explainIt: {
+          prompt: "You just used the number line to round Mario's score. Explain in your own words — how do you decide whether a number rounds up or down?",
+          markPoints: [
+            { terms: ["halfway", "half way", "midpoint", "450"], label: "halfway point" },
+            { terms: ["round up", "round down", "closer", "nearest"], label: "rounding direction" }
+          ],
+          hintSequence: [
+            "Try mentioning the halfway point between the two hundreds.",
+            "Now mention whether the number is closer to the hundred above or below."
+          ]
+        },
         algebra: "3,482 → 3,500 (nearest 100)",
         working: ["3,482 is between 3,400 and 3,500", "the tens digit (8) tells us it's past the halfway point (3,450)", "so 3,482 rounds up to 3,500"],
         challenge: { prompt: "Your turn: Luigi's score is 6,241. Round it to the nearest 100.", answer: "6200", hint: "Is 6,241 closer to 6,200 or 6,300?" }
       },
       {
-        id: "1-4", title: "🚢 25 × 4 × 17 — Rivet Rows",
-        warmup: "A hull plate has 25 rows of rivets, 4 rivets per row, repeated across 17 plates. Multiplication can be done in any order — which two of these numbers make a really friendly pair?",
+        id: "1-4", title: "🚀 25 × 4 × 17 — Panel Bolt Rows",
+        warmup: "A hull panel has 25 rows of bolts, 4 bolts per row, repeated across 17 panels. Multiplication can be done in any order — which two of these numbers make a really friendly pair?",
         thinking: { prompt: "25 × 4 is a well-known friendly pair. What does it equal?", choices: ["Multiply 25 × 4 first because it's a friendly pair", "Multiply in the order given: 25 × 4 × 17 straight through", "Multiply 4 × 17 first"] },
-        picture: { type: "steps", steps: ["25 × 4 × 17", "→ group the friendly pair: (25 × 4) × 17", "→ 25 × 4 = 100", "→ 100 × 17"] },
+        picture: {
+          type: "buildSteps",
+          given: "25 × 4 × 17",
+          steps: [
+            { prompt: "Group the friendly pair first: what is 25 × 4?", answer: "100" },
+            { prompt: "Now multiply: 100 × 17 = ?", answer: "1700" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Explain how grouping the friendly pair made this multiplication easier.",
+          markPoints: [
+            { terms: ["group", "grouped", "pair", "friendly"], label: "grouping" },
+            { terms: ["100", "easier", "round"], label: "why it helps" }
+          ],
+          hintSequence: [
+            "Try mentioning which two numbers you grouped together first.",
+            "Now mention why grouping them made the multiplication easier."
+          ]
+        },
         algebra: "25 × 4 × 17 = (25 × 4) × 17",
         working: ["25 × 4 × 17", "= (25 × 4) × 17", "= 100 × 17", "= 1700"],
-        challenge: { prompt: "Your turn, engineer: 4 × 37 × 25 rivets = ?", answer: "3700", hint: "Group 4 × 25 first." },
+        challenge: { prompt: "Your turn, engineer: 4 × 37 × 25 bolts = ?", answer: "3700", hint: "Group 4 × 25 first." },
         strategies: [
           { id: "s1", label: "Group the friendly pair (25×4)", steps: ["(25 × 4) × 17", "100 × 17 = 1700"], opCount: 2 },
           { id: "s2", label: "Group 4 × 17 first", steps: ["25 × (4 × 17)", "25 × 68 = 1700"], opCount: 3 },
@@ -1151,7 +1417,25 @@ const WORLDS = [
         id: "1-5", title: "🧪 64 mL + 36 mL — the Perfect Batch",
         warmup: "A chemistry kit needs exactly 100 mL of solution to work. You've measured 64 mL — some number pairs are special because they make a round 100.",
         thinking: { prompt: "64 and 36 — do you recognise this pair?", choices: ["They're a number bond to 100, so they add to exactly 100", "They need to be added digit by digit", "One of them should be rounded first"] },
-        picture: { type: "steps", steps: ["64 + 36", "→ 64 needs 36 to reach 100", "→ 36 is exactly that amount", "→ they're a number bond to 100"] },
+        picture: {
+          type: "buildSteps",
+          given: "64 + 36",
+          steps: [
+            { prompt: "How far is 64 from 100?", answer: "36" },
+            { prompt: "So 64 + 36 = ?", answer: "100" }
+          ]
+        },
+        explainIt: {
+          prompt: "Explain how recognizing a number bond to 100 helped you solve this instantly.",
+          markPoints: [
+            { terms: ["number bond", "bond", "pair"], label: "number bond" },
+            { terms: ["100", "memorise", "instantly", "know", "quickly"], label: "why it's fast" }
+          ],
+          hintSequence: [
+            "Try mentioning that 64 and 36 form a number bond to 100.",
+            "Now mention why recognizing that bond makes the addition instant, without needing to calculate."
+          ]
+        },
         algebra: "64 + 36 = 100",
         working: ["64 + 36", "64 is 36 away from 100", "36 + 64 = 100"],
         challenge: { prompt: "Your turn: you've measured 47 mL. How much more to fill exactly 100 mL? 47 + 53 = ?", answer: "100", hint: "Does 47 need 53 to reach 100?" },
@@ -1162,15 +1446,35 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "1-6", title: "🚢 234 + 152 Passengers Boarding",
-        warmup: "234 passengers board through the forward gangway, 152 through the aft gangway. Break both numbers into hundreds, tens, and ones before adding.",
+        id: "1-6", title: "🚀 234 + 152 Crew Boarding",
+        warmup: "234 crew members board through the forward airlock, 152 through the aft airlock. Break both numbers into hundreds, tens, and ones before adding.",
         thinking: { prompt: "234 + 152 — what's a clear way to add using place value?", choices: ["Add hundreds, then tens, then ones, and combine", "Add the numbers right to left without separating place value", "Round both numbers first"] },
         toolChoice: {
           prompt: "Which tool helps you keep hundreds, tens, and ones organised?",
           options: ["make_table", "simplify", "draw_diagram"],
           note: "Splitting a number into hundreds/tens/ones is like sorting it into a table — each column adds on its own, then you combine."
         },
-        picture: { type: "steps", steps: ["234 + 152", "→ hundreds: 200 + 100 = 300", "→ tens: 30 + 50 = 80", "→ ones: 4 + 2 = 6"] },
+        picture: {
+          type: "buildSteps",
+          given: "234 + 152",
+          steps: [
+            { prompt: "Add the hundreds: 200 + 100 = ?", answer: "300" },
+            { prompt: "Add the tens: 30 + 50 = ?", answer: "80" },
+            { prompt: "Add the ones: 4 + 2 = ?", answer: "6" },
+            { prompt: "Combine: 300 + 80 + 6 = ?", answer: "386" }
+          ]
+        },
+        explainIt: {
+          prompt: "Explain how splitting the numbers by place value helped you add them.",
+          markPoints: [
+            { terms: ["place value", "hundreds", "tens", "ones"], label: "place value" },
+            { terms: ["combine", "add together", "separately", "add up"], label: "combining parts" }
+          ],
+          hintSequence: [
+            "Try mentioning that you split each number into hundreds, tens, and ones.",
+            "Now mention that you added each place value separately, then combined them at the end."
+          ]
+        },
         algebra: "234 + 152 = (200+100) + (30+50) + (4+2)",
         working: ["234 + 152", "= (200 + 100) + (30 + 50) + (4 + 2)", "= 300 + 80 + 6", "= 386"],
         challenge: { prompt: "Your turn: 341 crew members + 226 more crew members = ?", answer: "567", hint: "300+200, 40+20, 1+6" }
@@ -1179,7 +1483,26 @@ const WORLDS = [
         id: "1-7", title: "🍄 98 Coins × 5 Levels",
         warmup: "Mario collects 98 coins per level, across 5 levels. 98 is very close to 100 — a friendly number to multiply by.",
         thinking: { prompt: "How could you use 100 to make 98 × 5 easier?", choices: ["Work out 100 × 5, then subtract 2 × 5", "Multiply 98 × 5 digit by digit", "Round 5 up to 10 instead"] },
-        picture: { type: "steps", steps: ["98 × 5", "→ 100 × 5 = 500", "→ 98 is 2 less than 100, so subtract 2 × 5", "→ 500 − 10"] },
+        picture: {
+          type: "buildSteps",
+          given: "98 × 5",
+          steps: [
+            { prompt: "Round 98 up to the nearest hundred. What do you get?", answer: "100" },
+            { prompt: "Now multiply: 100 × 5 = ?", answer: "500" },
+            { prompt: "You multiplied 2 extra groups of 5. Subtract: 500 − 10 = ?", answer: "490" }
+          ]
+        },
+        explainIt: {
+          prompt: "Explain how rounding 98 to 100 made this multiplication easier, and what you had to fix afterward.",
+          markPoints: [
+            { terms: ["round", "rounded", "rounding"], label: "rounding" },
+            { terms: ["subtract", "take away", "extra", "adjust"], label: "adjusting back" }
+          ],
+          hintSequence: [
+            "Try mentioning that you rounded 98 up to 100 first.",
+            "Now mention that you had to subtract the extra amount afterward to fix the rounding."
+          ]
+        },
         algebra: "98 × 5 = (100 − 2) × 5",
         working: ["98 × 5", "= (100 − 2) × 5", "= 500 − 10", "= 490"],
         challenge: { prompt: "Your turn: Luigi collects 97 coins per level across 4 levels. 97 × 4 = ?", answer: "388", hint: "100 × 4 − 3 × 4" },
@@ -1189,6 +1512,38 @@ const WORLDS = [
           { id: "s3", label: "Column multiplication", steps: ["5 × 8 = 40, write 0 carry 4", "5 × 9 = 45 + 4 = 49", "→ 490"], opCount: 3 }
         ],
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
+      },
+      {
+        id: "1-8", title: "🔬 Writing Big Numbers — Scientific Notation",
+        warmup: "The distance from Earth to the Sun is about 150,000,000 km — that's a lot of zeros to write and read. Scientific notation is a shorthand for very large (or very small) numbers.",
+        thinking: { prompt: "To write a number in scientific notation, what do you do first?", choices: ["Move the decimal point until only one non-zero digit is in front", "Count all the digits in the number", "Round the number to the nearest ten"] },
+        toolChoice: {
+          prompt: "Which tool helps you count decimal places?",
+          options: ["simplify", "draw_diagram", "guess_check"],
+          note: "Sliding the decimal point step by step is easiest to track using the Working Space tool."
+        },
+        picture: {
+          type: "buildSteps",
+          given: "150,000,000",
+          steps: [
+            { prompt: "Move the decimal point until only one digit is left in front. What's the new number?", answer: "1.5" },
+            { prompt: "Count how many places you moved the decimal point. What's the exponent?", answer: "8" }
+          ]
+        },
+        explainIt: {
+          prompt: "Explain why scientific notation is useful for a number like this.",
+          markPoints: [
+            { terms: ["zeros", "digits", "long", "big number", "hard to read"], label: "why it's useful" },
+            { terms: ["decimal point", "move", "exponent", "power"], label: "how it works" }
+          ],
+          hintSequence: [
+            "Try mentioning why writing out all those zeros is inconvenient.",
+            "Now mention how moving the decimal point and counting the places gives you the exponent."
+          ]
+        },
+        algebra: "1.5 × 10^8",
+        working: ["150,000,000 → move decimal 8 places left → 1.5", "150,000,000 = 1.5 × 10^8"],
+        challenge: { prompt: "Your turn: write 62,000,000 in scientific notation.", answer: "6.2 x 10^7", hint: "Move the decimal point until one digit is left in front, then count the places you moved it. Type your answer exactly like this: 6.2 x 10^7" }
       }
     ],
     competitionMissions: [
@@ -1239,52 +1594,81 @@ const WORLDS = [
       }
     ],
     boss: {
-      name: "The Compensation Golem", hp: 100,
+      name: "The Countdown Glitch", icon: "🌀", hp: 100,
       questions: [
-        { prompt: "199 rivets + 56 more rivets = ?", answer: "255" },
+        { prompt: "199 bolts + 56 more bolts = ?", answer: "255" },
         { prompt: "701 coins − 199 spent = ?", answer: "502" },
-        { prompt: "Round Mario's score, 4,758, to the nearest 100", answer: "4800" },
-        { prompt: "2 × 37 × 50 = ?", answer: "3700" },
-        { prompt: "998 mL + 347 mL = ?", answer: "1345" },
-        { prompt: "58 + 42 = ? (number bond)", answer: "100" },
-        { prompt: "312 passengers + 156 more = ? (use place value)", answer: "468" },
-        { prompt: "96 × 4 = ? (use 100 − 4)", answer: "384" }
+        { prompt: "96 × 4 = ? (use 100 − 4)", answer: "384" },
+        { prompt: "58 + 42 = ? (number bond)", answer: "100" }
       ]
     }
   },
   {
-    id: 2, chain: 1, code: "W2", icon: "↔️", name: "Number Line Universe",
+    id: 2, chain: 1, code: "W2", icon: "🌌", name: "Number Line Universe",
     color: "#7B4FC9", status: "ready",
-    tagline: "Jump strategy & negative numbers → submersibles, freezers, and level maps",
+    tagline: "Jump strategy & negative numbers → charting positions above and below the flight path",
     missions: [
       {
-        id: "2-1", title: "🚢 A Submersible Rises from the Wreck",
-        warmup: "A deep-sea submersible is surveying the Titanic wreck site. Imagine a number line running from deep underwater to the surface.",
-        thinking: { prompt: "The submersible is at −5 m and rises to 8 m. Which direction does it jump, and how far?", choices: ["Count the jump from −5 up to 8 on the number line", "Add −5 and 8 together without thinking about direction", "Subtract 8 from −5"] },
+        id: "2-1", title: "🛰️ A Probe Rises from the Crater",
+        warmup: "A rover probe is surveying a deep crater on the Moon. Imagine a number line running from the crater floor up to the surface.",
+        thinking: { prompt: "The probe is at −5 m and rises to 8 m. Which direction does it jump, and how far?", choices: ["Count the jump from −5 up to 8 on the number line", "Add −5 and 8 together without thinking about direction", "Subtract 8 from −5"] },
         toolChoice: {
           prompt: "Which tool helps you find the distance of the jump?",
           options: ["draw_diagram", "work_backward", "guess_check"],
           note: "Drawing the number line makes the jump visible — you can count the squares instead of worrying about signs."
         },
         picture: { type: "line", from: -5, to: 8, min: -8, max: 10 },
+        explainIt: {
+          prompt: "You just used the number line to find how far the probe rose. Explain how you found the distance between −5 m and 8 m.",
+          markPoints: [
+            { terms: ["jump", "distance", "count"], label: "counting the jump" },
+            { terms: ["negative", "positive", "sign", "opposite direction"], label: "crossing zero" }
+          ],
+          hintSequence: [
+            "Try mentioning how you counted the jump from −5 up to 8 on the line.",
+            "Now mention that the jump crosses from negative to positive, through zero."
+          ]
+        },
         algebra: "distance = 8 − (−5)",
         working: ["distance risen = 8 − (−5)", "= 8 + 5", "= 13 m"],
-        challenge: { prompt: "Your turn: a diver at −12 m rises to 3 m. How far did they rise?", answer: "15", hint: "3 − (−12)" }
+        challenge: { prompt: "Your turn: a probe at −12 m rises to 3 m. How far did it rise?", answer: "15", hint: "3 − (−12)" }
       },
       {
-        id: "2-2", title: "🧊 Iceberg Water Temperature Drop",
-        warmup: "The North Atlantic water temperature starts at 0°C near the ship, then drops sharply near an iceberg. Start at 0 on the number line.",
+        id: "2-2", title: "☄️ Comet Surface Temperature Drop",
+        warmup: "A comet's surface temperature starts at 0°C in sunlight, then drops sharply as it moves into shadow. Start at 0 on the number line.",
         thinking: { prompt: "The temperature starts at 0°C and drops 3°C. Which way do you jump?", choices: ["Start at 0 and move 3 steps left", "Start at 0 and move 3 steps right", "Add 3 to 0"] },
         picture: { type: "line", from: 0, to: -3, min: -6, max: 6 },
+        explainIt: {
+          prompt: "Explain how starting at 0 and moving left helped you find the new temperature.",
+          markPoints: [
+            { terms: ["left", "negative", "below zero", "drop"], label: "direction" },
+            { terms: ["0", "start", "zero"], label: "starting point" }
+          ],
+          hintSequence: [
+            "Try mentioning which direction you moved on the number line.",
+            "Now mention that you started at 0 before making the jump."
+          ]
+        },
         algebra: "0 − 3 = x",
         working: ["0 − 3 = x", "x = −3°C"],
-        challenge: { prompt: "Your turn: the water starts at 2°C and drops 7°C near the iceberg. What is the new temperature?", answer: "-5", hint: "2 − 7" }
+        challenge: { prompt: "Your turn: the surface starts at 2°C and drops 7°C as the comet moves into shadow. What is the new temperature?", answer: "-5", hint: "2 − 7" }
       },
       {
         id: "2-3", title: "🧪 Freezer Test, Two Cool-Downs",
         warmup: "A lab sample is cooled twice in a row in the freezer — two jumps left in a row, both below zero.",
         thinking: { prompt: "−4 + (−6) — what happens when you combine two negative jumps?", choices: ["Both jumps go left, so you move left a total of 10", "The two negatives cancel out to zero", "You jump right because two negatives make a positive"] },
         picture: { type: "line", from: -4, to: -10, min: -12, max: 4 },
+        explainIt: {
+          prompt: "Explain what happens when you combine two negative jumps in a row.",
+          markPoints: [
+            { terms: ["both", "same direction", "left"], label: "same direction" },
+            { terms: ["add", "total", "combine", "further"], label: "combining jumps" }
+          ],
+          hintSequence: [
+            "Try mentioning that both jumps move in the same direction (left).",
+            "Now mention that you combine the two jump sizes to get the total distance moved."
+          ]
+        },
         algebra: "−4 + (−6) = x",
         working: ["−4 + (−6)", "both jumps move left", "= −10"],
         challenge: { prompt: "Your turn: the sample cools by −7°C, then another −5°C. −7 + (−5) = ?", answer: "-12", hint: "Both jumps move further left." }
@@ -1299,28 +1683,36 @@ const WORLDS = [
           note: "Drawing both points on a line lets you count every step between them — the sign of each point stops mattering once you can see the gap."
         },
         picture: { type: "line", from: -3, to: 5, min: -6, max: 8 },
+        explainIt: {
+          prompt: "Explain why the distance between −3 and 5 is always a positive number.",
+          markPoints: [
+            { terms: ["distance", "positive", "gap", "steps"], label: "distance is positive" },
+            { terms: ["count", "counting", "between"], label: "counting between points" }
+          ],
+          hintSequence: [
+            "Try mentioning that distance is always a positive number, no matter which point is negative.",
+            "Now mention how you counted the steps between the two points on the line."
+          ]
+        },
         algebra: "distance = 5 − (−3)",
         working: ["distance = 5 − (−3)", "= 5 + 3", "= 8"],
         challenge: { prompt: "Your turn: find the distance between the pipe at −6 and the star at 2.", answer: "8", hint: "2 − (−6)" }
       }
     ],
     boss: {
-      name: "The Negative Number Wraith", hp: 100,
+      name: "The Retrograde Wraith", icon: "👻", hp: 100,
       questions: [
         { prompt: "−4 + 9 = ?", answer: "5" },
         { prompt: "6 − 10 = ?", answer: "-4" },
-        { prompt: "A lift on the ship goes from deck −2 to deck 5. How many decks did it rise?", answer: "7" },
-        { prompt: "−15 + 15 = ?", answer: "0" },
-        { prompt: "−3 − 3 = ?", answer: "-6" },
-        { prompt: "−8 + (−2) = ?", answer: "-10" },
-        { prompt: "Find the distance between the wreck at −5 m and the surface marker at 4 m.", answer: "9" }
+        { prompt: "A lift on the space station goes from deck −2 to deck 5. How many decks did it rise?", answer: "7" },
+        { prompt: "Find the distance between the crater floor at −5 m and the surface marker at 4 m.", answer: "9" }
       ]
     }
   },
   {
-    id: 3, chain: 2, code: "W3", icon: "▦", name: "Bar Model Kingdom",
+    id: 3, chain: 2, code: "W3", icon: "🛰️", name: "Bar Model Space Station",
     color: "#D9A32B", status: "ready",
-    tagline: "The heart of the bridge — bars become equations",
+    tagline: "The heart of the transfer network — bars become equations",
     missions: [
       {
         id: "3-1", title: "Ribbon in equal parts",
@@ -1332,6 +1724,17 @@ const WORLDS = [
           note: "Drawing 4 equal boxes turns 'how long is one part?' into a straightforward division, without needing to guess."
         },
         picture: { type: "bar", bars: [{ label: "ribbon", units: 4, color: "sg" }], totalLabel: "48 cm" },
+        explainIt: {
+          prompt: "Explain how drawing the bar into 4 equal boxes helped you find the length of one part.",
+          markPoints: [
+            { terms: ["equal", "boxes", "parts", "divide"], label: "equal boxes" },
+            { terms: ["divide", "division", "48", "share"], label: "dividing the total" }
+          ],
+          hintSequence: [
+            "Try mentioning that the bar was split into 4 equal boxes.",
+            "Now mention that finding one box means dividing the total by the number of boxes."
+          ]
+        },
         algebra: "4x = 48",
         working: ["Let each part = x cm", "4x = 48", "x = 48 ÷ 4", "x = 12 cm"],
         challenge: { prompt: "Your turn: a rope 72 m long is cut into 6 equal parts. Find one part.", answer: "12", hint: "6x = 72" }
@@ -1346,6 +1749,17 @@ const WORLDS = [
           note: "Drawing the bar first turns 'how many boxes?' into a simple division — that's why it comes before the picture step."
         },
         picture: { type: "bar", bars: [{ label: "Tom", units: 1, color: "sg" }, { label: "Sam", units: 3, color: "cam" }], totalLabel: "96" },
+        explainIt: {
+          prompt: "Explain how you decided how many boxes to draw for Tom and for Sam.",
+          markPoints: [
+            { terms: ["times as many", "3 times", "boxes"], label: "boxes from the ratio" },
+            { terms: ["total", "4 boxes", "share", "divide"], label: "sharing the total" }
+          ],
+          hintSequence: [
+            "Try mentioning why Sam's bar has 3 boxes while Tom's has 1.",
+            "Now mention how you used the total (96) shared across all the boxes together."
+          ]
+        },
         algebra: "x + 3x = 96",
         working: ["Let Tom = x, Sam = 3x", "x + 3x = 96", "4x = 96", "x = 24", "Tom = 24, Sam = 72"],
         challenge: { prompt: "Your turn: Mia has some stickers, Leo has 4 times as many. Together 80. How many does Mia have?", answer: "16", hint: "x + 4x = 80" }
@@ -1355,36 +1769,69 @@ const WORLDS = [
         warmup: "A bar split into equal time chunks.",
         thinking: { prompt: "A car travels 180 km in 3 hours at constant speed. What does each bar box represent?", choices: ["Split 180 into 3 equal boxes, one for each hour", "Multiply 180 by 3", "Guess a speed that feels about right"] },
         picture: { type: "bar", bars: [{ label: "distance", units: 3, color: "sg" }], totalLabel: "180 km" },
+        explainIt: {
+          prompt: "Explain how splitting the distance into equal hour-boxes helped you find the speed.",
+          markPoints: [
+            { terms: ["equal", "hour", "boxes", "each hour"], label: "equal time boxes" },
+            { terms: ["speed", "divide", "per hour"], label: "finding speed" }
+          ],
+          hintSequence: [
+            "Try mentioning that the total distance was split into 3 equal hour-boxes.",
+            "Now mention that one box's value is the speed per hour."
+          ]
+        },
         algebra: "3x = 180",
         working: ["Let speed = x km/h", "3x = 180", "x = 60 km/h"],
         challenge: { prompt: "Your turn: a train travels 240 km in 4 hours. Find the speed.", answer: "60", hint: "4x = 240" }
       },
       {
-        id: "3-4", title: "🚢 Engine Room — Ratio 1 : 2",
-        warmup: "An ocean liner has two boiler rooms. Room B always burns twice the coal of Room A — that's a ratio bar: 1 box and 2 boxes.",
-        thinking: { prompt: "Step 1 is just the drawing. Room A and Room B share 36 tonnes of coal in ratio 1 : 2. What's your first move?", choices: ["Draw 1 box for Room A and 2 boxes for Room B, then share 36 tonnes across all 3 boxes", "Split 36 exactly in half", "Multiply 36 by 2"] },
+        id: "3-4", title: "🚀 Fuel Bay — Ratio 1 : 2",
+        warmup: "The rocket has two fuel tanks. Tank B always burns twice the fuel of Tank A — that's a ratio bar: 1 box and 2 boxes.",
+        thinking: { prompt: "Step 1 is just the drawing. Tank A and Tank B share 36 tonnes of fuel in ratio 1 : 2. What's your first move?", choices: ["Draw 1 box for Tank A and 2 boxes for Tank B, then share 36 tonnes across all 3 boxes", "Split 36 exactly in half", "Multiply 36 by 2"] },
         toolChoice: {
-          prompt: "Which tool turns this coal ratio into real tonnes?",
+          prompt: "Which tool turns this fuel ratio into real tonnes?",
           options: ["draw_diagram", "simplify", "guess_check"],
           note: "Once you can see 3 total boxes, the tonnage splits into a simple division — the ratio bar does the hard thinking for you."
         },
-        picture: { type: "bar", bars: [{ label: "Room A", units: 1, color: "sg" }, { label: "Room B", units: 2, color: "cam" }], totalLabel: "36 tonnes" },
+        picture: { type: "bar", bars: [{ label: "Tank A", units: 1, color: "sg" }, { label: "Tank B", units: 2, color: "cam" }], totalLabel: "36 tonnes" },
+        explainIt: {
+          prompt: "Explain how the ratio bar showed you how much fuel each tank holds.",
+          markPoints: [
+            { terms: ["ratio", "boxes", "1:2", "twice"], label: "ratio boxes" },
+            { terms: ["divide", "3 boxes", "total", "share"], label: "sharing the total" }
+          ],
+          hintSequence: [
+            "Try mentioning how many total boxes the bar had, based on the ratio.",
+            "Now mention how you divided the total fuel across those boxes to find each tank's amount."
+          ]
+        },
         algebra: "x + 2x = 36",
-        working: ["Room A = x, Room B = 2x", "x + 2x = 36", "3x = 36", "x = 12", "Room A = 12 t, Room B = 24 t"],
+        working: ["Tank A = x, Tank B = 2x", "x + 2x = 36", "3x = 36", "x = 12", "Tank A = 12 t, Tank B = 24 t"],
         challenge: { prompt: "Your turn, engineer: two fuel tanks are in ratio 1 : 3, total 48 tonnes. Find the smaller tank (tonnes).", answer: "12", hint: "4x = 48" }
       },
       {
-        id: "3-5", title: "🚢 Cabin Count — 'more than'",
-        warmup: "Not every bar is a multiple. Sometimes one deck just has a fixed number of extra cabins — same length bar, plus a chunk.",
-        thinking: { prompt: "First class deck has 45 cabins. Second class deck has 18 more cabins than first class. Step 1: how do you draw second class's bar?", choices: ["Draw it the same length as first class's bar, plus an extra 18-cabin chunk", "Draw it exactly 18 units long", "Draw it twice as long as first class"] },
-        picture: { type: "bar", bars: [{ label: "1st class", units: 1, color: "sg", plusNumber: 0 }, { label: "2nd class", units: 1, color: "cam", plusNumber: 18 }], totalLabel: "1st class = 45" },
-        algebra: "2nd class = 45 + 18",
-        working: ["1st class = 45", "2nd class = 1st class + 18", "2nd class = 45 + 18", "2nd class = 63 cabins"],
-        challenge: { prompt: "Your turn: the cargo deck stores 32 crates. The engine deck stores 15 more crates than the cargo deck. How many on the engine deck?", answer: "47", hint: "32 + 15" }
+        id: "3-5", title: "🚀 Module Count — 'more than'",
+        warmup: "Not every bar is a multiple. Sometimes one module just has a fixed number of extra bunks — same length bar, plus a chunk.",
+        thinking: { prompt: "The crew module has 45 bunks. The science module has 18 more bunks than the crew module. Step 1: how do you draw the science module's bar?", choices: ["Draw it the same length as the crew module's bar, plus an extra 18-bunk chunk", "Draw it exactly 18 units long", "Draw it twice as long as the crew module"] },
+        picture: { type: "bar", bars: [{ label: "crew mod.", units: 1, color: "sg", plusNumber: 0 }, { label: "science mod.", units: 1, color: "cam", plusNumber: 18 }], totalLabel: "crew mod. = 45" },
+        explainIt: {
+          prompt: "Explain how the bar showed the 'more than' relationship between the two modules.",
+          markPoints: [
+            { terms: ["same length", "extra", "more than", "plus"], label: "same bar plus extra" },
+            { terms: ["add", "18", "chunk"], label: "adding the extra amount" }
+          ],
+          hintSequence: [
+            "Try mentioning that the science module's bar is the same length as the crew module's, plus an extra chunk.",
+            "Now mention that you added the extra amount to find the science module's total."
+          ]
+        },
+        algebra: "science mod. = 45 + 18",
+        working: ["crew mod. = 45", "science mod. = crew mod. + 18", "science mod. = 45 + 18", "science mod. = 63 bunks"],
+        challenge: { prompt: "Your turn: the cargo bay stores 32 crates. The supply bay stores 15 more crates than the cargo bay. How many in the supply bay?", answer: "47", hint: "32 + 15" }
       },
       {
         id: "3-6", title: "🧪 Coolant Mix — Three-part ratio bar",
-        warmup: "Not every bar splits into just two parts. The ship's chief engineer mixes coolant from 3 chemicals — that's a 3-part bar.",
+        warmup: "Not every bar splits into just two parts. Mission Control's chief engineer mixes coolant from 3 chemicals — that's a 3-part bar.",
         thinking: { prompt: "100 litres of coolant are mixed in the ratio 2 : 3 : 5 (water : glycol : additive). Step 1: what do you find first?", choices: ["Add 2 + 3 + 5 to find the total number of boxes first", "Just divide 100 by 3 (the number of chemicals)", "Multiply 2 × 3 × 5"] },
         toolChoice: {
           prompt: "Three ingredients instead of two — which tool helps you organise the mix?",
@@ -1392,54 +1839,83 @@ const WORLDS = [
           note: "A 3-part bar makes the 'total boxes' step visible before you divide, instead of juggling three numbers in your head."
         },
         picture: { type: "bar", bars: [{ label: "water", units: 2, color: "sg" }, { label: "glycol", units: 3, color: "cam" }, { label: "additive", units: 5, color: "sg" }], totalLabel: "100 L" },
+        explainIt: {
+          prompt: "Explain how you found the total number of boxes before dividing the coolant.",
+          markPoints: [
+            { terms: ["add", "total boxes", "2+3+5", "10 boxes"], label: "adding the parts" },
+            { terms: ["divide", "each box", "one box"], label: "finding one box" }
+          ],
+          hintSequence: [
+            "Try mentioning that you added all three ratio numbers together to get the total number of boxes.",
+            "Now mention that dividing the total litres by that number gives the value of one box."
+          ]
+        },
         algebra: "2x + 3x + 5x = 100",
         working: ["total boxes = 2 + 3 + 5 = 10", "10x = 100", "x = 10", "water = 20 L, glycol = 30 L, additive = 50 L"],
         challenge: { prompt: "Your turn, chemist: 60 L of fuel additive is mixed in ratio 1 : 2 : 3. Find the smallest ingredient (litres).", answer: "10", hint: "1+2+3=6 boxes, 6x=60" }
       }
     ],
     boss: {
-      name: "The Bar Model King", hp: 100,
+      name: "The Station Sentinel", icon: "🤖", hp: 100,
       questions: [
         { prompt: "Bar split into 5 equal boxes, total 65. Value of 1 box?", answer: "13" },
         { prompt: "x + 2x = 30. Find x.", answer: "10" },
-        { prompt: "A bar of 3 boxes = 27. Value of 1 box?", answer: "9" },
-        { prompt: "Ratio 2 : 3, sum 40. Value of 1 unit?", answer: "8" },
-        { prompt: "x + 5x = 54. Find x.", answer: "9" },
-        { prompt: "A bar of 6 boxes = 96. Value of 1 box?", answer: "16" },
         { prompt: "Tia has 20. Ravi has 9 more than Tia. How many does Ravi have?", answer: "29" },
         { prompt: "$90 shared in ratio 1:2:6. Find the smallest share.", answer: "10" }
       ]
     }
   },
   {
-    id: 4, chain: 3, code: "W4", icon: "🔍", name: "Word Problem Translator",
+    id: 4, chain: 3, code: "W4", icon: "📡", name: "Comms Translator",
     color: "#1E9E8B", status: "ready",
-    tagline: "Numbers → Keywords → Model → Equation → Answer (shipyard, lab & Mushroom Kingdom stories)",
+    tagline: "Numbers → Keywords → Model → Equation → Answer (deep-space transmissions, lab & Mushroom Kingdom stories)",
     isWordProblemWorld: true,
     missions: [
       {
-        id: "4-1",
-        text: "Two shipyard workers, Priya and Sam, share 84 rivets altogether. Priya has 3 times as many rivets as Sam. How many rivets does Sam have?",
+        id: "4-1", icon: "🔩",
+        text: "Two mission engineers, Priya and Sam, have 84 bolts altogether. Priya has 3 times as many bolts as Sam. How many bolts does Sam have?",
         toolChoice: {
           prompt: "Which tool would help you start this problem?",
           options: ["draw_diagram", "guess_check", "make_table"],
-          note: "Drawing 1 box for Sam and 3 boxes for Priya turns 'how many rivets?' into a simple division of 84 into 4 boxes."
+          note: "Drawing 1 box for Sam and 3 boxes for Priya turns 'how many bolts?' into a simple division of 84 into 4 boxes."
         },
         picture: { type: "bar", bars: [{ label: "Sam", units: 1, color: "sg" }, { label: "Priya", units: 3, color: "cam" }], totalLabel: "84" },
+        explainIt: {
+          prompt: "You just built the bar model below. Now explain it in your own words — how did drawing boxes for Sam and Priya help you find how many bolts Sam has?",
+          markPoints: [
+            { terms: ["bar model", "box", "boxes", "unit", "units"], label: "bar model / units" },
+            { terms: ["divide", "divided", "division", "split", "84"], label: "dividing the total" }
+          ],
+          hintSequence: [
+            "Try mentioning that you drew boxes (a bar model) — 1 for Sam and 3 for Priya.",
+            "Now mention that you divided 84 by the total number of boxes (4) to find one unit."
+          ]
+        },
         algebra: "x + 3x = 84",
         working: ["Let Sam = x, Priya = 3x", "x + 3x = 84", "4x = 84", "x = 21"],
-        answer: "Sam has 21 rivets."
+        answer: "Sam has 21 bolts."
       },
       {
-        id: "4-2",
-        text: "A ship's boiler feed tank holds 60 litres of water. After 25 litres are used to fire the boilers, how many litres remain?",
+        id: "4-2", icon: "🧪",
+        text: "A rocket's coolant tank holds 60 litres of water. After 25 litres are used to cool the engines, how many litres remain?",
         picture: { type: "bar", bars: [{ label: "tank", units: 1, color: "sg", plusNumber: null }], totalLabel: "60 litres, 25 used" },
+        explainIt: {
+          prompt: "You just built the bar model below. Now explain it in your own words — how did the bar help you find how many litres remain?",
+          markPoints: [
+            { terms: ["bar model", "bar", "box", "picture", "diagram"], label: "the bar model" },
+            { terms: ["subtract", "subtracted", "minus", "take away", "used"], label: "subtracting what's used" }
+          ],
+          hintSequence: [
+            "Try mentioning that you drew a bar to show the whole tank of 60 litres.",
+            "Now mention that you subtracted the 25 litres used from the 60 to find what's left."
+          ]
+        },
         algebra: "60 − 25 = x",
         working: ["60 − 25 = x", "x = 35"],
         answer: "35 litres remain."
       },
       {
-        id: "4-3",
+        id: "4-3", icon: "🪙",
         text: "Mario has twice as many coins as Luigi. Together they have 45 coins. How many coins does Luigi have?",
         toolChoice: {
           prompt: "Which tool would help you start this problem?",
@@ -1447,20 +1923,42 @@ const WORLDS = [
           note: "Drawing 1 box for Luigi and 2 boxes for Mario makes the total number of boxes (3) visible before you divide."
         },
         picture: { type: "bar", bars: [{ label: "Luigi", units: 1, color: "sg" }, { label: "Mario", units: 2, color: "cam" }], totalLabel: "45" },
+        explainIt: {
+          prompt: "You just built the bar model below. Now explain it in your own words — how did drawing boxes for Luigi and Mario help you find how many coins Luigi has?",
+          markPoints: [
+            { terms: ["bar model", "box", "boxes", "unit", "units"], label: "bar model / units" },
+            { terms: ["divide", "divided", "division", "split", "45"], label: "dividing the total" }
+          ],
+          hintSequence: [
+            "Try mentioning that you drew boxes (a bar model) — 1 for Luigi and 2 for Mario.",
+            "Now mention that you divided 45 by the total number of boxes (3) to find one unit."
+          ]
+        },
         algebra: "x + 2x = 45",
         working: ["Let Luigi = x, Mario = 2x", "x + 2x = 45", "3x = 45", "x = 15"],
         answer: "Luigi has 15 coins."
       },
       {
-        id: "4-4",
+        id: "4-4", icon: "🧪",
         text: "In the lab, Zara measured 27 mL of solution. Liam measured 15 mL more than Zara. How many mL did Liam measure?",
         picture: { type: "bar", bars: [{ label: "Zara", units: 1, color: "sg" }, { label: "Liam", units: 1, color: "cam", plusNumber: 15 }], totalLabel: "Zara = 27" },
+        explainIt: {
+          prompt: "You just built the bar model below. Now explain it in your own words — how did the 'more than' bar help you find how much Liam measured?",
+          markPoints: [
+            { terms: ["bar model", "bar", "box", "more than", "extra"], label: "the 'more than' bar" },
+            { terms: ["add", "added", "plus", "addition"], label: "adding the extra amount" }
+          ],
+          hintSequence: [
+            "Try mentioning that you drew a bar showing Liam has 15 mL more than Zara.",
+            "Now mention that you added the extra 15 mL onto Zara's 27 mL to find Liam's amount."
+          ]
+        },
         algebra: "Liam = 27 + 15",
         working: ["Zara = 27", "Liam = Zara + 15", "Liam = 27 + 15", "Liam = 42"],
         answer: "Liam measured 42 mL."
       },
       {
-        id: "4-5",
+        id: "4-5", icon: "🧫",
         text: "A chemistry lab has 120 mL of a reagent. It is shared equally into 8 test tubes. How many mL are in each tube?",
         toolChoice: {
           prompt: "Which tool would help you start this problem?",
@@ -1468,46 +1966,76 @@ const WORLDS = [
           note: "Drawing 8 equal boxes for 120 mL turns the problem straight into a division — no guessing needed."
         },
         picture: { type: "bar", bars: [{ label: "reagent", units: 8, color: "sg" }], totalLabel: "120" },
+        explainIt: {
+          prompt: "You just built the bar model below. Now explain it in your own words — how did splitting the bar into 8 equal boxes help you find how much is in each test tube?",
+          markPoints: [
+            { terms: ["bar model", "bar", "box", "equal boxes", "equal groups"], label: "equal-groups bar model" },
+            { terms: ["divide", "divided", "division", "share", "shared", "split"], label: "dividing into equal shares" }
+          ],
+          hintSequence: [
+            "Try mentioning that you drew 8 equal boxes to show the 8 test tubes.",
+            "Now mention that you divided 120 by 8 to find how much is in each equal box."
+          ]
+        },
         algebra: "8x = 120",
         working: ["Let 1 test tube = x mL", "8x = 120", "x = 15"],
         answer: "Each test tube has 15 mL."
       }
     ],
     boss: {
-      name: "The Riddle Sphinx", hp: 100,
+      name: "The Signal Sphinx", icon: "🗿", hp: 100,
       questions: [
         { prompt: "\"Twice as many\" means multiply by...?", answer: "2" },
-        { prompt: "A cargo hold has 90 crates, some are unloaded, 34 remain. How many were unloaded?", answer: "56" },
-        { prompt: "Toad has half as many coins as Peach (Peach has 24). How many does Toad have?", answer: "12" },
         { prompt: "\"Altogether\" is usually a clue to which operation? (add/subtract)", answer: "add" },
-        { prompt: "Three engineers share 45 bolts equally. How many each?", answer: "15" },
-        { prompt: "Noah has 12 more coins than Priya. Priya has 20. How many does Noah have?", answer: "32" },
-        { prompt: "84 test tubes of reagent shared equally into 6 trays. How many per tray?", answer: "14" }
+        { prompt: "A cargo hold has 90 crates, some are unloaded, 34 remain. How many were unloaded?", answer: "56" },
+        { prompt: "Three engineers share 45 bolts equally. How many each?", answer: "15" }
       ]
     }
   },
   {
-    id: 5, chain: 4, code: "W5", icon: "🍕", name: "Fraction Bridge",
+    id: 5, chain: 4, code: "W5", icon: "🌗", name: "Fraction Docking Bay",
     color: "#D6407A", status: "ready",
-    tagline: "Mario blocks, ship decks & lab beakers → improper fractions & operations",
+    tagline: "Docking modules, ship decks & lab beakers → improper fractions & operations",
     missions: [
       {
         id: "5-1", title: "🍄 3 out of 4 Question Blocks",
         warmup: "Picture a row of 4 Question Blocks. Mario has already hit 3 of them.",
         thinking: { prompt: "If 3 of the 4 blocks are hit, what fraction is that?", choices: ["Count how many of the 4 blocks are shaded", "Count how many blocks are NOT shaded", "Guess the fraction by eye"] },
         picture: { type: "bar", bars: [{ label: "blocks", units: 4, color: "sg", shaded: 3 }], totalLabel: "3 shaded of 4" },
+        explainIt: {
+          prompt: "You just built the bar model below. Now explain it in your own words — how did the shaded boxes help you write the fraction?",
+          markPoints: [
+            { terms: ["shaded", "hit", "coloured", "colored", "filled"], label: "counting shaded parts" },
+            { terms: ["total", "whole", "altogether", "all the boxes", "4 boxes", "denominator"], label: "counting the total parts" }
+          ],
+          hintSequence: [
+            "Try mentioning that you counted the shaded boxes (the blocks Mario hit).",
+            "Now mention that you counted the total number of boxes, which goes on the bottom of the fraction."
+          ]
+        },
         algebra: "3/4",
         working: ["4 blocks total", "3 blocks shaded (hit)", "fraction hit = 3/4"],
         challenge: { prompt: "Your turn: a row has 5 equal blocks, 2 are hit. What fraction is that?", answer: "2/5", hint: "shaded parts / total parts" }
       },
       {
-        id: "5-2", title: "🚢 3/4 of the Crew (60 Sailors) On Deck",
-        warmup: "If 3 boxes out of 4 equal boxes = 60 sailors on deck, what does 1 box equal?",
+        id: "5-2", title: "🚀 3/4 of the Crew (60 Astronauts) On Duty",
+        warmup: "If 3 boxes out of 4 equal boxes = 60 astronauts on duty, what does 1 box equal?",
         thinking: { prompt: "Find the value of 1 part first, then the whole bar. What's the best order?", choices: ["Find what 1 part is worth first, then find all 4 parts", "Multiply 60 by 3/4", "Divide 60 by 4 only"] },
         picture: { type: "bar", bars: [{ label: "", units: 4, color: "sg", shaded: 3 }], totalLabel: "3 parts = 60" },
+        explainIt: {
+          prompt: "You just built the bar model below. Now explain it in your own words — how did the boxes help you find the whole crew from the 60 on duty?",
+          markPoints: [
+            { terms: ["1 part", "one part", "one box", "1 box", "each box", "unit"], label: "finding 1 part" },
+            { terms: ["multiply", "times", "all 4", "four boxes", "whole", "total"], label: "scaling up to the whole" }
+          ],
+          hintSequence: [
+            "Try mentioning that you worked out what 1 part (1 box) is worth by dividing 60 by 3.",
+            "Now mention that you multiplied 1 part by 4 to get the whole crew."
+          ]
+        },
         algebra: "(3/4)x = 60",
         working: ["3 parts = 60", "1 part = 60 ÷ 3 = 20", "4 parts (whole crew) = 20 × 4 = 80"],
-        challenge: { prompt: "Your turn: 2/5 of the crew is 40 sailors. Find the total crew.", answer: "100", hint: "1 part = 40 ÷ 2, then × 5" },
+        challenge: { prompt: "Your turn: 2/5 of the crew is 40 astronauts. Find the total crew.", answer: "100", hint: "1 part = 40 ÷ 2, then × 5" },
         strategies: [
           { id: "s1", label: "Unitary method: find 1 part, then the whole", steps: ["60 ÷ 3 = 20 (1 part)", "20 × 4 = 80 (whole)"], opCount: 2 },
           { id: "s2", label: "Multiply by the reciprocal (4/3)", steps: ["60 × 4/3", "= 240/3", "= 80"], opCount: 3 },
@@ -1520,6 +2048,17 @@ const WORLDS = [
         warmup: "The lab has 7 quarter-litre beakers full of solution — more than one whole litre!",
         thinking: { prompt: "7 quarters is the same as how many wholes and how many quarters left over?", choices: ["Count how many full groups of 4 fit into 7", "Just write 7/4 as it is", "Turn it into a decimal instead"] },
         picture: { type: "bar", bars: [{ label: "beaker set A", units: 4, color: "sg", shaded: 4 }, { label: "beaker set B", units: 4, color: "cam", shaded: 3 }], totalLabel: "7/4" },
+        explainIt: {
+          prompt: "You just built the bar model below. Now explain it in your own words — how did the two bars help you turn 7/4 into a mixed number?",
+          markPoints: [
+            { terms: ["whole", "full bar", "full", "1 whole", "one whole"], label: "the whole" },
+            { terms: ["left over", "leftover", "remaining", "remainder", "3 quarters", "extra"], label: "the leftover quarters" }
+          ],
+          hintSequence: [
+            "Try mentioning that one full bar of 4 quarters makes 1 whole.",
+            "Now mention the leftover quarters (3 quarters) in the second bar."
+          ]
+        },
         algebra: "7/4 = 1¾",
         working: ["7/4 means 7 quarter-litres", "4 quarters = 1 whole litre, leaving 3 quarters", "7/4 = 1 whole and 3/4 = 1¾ litres"],
         challenge: { prompt: "Your turn: write 9/2 as a mixed number.", answer: "4 1/2", hint: "How many whole 2's fit into 9?" }
@@ -1534,36 +2073,56 @@ const WORLDS = [
           note: "Shading the bars shows the denominator (the size of each coin zone) never changes — only the number of shaded zones adds up."
         },
         picture: { type: "bar", bars: [{ label: "1/5", units: 5, color: "sg", shaded: 1 }, { label: "2/5", units: 5, color: "cam", shaded: 2 }], totalLabel: "" },
+        explainIt: {
+          prompt: "You just built the bar model below. Now explain it in your own words — how did the shaded bars show you how to add 1/5 + 2/5?",
+          markPoints: [
+            { terms: ["same", "denominator", "bottom", "equal parts", "5 parts"], label: "same denominator" },
+            { terms: ["add", "added", "plus", "numerator", "numerators", "top", "shaded"], label: "adding the shaded parts" }
+          ],
+          hintSequence: [
+            "Try mentioning that both bars are split into the same size parts, so the denominator stays the same.",
+            "Now mention that you added the shaded parts (the numerators) together."
+          ]
+        },
         algebra: "1/5 + 2/5",
         working: ["1/5 + 2/5", "same denominator, so add the numerators", "= (1+2)/5", "= 3/5"],
         challenge: { prompt: "Your turn: 2/7 + 3/7 = ?", answer: "5/7", hint: "Add just the top numbers." }
       },
       {
-        id: "5-5", title: "🚢 Equivalent Fractions — Lifeboat Capacity",
-        warmup: "The same fraction of lifeboat capacity, split into a different number of equal seats.",
-        thinking: { prompt: "1/2 of a lifeboat's capacity is the same amount as how many quarters?", choices: ["Cut each half into 2, so 1/2 = 2/4", "1/2 is always smaller than any quarter amount", "1/2 can't be written any other way"] },
+        id: "5-5", title: "🚀 Equivalent Fractions — Escape Pod Capacity",
+        warmup: "The same fraction of escape pod capacity, split into a different number of equal seats.",
+        thinking: { prompt: "1/2 of an escape pod's capacity is the same amount as how many quarters?", choices: ["Cut each half into 2, so 1/2 = 2/4", "1/2 is always smaller than any quarter amount", "1/2 can't be written any other way"] },
         picture: { type: "bar", bars: [{ label: "1/2", units: 2, color: "sg", shaded: 1 }, { label: "2/4", units: 4, color: "cam", shaded: 2 }], totalLabel: "" },
+        explainIt: {
+          prompt: "You just built the bar model below. Now explain it in your own words — how did the two bars show that 1/2 and 2/4 are equal?",
+          markPoints: [
+            { terms: ["same", "equal", "equivalent", "matches", "match"], label: "same amount" },
+            { terms: ["cut", "split", "double", "doubled", "multiply", "multiplied", "times 2", "2"], label: "cutting into smaller parts" }
+          ],
+          hintSequence: [
+            "Try mentioning that the shaded part is the same amount in both bars (equivalent).",
+            "Now mention that you cut each half into 2 smaller parts, which is like multiplying top and bottom by 2."
+          ]
+        },
         algebra: "1/2 = 2/4",
         working: ["1/2", "multiply top and bottom by 2", "= 2/4"],
         challenge: { prompt: "Your turn: write 1/3 as an equivalent fraction with denominator 6.", answer: "2/6", hint: "Multiply top and bottom by 2." }
       }
     ],
     boss: {
-      name: "The Fraction Djinn", hp: 100,
+      name: "The Docking Djinn", icon: "🧞", hp: 100,
       questions: [
         { prompt: "5/8 of 40 coins = ?", answer: "25" },
         { prompt: "Write 11/3 as a mixed number (e.g. 3 2/3)", answer: "3 2/3" },
         { prompt: "1/2 + 1/4 = ? (as a fraction, e.g. 3/4)", answer: "3/4" },
-        { prompt: "3/5 of the crew is 24 sailors. Find the total crew.", answer: "40" },
-        { prompt: "3/8 + 2/8 = ?", answer: "5/8" },
-        { prompt: "Write 2/3 as an equivalent fraction with denominator 9.", answer: "6/9" }
+        { prompt: "3/5 of the crew is 24 astronauts. Find the total crew.", answer: "40" }
       ]
     }
   },
   {
-    id: 6, chain: 5, code: "W6", icon: "⚖️", name: "Ratio & Proportion Bridge",
+    id: 6, chain: 5, code: "W6", icon: "⚖️", name: "Ratio & Proportion Relay",
     color: "#3E8E4F", status: "ready",
-    tagline: "Ratio bars → charts, power meters, boilers & coin trades",
+    tagline: "Ratio bars → telemetry charts, power meters, thrusters & fuel trades",
     missions: [
       {
         id: "6-1", title: "🍄 Warp Pipe Coins — Ratio 1 : 2",
@@ -1575,30 +2134,77 @@ const WORLDS = [
           note: "Bar models turn ratio problems into a simple share-out division, once you know the total number of boxes."
         },
         picture: { type: "bar", bars: [{ label: "Pipe A", units: 1, color: "sg" }, { label: "Pipe B", units: 2, color: "cam" }], totalLabel: "36 coins" },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did the boxes for Pipe A and Pipe B help you share out the 36 coins?",
+          markPoints: [
+            { terms: ["box", "boxes", "bar", "unit", "units", "parts"], label: "ratio boxes" },
+            { terms: ["divide", "divided", "share", "shared", "split", "36"], label: "sharing the total" }
+          ],
+          hintSequence: [
+            "Try mentioning that you drew 1 box for Pipe A and 2 boxes for Pipe B (a ratio bar).",
+            "Now mention that you divided the 36 coins by the total number of boxes (3) to find one box."
+          ]
+        },
         algebra: "x : 2x  → 3x = 36",
         working: ["Pipe A = x", "Pipe B = 2x", "if total = 36: 3x = 36", "x = 12 → Pipe A = 12 coins, Pipe B = 24 coins"],
         challenge: { prompt: "Your turn: two piranha plant pipes drop coins in ratio 2 : 5, total 63 coins. Find the smaller pipe's coins.", answer: "18", hint: "2x + 5x = 63" }
       },
       {
-        id: "6-2", title: "⚙️ Boiler Fuel Mix — Scaling Up", 
-        warmup: "The ship's engineer has a fuel formula for 4 boilers, but the liner just added more boilers. Time to scale the recipe.",
-        thinking: { prompt: "If 4 boilers need 200 kg of coal, what should you find first?", choices: ["Find how much 1 boiler needs first, then multiply by 10", "Multiply 200 by 10 directly", "Divide 200 by 10"] },
-        picture: { type: "steps", steps: ["4 boilers → 200 kg", "1 boiler → 200 ÷ 4 = 50 kg", "10 boilers → 50 × 10"] },
+        id: "6-2", title: "⚙️ Thruster Fuel Mix — Scaling Up", 
+        warmup: "Mission Control's engineer has a fuel formula for 4 thrusters, but the rocket just added more thrusters. Time to scale the recipe.",
+        thinking: { prompt: "If 4 thrusters need 200 kg of fuel, what should you find first?", choices: ["Find how much 1 thruster needs first, then multiply by 10", "Multiply 200 by 10 directly", "Divide 200 by 10"] },
+        picture: {
+          type: "buildSteps",
+          given: "4 thrusters → 200 kg",
+          steps: [
+            { prompt: "How much fuel does 1 thruster need? 200 ÷ 4 = ?", answer: "50", note: "the fuel for one thruster" },
+            { prompt: "Now scale up to 10 thrusters: 50 × 10 = ?", answer: "500" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did finding the fuel for 1 thruster first help you work out 10 thrusters?",
+          markPoints: [
+            { terms: ["1 thruster", "one thruster", "each thruster", "unit", "divided", "divide"], label: "finding 1 thruster" },
+            { terms: ["multiply", "multiplied", "times", "scale", "scaled", "10 thrusters"], label: "scaling up" }
+          ],
+          hintSequence: [
+            "Try mentioning that you first worked out how much fuel 1 thruster needs by dividing.",
+            "Now mention that you multiplied that amount to scale up to 10 thrusters."
+          ]
+        },
         algebra: "200 ÷ 4 × 10",
-        working: ["1 boiler needs 200 ÷ 4 = 50 kg", "10 boilers need 50 × 10 = 500 kg"],
-        challenge: { prompt: "Your turn, engineer: 3 boilers need 90 kg of coal. How much for 7 boilers?", answer: "210", hint: "1 boiler = 90 ÷ 3" },
+        working: ["1 thruster needs 200 ÷ 4 = 50 kg", "10 thrusters need 50 × 10 = 500 kg"],
+        challenge: { prompt: "Your turn, engineer: 3 thrusters need 90 kg of fuel. How much for 7 thrusters?", answer: "210", hint: "1 thruster = 90 ÷ 3" },
         strategies: [
-          { id: "s1", label: "Unitary method: find 1 boiler, then ×10", steps: ["200 ÷ 4 = 50 (1 boiler)", "50 × 10 = 500"], opCount: 2 },
+          { id: "s1", label: "Unitary method: find 1 thruster, then ×10", steps: ["200 ÷ 4 = 50 (1 thruster)", "50 × 10 = 500"], opCount: 2 },
           { id: "s2", label: "Set up a proportion and cross-multiply", steps: ["4/200 = 10/x", "4x = 2000", "x = 500"], opCount: 3 },
-          { id: "s3", label: "Repeated addition, one boiler at a time", steps: ["add 50 kg, once for each of the 10 boilers"], opCount: 10 }
+          { id: "s3", label: "Repeated addition, one thruster at a time", steps: ["add 50 kg, once for each of the 10 thrusters"], opCount: 10 }
         ],
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "6-3", title: "🧭 Nautical Chart Scale",
-        warmup: "The navigator's chart for the Atlantic crossing uses a scale of 1 : 100,000 — 1 cm on paper is a lot of real ocean.",
-        thinking: { prompt: "If 1 cm on the chart = 100,000 cm at sea, how many metres is that?", choices: ["Convert 1 cm to real-life cm first, then to metres", "Just use 100,000 as the answer in metres", "Divide 100,000 by 1,000,000"] },
-        picture: { type: "steps", steps: ["chart scale 1 : 100,000", "1 cm on chart = 100,000 cm at sea", "100,000 cm ÷ 100 = metres"] },
+        id: "6-3", title: "🧭 Star Chart Scale",
+        warmup: "Mission Control's star chart for the transit to Mars uses a scale of 1 : 100,000 — 1 cm on paper is a lot of real distance.",
+        thinking: { prompt: "If 1 cm on the chart = 100,000 cm of real distance, how many metres is that?", choices: ["Convert 1 cm to real-life cm first, then to metres", "Just use 100,000 as the answer in metres", "Divide 100,000 by 1,000,000"] },
+        picture: {
+          type: "buildSteps",
+          given: "chart scale 1 : 100,000",
+          steps: [
+            { prompt: "1 cm on the chart is how many cm of real distance?", answer: "100000", note: "the scale tells you" },
+            { prompt: "Convert to metres: 100,000 cm ÷ 100 = ?", answer: "1000" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did the scale help you find the real distance in metres?",
+          markPoints: [
+            { terms: ["scale", "ratio", "represents", "stands for", "real distance"], label: "using the scale" },
+            { terms: ["divide", "divided", "convert", "converted", "metres", "meters"], label: "converting cm to metres" }
+          ],
+          hintSequence: [
+            "Try mentioning that the scale says 1 cm on the chart stands for 100,000 cm in real life.",
+            "Now mention that you converted centimetres to metres by dividing by 100."
+          ]
+        },
         algebra: "100,000 cm ÷ 100 = 1000 m",
         working: ["1 cm represents 100,000 cm", "100,000 cm = 1000 m", "so 3 cm on the chart = 3000 m"],
         challenge: { prompt: "Your turn, navigator: chart scale 1 : 50,000. How many metres does 2 cm represent?", answer: "1000", hint: "2 × 50,000 cm, then ÷ 100" },
@@ -1612,7 +2218,25 @@ const WORLDS = [
         id: "6-4", title: "🍄 Power Meter — Percentage of an amount",
         warmup: "Percent means 'out of 100' — like a Star Power meter that fills up in chunks of 10.",
         thinking: { prompt: "Mario's level has 150 coins total. He's collected 20% so far — what's a clear first step?", choices: ["Find 10% first (÷10), then double it for 20%", "Multiply 150 by 20 directly", "Add 20 to 150"] },
-        picture: { type: "steps", steps: ["20% of 150 coins", "→ 10% of 150 = 15 coins", "→ 20% is double that: 15 × 2"] },
+        picture: {
+          type: "buildSteps",
+          given: "20% of 150 coins",
+          steps: [
+            { prompt: "Find 10% first. 150 ÷ 10 = ?", answer: "15", note: "10% is one tenth" },
+            { prompt: "20% is double 10%: 15 × 2 = ?", answer: "30" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did finding 10% first help you work out 20% of 150?",
+          markPoints: [
+            { terms: ["10 percent", "ten percent", "tenth", "divided by 10", "divide by 10", "10"], label: "finding 10% first" },
+            { terms: ["double", "doubled", "twice", "multiply", "multiplied", "times"], label: "doubling it" }
+          ],
+          hintSequence: [
+            "Try mentioning that you found 10 percent first by dividing 150 by 10.",
+            "Now mention that you doubled the 10 percent amount to get 20 percent."
+          ]
+        },
         algebra: "20% of 150 = (150 ÷ 10) × 2",
         working: ["10% of 150 = 15", "20% = 2 × 15", "= 30 coins"],
         challenge: { prompt: "Your turn: a level has 200 coins. Find 30% of them.", answer: "60", hint: "10% of 200 = 20, then × 3" },
@@ -1627,7 +2251,25 @@ const WORLDS = [
         id: "6-5", title: "🪙 Toad's Trading Post",
         warmup: "At Toad's Trading Post, 1 Gold Coin trades for 1.30 Star Coins. Exchange rates are just a ratio between two currencies.",
         thinking: { prompt: "1 Gold Coin = 1.30 Star Coins. How would you find the Star Coin value of 20 Gold Coins?", choices: ["Multiply 20 by the exchange rate 1.30", "Divide 20 by 1.30", "Add 1.30 to 20"] },
-        picture: { type: "steps", steps: ["1 Gold = 1.30 Star", "20 Gold = 20 × 1.30", "= 26 Star Coins"] },
+        picture: {
+          type: "buildSteps",
+          given: "1 Gold = 1.30 Star",
+          steps: [
+            { prompt: "How many Star Coins is 1 Gold Coin worth?", answer: "1.30", note: "the exchange rate" },
+            { prompt: "Now multiply for 20 Gold Coins: 20 × 1.30 = ?", answer: "26" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did the exchange rate help you change 20 Gold Coins into Star Coins?",
+          markPoints: [
+            { terms: ["rate", "exchange", "worth", "trade", "1.30"], label: "the exchange rate" },
+            { terms: ["multiply", "multiplied", "times"], label: "multiplying" }
+          ],
+          hintSequence: [
+            "Try mentioning the exchange rate — 1 Gold Coin is worth 1.30 Star Coins.",
+            "Now mention that you multiplied the number of Gold Coins by the rate."
+          ]
+        },
         algebra: "20 × 1.30",
         working: ["1 Gold = 1.30 Star", "20 Gold = 20 × 1.30", "= 26 Star Coins"],
         challenge: { prompt: "Your turn: 1 Gold Coin = 1.30 Star Coins. How many Star Coins for 50 Gold Coins?", answer: "65", hint: "50 × 1.30" },
@@ -1636,24 +2278,165 @@ const WORLDS = [
           { id: "s2", label: "Split the rate into 1 + 0.30", steps: ["20 × 1 = 20", "20 × 0.30 = 6", "20 + 6 = 26"], opCount: 3 }
         ],
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
+      },
+      {
+        id: "6-6", title: "🌙 Moon Distance Detective",
+        warmup: "Mission Control needs your help. The Moon is about 384,000 km from Earth. The probe Artemis-7 travels at 8 km/s. This mission launched in March, and the probe carries 3 science instruments. How long will the trip take?",
+        spot: [
+          { text: "384,000 km", relevant: true },
+          { text: "8 km/s", relevant: true },
+          { text: "launched in March", relevant: false },
+          { text: "3 science instruments", relevant: false }
+        ],
+        thinking: { prompt: "You know the distance and the speed — which relationship connects them?", choices: ["time = distance ÷ speed", "time = distance × speed", "time = speed ÷ distance"] },
+        toolChoice: {
+          prompt: "Which tool helps you see how distance, speed, and time fit together?",
+          options: ["make_table", "draw_diagram", "work_backward"],
+          note: "A simple table of distance / speed / time keeps the three quantities lined up so the relationship is easy to spot — the same move as any other rate problem in this world."
+        },
+        picture: {
+          type: "buildSteps",
+          given: "distance 384,000 km, speed 8 km/s",
+          steps: [
+            { prompt: "Find the time in seconds. 384,000 ÷ 8 = ?", answer: "48000", note: "time = distance ÷ speed" },
+            { prompt: "Convert seconds to hours (1 decimal place). 48,000 ÷ 3,600 = ?", answer: "13.3" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did the distance and the speed help you find how long the trip takes?",
+          markPoints: [
+            { terms: ["distance", "speed"], label: "distance and speed" },
+            { terms: ["divide", "divided", "division", "split"], label: "dividing to find time" }
+          ],
+          hintSequence: [
+            "Try mentioning the two things you knew — the distance and the speed.",
+            "Now mention that you divided the distance by the speed to find the time."
+          ]
+        },
+        algebra: "t = d ÷ v",
+        working: ["t = 384,000 ÷ 8", "t = 48,000 seconds", "48,000 ÷ 3,600 ≈ 13.3 hours"],
+        checkPrompt: {
+          question: "Before you calculate exactly — about how long do you think the next probe's trip will take?",
+          choices: ["Less than 1 hour", "About half a day (around 10–12 hours)", "Several weeks"],
+          correctIndex: 1
+        },
+        challenge: { prompt: "Your turn, Mission Control: a probe is 216,000 km away and travels at 6 km/s. How many hours will the trip take?", answer: "10", hint: "First find seconds: 216,000 ÷ 6. Then convert seconds to hours by dividing by 3,600." },
+        explainTemplate: {
+          before: "The probe takes about",
+          blankOptions: ["10 hours", "10 minutes", "10 days"],
+          correctBlank: "10 hours",
+          after: "to reach its target, because distance ÷ speed gives time."
+        }
+      },
+      {
+        id: "6-7", title: "🚚 Highway Rate Check",
+        warmup: "A supply truck drives at 80 km/h along the highway from base to the launch site, a distance of 320 km. How many hours will the drive take?",
+        thinking: { prompt: "Which relationship connects distance, speed, and time here?", choices: ["time = distance ÷ speed", "time = distance × speed", "distance = time ÷ speed"] },
+        toolChoice: {
+          prompt: "Which tool helps you organize distance, speed, and time?",
+          options: ["make_table", "draw_diagram", "guess_check"],
+          note: "A table with distance / speed / time as its three rows keeps everything lined up for the division."
+        },
+        picture: {
+          type: "buildSteps",
+          given: "distance 320 km, speed 80 km/h",
+          steps: [
+            { prompt: "Find the time. 320 ÷ 80 = ?", answer: "4", note: "hours" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did the distance and the speed help you find how long the drive takes?",
+          markPoints: [
+            { terms: ["distance", "speed"], label: "distance and speed" },
+            { terms: ["divide", "divided", "division", "split"], label: "dividing to find time" }
+          ],
+          hintSequence: [
+            "Try mentioning the two things you knew — the distance and the speed.",
+            "Now mention that you divided the distance by the speed to get the time."
+          ]
+        },
+        algebra: "t = d ÷ v",
+        working: ["t = 320 ÷ 80", "t = 4 hours"],
+        challenge: { prompt: "Your turn: a van drives at 60 km/h for a distance of 180 km. How many hours does the drive take?", answer: "3", hint: "180 ÷ 60" }
+      },
+      {
+        id: "6-8", title: "🚰 Tank Fill Time",
+        warmup: "A fuel tap fills the rocket's tank at 3 litres/min. The tank holds 45 litres total. How many minutes will it take to fill?",
+        thinking: { prompt: "Which relationship fits this situation?", choices: ["time = amount ÷ rate", "time = amount × rate", "amount = time ÷ rate"] },
+        toolChoice: {
+          prompt: "Which tool helps you see the amount / rate / time relationship?",
+          options: ["make_table", "draw_diagram", "simplify"],
+          note: "Same move as any rate problem — line up amount, rate, and time, then divide."
+        },
+        picture: {
+          type: "buildSteps",
+          given: "45 litres, filling at 3 litres/min",
+          steps: [
+            { prompt: "Find the time. 45 ÷ 3 = ?", answer: "15", note: "minutes" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did the amount and the fill rate help you find how long the tank takes to fill?",
+          markPoints: [
+            { terms: ["amount", "rate", "litres per minute", "3 litres"], label: "amount and rate" },
+            { terms: ["divide", "divided", "division", "split"], label: "dividing to find time" }
+          ],
+          hintSequence: [
+            "Try mentioning the two things you knew — the amount of fuel and the rate it fills.",
+            "Now mention that you divided the amount by the rate to get the time."
+          ]
+        },
+        algebra: "t = amount ÷ rate",
+        working: ["t = 45 ÷ 3", "t = 15 minutes"],
+        challenge: { prompt: "Your turn: a tap fills at 5 litres/min. How many minutes to fill a 60 litre tank?", answer: "12", hint: "60 ÷ 5" }
+      },
+      {
+        id: "6-9", title: "🪜 Fuel Tank Conversion",
+        warmup: "Mission Control needs the fuel reading in a different unit before the launch checklist can be signed off. The tank holds 3.5 litres of fuel.",
+        thinking: { prompt: "Converting litres to millilitres — bigger unit to smaller unit. What do you do?", choices: ["Multiply by 1000", "Divide by 1000", "Add 1000"] },
+        toolChoice: {
+          prompt: "Which tool helps you convert cleanly?",
+          options: ["make_table", "simplify", "guess_check"],
+          note: "The unit ladder keeps the multiply/divide direction straight so you don't flip it by accident."
+        },
+        picture: {
+          type: "buildSteps",
+          given: "3.5 litres → millilitres",
+          steps: [
+            { prompt: "How many millilitres are in 1 litre?", answer: "1000", note: "the conversion fact" },
+            { prompt: "Now convert. 3.5 × 1000 = ?", answer: "3500" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did knowing 1 litre = 1000 millilitres help you convert the fuel reading?",
+          markPoints: [
+            { terms: ["1000", "thousand", "conversion", "convert", "converted"], label: "the conversion fact" },
+            { terms: ["multiply", "multiplied", "times"], label: "multiplying" }
+          ],
+          hintSequence: [
+            "Try mentioning that 1 litre is the same as 1000 millilitres (the conversion).",
+            "Now mention that you multiplied by 1000 because millilitres are a smaller unit."
+          ]
+        },
+        algebra: "3.5 × 1000",
+        working: ["3.5 l × 1000 = 3500 ml"],
+        challenge: { prompt: "Your turn: convert 2.2 kilograms to grams.", answer: "2200", hint: "2.2 × 1000" }
       }
     ],
     boss: {
-      name: "The Proportion Serpent", hp: 100,
+      name: "The Proportion Comet", icon: "☄️", hp: 100,
       questions: [
         { prompt: "Ratio 3 : 4, total 70. Find the smaller part.", answer: "30" },
         { prompt: "Toad's rate: 1 Gold = 1.30 Star Coins. How many Star Coins for 20 Gold?", answer: "26" },
         { prompt: "20% of 150 coins = ?", answer: "30" },
-        { prompt: "5 boilers need 150 kg of coal each — total for 5?", answer: "750" },
-        { prompt: "Find 40% of 90 coins.", answer: "36" },
-        { prompt: "1 Gold = 1.30 Star Coins. How many Star Coins for 10 Gold?", answer: "13" }
+        { prompt: "5 thrusters need 150 kg of fuel each — total for 5?", answer: "750" }
       ]
     }
   },
   {
-    id: 7, chain: 6, code: "W7", icon: "🔤", name: "Algebra Translator",
+    id: 7, chain: 6, code: "W7", icon: "🖥️", name: "Navigation Computer",
     color: "#C23B3B", status: "ready",
-    tagline: "The most important world — Picture → Boxes → Letters → Solve (Mario blocks, ship crates & lab flasks)",
+    tagline: "The most important world — Picture → Boxes → Letters → Solve (nav computer readouts, cargo crates & lab flasks)",
     isAlgebraLadder: true,
     missions: [
       {
@@ -1666,6 +2449,17 @@ const WORLDS = [
           note: "Drawing the boxes first is what makes 2x + 5 = 17 make sense later — the picture and the equation are the same thing."
         },
         picture: { type: "bar", bars: [{ label: "x", units: 2, color: "sg", plusNumber: 5 }], totalLabel: "17" },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did the boxes help you turn the coin problem into an equation?",
+          markPoints: [
+            { terms: ["box", "boxes", "block", "blocks", "letter", "unknown"], label: "boxes stand for x" },
+            { terms: ["equation", "2x", "two x", "add", "plus"], label: "writing the equation" }
+          ],
+          hintSequence: [
+            "Try mentioning that each box (Question Block) stands for the same unknown number, x.",
+            "Now mention how you wrote it as an equation: two boxes plus 5 equals 17."
+          ]
+        },
         algebra: "□ + □ + 5 = 17   →   2x + 5 = 17",
         working: ["□ + □ + 5 = 17", "call the box size x: 2x + 5 = 17"],
         challenge: { prompt: "Your turn: three Question Blocks plus 4 coins makes 19 coins. Write the equation using x.", answer: "3x+4=19", hint: "3 boxes = 3x" }
@@ -1674,21 +2468,57 @@ const WORLDS = [
         id: "7-2", title: "🍄 Solving 2x + 5 = 17",
         warmup: "You already wrote the equation for the coin blocks — now solve it.",
         thinking: { prompt: "What's the first step to get x alone?", choices: ["Subtract 5 from both sides first, then divide by 2", "Divide by 2 first, then subtract 5", "Guess and check numbers"] },
-        picture: { type: "steps", steps: ["2x + 5 = 17", "→ subtract 5 from both sides", "→ 2x = 12", "→ divide both sides by 2"] },
+        picture: {
+          type: "buildSteps",
+          given: "2x + 5 = 17",
+          steps: [
+            { prompt: "Subtract 5 from both sides. 17 − 5 = ?", answer: "12", note: "so 2x = 12" },
+            { prompt: "Divide both sides by 2. 12 ÷ 2 = ?", answer: "6", note: "so x = 6" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did you get x on its own?",
+          markPoints: [
+            { terms: ["subtract", "subtracted", "take away", "took away", "minus"], label: "subtracting 5 from both sides" },
+            { terms: ["divide", "divided", "division", "split"], label: "dividing by 2" }
+          ],
+          hintSequence: [
+            "Try mentioning that you subtracted 5 from both sides first.",
+            "Now mention that you divided both sides by 2 to get x alone."
+          ]
+        },
         algebra: "2x + 5 = 17",
         working: ["2x + 5 = 17", "2x = 17 − 5", "2x = 12", "x = 6"],
         challenge: { prompt: "Your turn: solve 3x + 4 = 19", answer: "5", hint: "3x = 15" }
       },
       {
-        id: "7-3", title: "🚢 Expanding Brackets — Lifeboat Crates",
-        warmup: "2 lifeboats each carry a crate of (x + 3) supplies. 2(x + 3) means 2 groups of (x + 3).",
+        id: "7-3", title: "🚀 Expanding Brackets — Cargo Pod Crates",
+        warmup: "2 cargo pods each carry a crate of (x + 3) supplies. 2(x + 3) means 2 groups of (x + 3).",
         thinking: { prompt: "If you have 2 groups of (x + 3), what do you get when you share the 2 into the bracket?", choices: ["Multiply 2 by both x and 3 separately", "Only multiply 2 by x", "Only multiply 2 by 3"] },
         toolChoice: {
           prompt: "Which tool shows why the 2 multiplies both terms?",
           options: ["draw_diagram", "simplify", "work_backward"],
           note: "An area-model rectangle split into x and 3 shows both parts get multiplied by 2 — it's the same picture as (25×4)×17, just with a letter in it."
         },
-        picture: { type: "steps", steps: ["2(x + 3)", "= 2 × x + 2 × 3", "= 2x + 6"] },
+        picture: {
+          type: "buildSteps",
+          given: "2(x + 3)",
+          steps: [
+            { prompt: "Multiply the 2 by the x. 2 × x = ?", answer: "2x" },
+            { prompt: "Multiply the 2 by the 3. 2 × 3 = ?", answer: "6", note: "so 2(x + 3) = 2x + 6" }
+          ]
+        },
+        explainIt: {
+          prompt: "You just built the model below. Now explain it in your own words — how did you expand the bracket 2(x + 3)?",
+          markPoints: [
+            { terms: ["multiply", "multiplied", "times"], label: "multiplying by 2" },
+            { terms: ["both", "each", "every", "x and 3", "x and the 3"], label: "both terms in the bracket" }
+          ],
+          hintSequence: [
+            "Try mentioning that you multiplied the 2 by the terms inside the bracket.",
+            "Now mention that the 2 multiplies both the x and the 3, not just one of them."
+          ]
+        },
         algebra: "2(x + 3) = 2x + 6",
         working: ["2(x + 3)", "= 2 × x + 2 × 3", "= 2x + 6"],
         challenge: { prompt: "Your turn: expand 3(x + 4)", answer: "3x+12", hint: "3 × x and 3 × 4" }
@@ -1703,8 +2533,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: factorise 4x + 20", answer: "4(x+5)", hint: "common factor is 4" }
       },
       {
-        id: "7-5", title: "🚢 Solving with Brackets — Coal Crates",
-        warmup: "3 coal crates, each holding (x + 2) tonnes, total 21 tonnes. This mission combines everything so far: expand, then solve.",
+        id: "7-5", title: "🚀 Solving with Brackets — Fuel Crates",
+        warmup: "3 fuel crates, each holding (x + 2) tonnes, total 21 tonnes. This mission combines everything so far: expand, then solve.",
         thinking: { prompt: "3(x + 2) = 21 — what's your first move?", choices: ["Expand the bracket first, then solve like a normal equation", "Divide 21 by 3 first without expanding", "Guess and check numbers"] },
         picture: { type: "steps", steps: ["3(x + 2) = 21", "→ expand: 3x + 6 = 21", "→ subtract 6: 3x = 15", "→ divide by 3"] },
         algebra: "3(x + 2) = 21",
@@ -1728,27 +2558,23 @@ const WORLDS = [
       }
     ],
     boss: {
-      name: "The Equation Dragon", hp: 100,
+      name: "The Rogue Nav AI", icon: "🧭", hp: 100,
       questions: [
         { prompt: "Solve: 4x + 3 = 19", answer: "4" },
         { prompt: "Expand: 5(x + 2)", answer: "5x+10" },
         { prompt: "Factorise: 6x + 18", answer: "6(x+3)" },
-        { prompt: "Solve: 2(x + 4) = 20", answer: "6" },
-        { prompt: "Solve: 3x − 4 = 11", answer: "5" },
-        { prompt: "Expand: 4(x − 1)", answer: "4x-4" },
-        { prompt: "Solve: 6x − 2 = 3x + 7", answer: "3" },
-        { prompt: "Factorise: 8x + 12", answer: "4(2x+3)" }
+        { prompt: "Solve: 6x − 2 = 3x + 7", answer: "3" }
       ]
     }
   },
   {
-    id: 8, chain: 7, code: "W8", icon: "📐", name: "Geometry Visualization",
+    id: 8, chain: 7, code: "W8", icon: "📐", name: "Structural Engineering Bay",
     color: "#5B7DB1", status: "ready",
-    tagline: "Angles, area, volume, Pythagoras — rigging, decks, cargo holds & masts",
+    tagline: "Angles, area, volume, Pythagoras — solar panels, hull decks, cargo bays & antenna masts",
     missions: [
       {
-        id: "8-1", title: "🚢 Rigging Angle on the Mast",
-        warmup: "A taut rigging cable runs straight from bow to stern along the deck rail — a straight line always measures 180°, no matter how it's split.",
+        id: "8-1", title: "🛰️ Antenna Angle on the Mast",
+        warmup: "A taut support cable runs straight along the spacecraft's hull rail — a straight line always measures 180°, no matter how it's split.",
         thinking: { prompt: "One angle on a straight line is 110°. What must the other one be?", choices: ["180° − 110°, since the two angles must add to 180°", "110° × 2, since angles double on a line", "Just guess a number less than 110°"] },
         toolChoice: {
           prompt: "Which tool helps you find the missing angle?",
@@ -1770,8 +2596,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: angles 100°, 95°, and x meet at a point. Find x.", answer: "165", hint: "360 − 100 − 95" }
       },
       {
-        id: "8-3", title: "🚢 Deck Tile Area",
-        warmup: "The ship's promenade deck is being tiled. Area counts how many unit squares fit inside a shape.",
+        id: "8-3", title: "🛰️ Solar Panel Area",
+        warmup: "A solar panel array is being tiled with cells. Area counts how many unit squares fit inside a shape.",
         thinking: { prompt: "A rectangle is 4 units wide and 3 units tall. How do you find the area?", choices: ["Multiply width × height: 4 × 3", "Add width + height: 4 + 3", "Count only the outside edge (perimeter)"] },
         picture: { type: "areagrid", rows: 3, cols: 4 },
         algebra: "Area = 4 × 3",
@@ -1779,8 +2605,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: a rectangle is 6 units by 5 units. Find its area.", answer: "30", hint: "6 × 5" }
       },
       {
-        id: "8-4", title: "🚢 Triangular Sail Area",
-        warmup: "A triangular sail is exactly half of the rectangular sailcloth it was cut from.",
+        id: "8-4", title: "🛰️ Triangular Solar Sail Area",
+        warmup: "A triangular solar sail is exactly half of the rectangular sail material it was cut from.",
         thinking: { prompt: "A right triangle has base 6 and height 4. What's a quick way to find its area?", choices: ["Find the rectangle area (6×4), then halve it", "Just multiply base × height with no halving", "Add base + height"] },
         toolChoice: {
           prompt: "Which tool connects a new shape (triangle) back to one you already know (rectangle)?",
@@ -1793,8 +2619,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: base 8, height 5. Find the triangle's area.", answer: "20", hint: "(8×5)÷2" }
       },
       {
-        id: "8-5", title: "🚢 Cargo Hold Volume",
-        warmup: "Volume counts how many unit cubes fill the cargo hold, layer by layer.",
+        id: "8-5", title: "🛰️ Cargo Bay Volume",
+        warmup: "Volume counts how many unit cubes fill the cargo bay, layer by layer.",
         thinking: { prompt: "A box is 3 wide, 2 deep, and 2 tall. What's a clear way to find the volume?", choices: ["Find one layer's area (3×2), then multiply by the height (2 layers)", "Just add 3+2+2", "Multiply only two of the three numbers"] },
         picture: { type: "areagrid", rows: 2, cols: 3 },
         algebra: "Volume = (3 × 2) × 2",
@@ -1802,8 +2628,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: a box is 4 wide, 3 deep, 2 tall. Find the volume.", answer: "24", hint: "(4×3)×2" }
       },
       {
-        id: "8-6", title: "🚢 Mast Height — Pythagoras' Theorem",
-        warmup: "A support cable runs from the top of the mast to the deck. In a right triangle, the two shorter sides are the legs; the longest side is the hypotenuse.",
+        id: "8-6", title: "🛰️ Antenna Mast Height — Pythagoras' Theorem",
+        warmup: "A support cable runs from the top of the antenna mast to the hull. In a right triangle, the two shorter sides are the legs; the longest side is the hypotenuse.",
         thinking: { prompt: "A right triangle has legs 3 and 4. How does Pythagoras find the hypotenuse?", choices: ["Square both legs, add them, then square root the result", "Add the two legs together directly", "Multiply the two legs together"] },
         toolChoice: {
           prompt: "Which tool helps you keep the three steps (square, add, root) in order?",
@@ -1817,11 +2643,9 @@ const WORLDS = [
       }
     ],
     boss: {
-      name: "The Angle Golem", hp: 100,
+      name: "The Structural Golem", icon: "🪨", hp: 100,
       questions: [
-        { prompt: "Angles on a line: one is 75°, find the other.", answer: "105" },
         { prompt: "Angles at a point: 90°, 130°, x. Find x.", answer: "140" },
-        { prompt: "Rectangle 7 by 3. Find area.", answer: "21" },
         { prompt: "Triangle base 10, height 6. Find area.", answer: "30" },
         { prompt: "Box 5×2×3. Find volume.", answer: "30" },
         { prompt: "Legs 5 and 12. Find the hypotenuse.", answer: "13" }
@@ -1829,14 +2653,14 @@ const WORLDS = [
     }
   },
   {
-    id: 9, chain: 8, code: "W9", icon: "🔁", name: "Pattern Explorer",
+    id: 9, chain: 8, code: "W9", icon: "🔭", name: "Deep-Space Pattern Scanner",
     color: "#3A8F8A", status: "ready",
-    tagline: "Sequences, nth term, and function machines — coal logs, crystals & coin counts",
+    tagline: "Sequences, nth term, and function machines — pulsar signals, crystal grids & coin counts",
     hasPatternLibrary: true,
     missions: [
       {
-        id: "9-1", title: "🚢 Coal Loaded Each Day",
-        warmup: "The crew logs coal loaded each day: 3, 7, 11, 15 tonnes. Look at the jumps between terms to find the pattern.",
+        id: "9-1", title: "📡 Fuel Loaded Each Day",
+        warmup: "The crew logs fuel loaded each day: 3, 7, 11, 15 tonnes. Look at the jumps between terms to find the pattern.",
         thinking: { prompt: "3, 7, 11, 15, ... what's the pattern?", choices: ["Each term adds 4 to the one before", "Each term doubles", "Each term adds a different amount each time"] },
         toolChoice: {
           prompt: "Which tool helps you spot the rule behind these numbers?",
@@ -1868,7 +2692,7 @@ const WORLDS = [
       },
       {
         id: "9-4", title: "⚙️ Engine Function Machine",
-        warmup: "The engine room's control system takes an input, applies steps in order, and gives an output — just like a function machine.",
+        warmup: "The rocket's engine control system takes an input, applies steps in order, and gives an output — just like a function machine.",
         thinking: { prompt: "Input 5 → add 3 → multiply by 2 → output. What happens first?", choices: ["Add 3 to the input before multiplying", "Multiply first, then add 3", "Add 3 and multiply 2 at the same time"] },
         picture: { type: "chain", items: [{ type: "value", text: "5" }, { type: "op", text: "+3" }, { type: "value", text: "8" }, { type: "op", text: "×2" }, { type: "value", text: "16" }] },
         algebra: "output = (5 + 3) × 2",
@@ -1876,8 +2700,8 @@ const WORLDS = [
         challenge: { prompt: "Your turn: input 6 → add 3 → multiply by 2 → output?", answer: "18", hint: "(6+3)×2" }
       },
       {
-        id: "9-5", title: "🚢 Missing Rivet Count",
-        warmup: "The rivet log shows 6, 11, __, 21, 26 for five hull sections. Sometimes a term is missing from the middle, not the end.",
+        id: "9-5", title: "📡 Missing Bolt Count",
+        warmup: "The bolt log shows 6, 11, __, 21, 26 for five hull sections. Sometimes a term is missing from the middle, not the end.",
         thinking: { prompt: "6, 11, __, 21, 26 — the pattern adds 5 each time. What's missing?", choices: ["11 + 5, since the pattern adds 5 between each term", "21 − 6, the difference between the ends", "Just guess a number between 11 and 21"] },
         toolChoice: {
           prompt: "Which tool helps you fill in a missing term without counting one by one?",
@@ -1891,26 +2715,24 @@ const WORLDS = [
       }
     ],
     boss: {
-      name: "The Sequence Oracle", hp: 100,
+      name: "The Pulsar Oracle", icon: "🔮", hp: 100,
       questions: [
         { prompt: "2, 6, 10, 14 — find the next term.", answer: "18" },
         { prompt: "What is the 5th square number?", answer: "25" },
         { prompt: "Sequence 3, 7, 11 (+4 each time). Find the nth term.", answer: "4n-1" },
-        { prompt: "Input 4 → add 5 → multiply by 3 → output?", answer: "27" },
-        { prompt: "5, 12, __, 26 (+7 each time). Find the missing term.", answer: "19" },
-        { prompt: "A sequence starts at 10 and adds 3 each time. Find the 4th term.", answer: "19" }
+        { prompt: "Input 4 → add 5 → multiply by 3 → output?", answer: "27" }
       ]
     }
   },
   {
-    id: 10, chain: 9, code: "W10", icon: "📊", name: "Data & Probability",
+    id: 10, chain: 9, code: "W10", icon: "📊", name: "Mission Telemetry Deck",
     color: "#B15B7D", status: "ready",
-    tagline: "Tables, graphs, mean, median, and probability — cargo counts, lab readings & item blocks",
+    tagline: "Tables, graphs, mean, median, and probability — cargo telemetry, lab readings & sensor data",
     missions: [
       {
-        id: "10-1", title: "🚢 Coal Loaded by Four Crews",
+        id: "10-1", title: "📡 Fuel Loaded by Four Crews",
         warmup: "A bar chart turns a table of data into a picture you can compare at a glance.",
-        thinking: { prompt: "Four crews' coal tonnes today: Crew A 5, Crew B 8, Crew C 3, Crew D 6. How do you find the total?", choices: ["Add all the values together: 5+8+3+6", "Multiply all the values together", "Just use the biggest number"] },
+        thinking: { prompt: "Four crews' fuel tonnes today: Crew A 5, Crew B 8, Crew C 3, Crew D 6. How do you find the total?", choices: ["Add all the values together: 5+8+3+6", "Multiply all the values together", "Just use the biggest number"] },
         picture: { type: "barchart", categories: [{ label: "Crew A", value: 5 }, { label: "Crew B", value: 8 }, { label: "Crew C", value: 3 }, { label: "Crew D", value: 6 }] },
         algebra: "total = 5 + 8 + 3 + 6",
         working: ["5 + 8 + 3 + 6", "= 22"],
@@ -1931,7 +2753,7 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "10-3", title: "🚢 Median Cargo Crate Weight",
+        id: "10-3", title: "📦 Median Cargo Crate Weight",
         warmup: "The median is the middle value once the data is in order.",
         thinking: { prompt: "Crate weights (tonnes): 7, 2, 9, 4, 5. What's the first step to find the median?", choices: ["Sort the numbers from smallest to largest first", "Add all the numbers together", "Find the biggest number"] },
         toolChoice: {
@@ -1969,25 +2791,23 @@ const WORLDS = [
       }
     ],
     boss: {
-      name: "The Probability Phantom", hp: 100,
+      name: "The Telemetry Phantom", icon: "🛰️", hp: 100,
       questions: [
-        { prompt: "Coal tonnes 6, 2, 9, 3. Find the total.", answer: "20" },
+        { prompt: "Fuel tonnes 6, 2, 9, 3. Find the total.", answer: "20" },
         { prompt: "Temperature readings 5, 9, 4, 2°C. Find the mean.", answer: "5" },
         { prompt: "Crate weights 10, 3, 7, 1, 5. Find the median (sort first).", answer: "5" },
-        { prompt: "Item block has 2 Fire Flowers, 6 Mushrooms. Find P(Fire Flower).", answer: "2/8" },
-        { prompt: "A coin is flipped twice. Find P(Heads then Tails).", answer: "1/4" },
-        { prompt: "Coal tonnes 12, 15, 9, 14. Find the total.", answer: "50" }
+        { prompt: "A coin is flipped twice. Find P(Heads then Tails).", answer: "1/4" }
       ]
     }
   },
   {
     id: 11, chain: 10, code: "W11", icon: "🎓", name: "Cambridge Exam Translator",
     color: "#1F3A5F", status: "ready",
-    tagline: "How Cambridge gives marks — rivets, beakers & the exam marker's logbook",
+    tagline: "How Cambridge gives marks — flight logs, beakers & the exam marker's logbook",
     missions: [
       {
-        id: "11-1", title: "🚢 35 Rivets × 19 Rows",
-        warmup: "A hull section has 35 rivets per row, across 19 rows. Round 19 up to 20, then adjust.",
+        id: "11-1", title: "🚀 35 Bolts × 19 Rows",
+        warmup: "A hull section has 35 bolts per row, across 19 rows. Round 19 up to 20, then adjust.",
         thinking: { prompt: "How would you tackle 35 × 19 in your head?", choices: ["Round 19 up to 20, then subtract one group of 35", "Multiply 35 × 19 directly, digit by digit", "Round 35 up to 40 instead"] },
         picture: { type: "steps", steps: ["35 × 19", "→ 35 × 20 − 35", "→ 700 − 35"] },
         algebra: "35 × 19 = 35 × (20 − 1)",
@@ -2002,7 +2822,7 @@ const WORLDS = [
       },
       {
         id: "11-2", title: "⚙️ Where Do the Marks Come From?",
-        warmup: "A Cambridge marker reads your working line by line, like an inspector checking a ship's logbook — not just your final answer.",
+        warmup: "A Cambridge marker reads your working line by line, like an inspector checking a flight logbook — not just your final answer.",
         thinking: { prompt: "In the working for 35 × 19 above, which line shows the method, and which line shows the final answer?", choices: ["The method lines earn M1, the final answer earns A1", "Only the final answer matters for marks", "Neat handwriting earns the most marks"] },
         picture: { type: "steps", steps: ["M1 = marks for a correct method shown", "A1 = marks for an accurate final answer", "B1 = marks for a stated fact, independent of method"] },
         algebra: "M1 + M1 + A1",
@@ -2025,7 +2845,7 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "11-4", title: "🚢 1000 L Fuel Tank − 463 L Used",
+        id: "11-4", title: "🚀 1000 L Fuel Tank − 463 L Used",
         warmup: "A 1000 L fuel tank has 463 L used. Subtracting from 1000 is easier than it looks with the right trick.",
         thinking: { prompt: "1000 − 463 — what's a clean way to work this out?", choices: ["Subtract from each digit as if borrowing from 999, then add 1", "Subtract 463 from 1000 column by column with lots of borrowing", "Round 463 to 500 first"] },
         picture: { type: "steps", steps: ["1000 − 463", "→ 999 − 463 = 536 (no borrowing needed)", "→ add the 1 back: 536 + 1"] },
@@ -2040,21 +2860,19 @@ const WORLDS = [
       }
     ],
     boss: {
-      name: "The Mark Scheme Oracle", hp: 100,
+      name: "The Certification Oracle", icon: "📜", hp: 100,
       questions: [
         { prompt: "62 × 19 = ? (use the (20-1) trick)", answer: "1178" },
         { prompt: "A method mark is called M1 or A1?", answer: "M1" },
         { prompt: "An accuracy mark (final answer) is called M1 or A1?", answer: "A1" },
-        { prompt: "48 × 29 = ? (round 29 to 30)", answer: "1392" },
-        { prompt: "36 × 9 = ? (use the (10-1) trick)", answer: "324" },
         { prompt: "1000 − 528 = ? (use the 999 trick)", answer: "472" }
       ]
     }
   },
   {
-    id: 12, chain: 11, code: "W12", icon: "👑", name: "Grand Bridge Challenge",
+    id: 12, chain: 11, code: "W12", icon: "🪐", name: "Grand Transit Challenge",
     color: "#4B2E83", status: "ready",
-    tagline: "The final gauntlet — cross the last bridge to rescue Princess Anna",
+    tagline: "The final gauntlet — complete the last transfer bridge to rescue Princess Anna",
     isGrandChallenge: true,
     missions: [
       {
@@ -2084,8 +2902,8 @@ const WORLDS = [
         answer: "x = 6"
       },
       {
-        id: "12-3", title: "🚢 Engine Room Ratio 1 : 2",
-        text: "Two boiler rooms share coal in the ratio 1 : 2. The sum is 36 tonnes. Find the two amounts.",
+        id: "12-3", title: "🚀 Fuel Bay Ratio 1 : 2",
+        text: "Two fuel tanks share fuel in the ratio 1 : 2. The sum is 36 tonnes. Find the two amounts.",
         toolChoice: {
           prompt: "Which tool turns this ratio into two numbers?",
           options: ["draw_diagram", "simplify", "guess_check"],
@@ -2097,8 +2915,8 @@ const WORLDS = [
         answer: "12 and 24"
       },
       {
-        id: "12-4", title: "🚢 Submersible Rise from the Wreck",
-        text: "A deep-sea submersible surveying the Titanic wreck is at −5 m. It rises to 8 m. How far did it rise?",
+        id: "12-4", title: "🛰️ Probe Rise from the Crater",
+        text: "A rover probe surveying a lunar crater is at −5 m. It rises to 8 m. How far did it rise?",
         toolChoice: {
           prompt: "Which tool helps you find the distance of the rise?",
           options: ["draw_diagram", "work_backward", "guess_check"],
@@ -2110,8 +2928,8 @@ const WORLDS = [
         answer: "13 m"
       },
       {
-        id: "12-5", title: "🚢 Mental to Formal: 52 Rivets × 19 Rows",
-        text: "Calculate 52 rivets × 19 rows by rounding 19 up to 20 and adjusting.",
+        id: "12-5", title: "🚀 Mental to Formal: 52 Bolts × 19 Rows",
+        text: "Calculate 52 bolts × 19 rows by rounding 19 up to 20 and adjusting.",
         picture: { type: "steps", steps: ["52 × 19", "→ 52 × 20 − 52", "→ 1040 − 52"] },
         algebra: "52 × 19 = 52 × (20 − 1)",
         working: ["52 × 19", "= 52 × (20 − 1)", "= 52 × 20 − 52 × 1", "= 1040 − 52", "= 988"],
@@ -2124,8 +2942,8 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "12-6", title: "🚢 3/4 of the Crew is 60 Sailors",
-        text: "3/4 of the crew is 60 sailors. Find the total crew.",
+        id: "12-6", title: "🚀 3/4 of the Crew is 60 Astronauts",
+        text: "3/4 of the crew is 60 astronauts. Find the total crew.",
         picture: { type: "bar", bars: [{ label: "", units: 4, color: "sg", shaded: 3 }], totalLabel: "3 parts = 60" },
         algebra: "(3/4)x = 60",
         working: ["3 parts = 60", "1 part = 60 ÷ 3 = 20", "4 parts (whole) = 20 × 4 = 80"],
@@ -2138,29 +2956,26 @@ const WORLDS = [
         strategyRace: { prompt: "Which method gets to the answer in the fewest steps?", correctId: "s1" }
       },
       {
-        id: "12-7", title: "🚢 Captain & Cabin Boy — Age Problem",
-        text: "The captain is 3 times as old as the cabin boy. In 5 years, the captain will be twice as old as him. Find their current ages.",
+        id: "12-7", title: "🚀 Commander & Cadet — Age Problem",
+        text: "The commander is 3 times as old as the cadet. In 5 years, the commander will be twice as old as him. Find their current ages.",
         toolChoice: {
           prompt: "Age problems change over time — which tool helps you track that?",
           options: ["make_table", "work_backward", "case_analysis"],
           note: "A quick table of 'now' vs 'in 5 years' for both people keeps the two moments in time from getting mixed up."
         },
-        picture: { type: "bar", bars: [{ label: "cabin boy (now)", units: 1, color: "sg" }, { label: "captain (now)", units: 3, color: "cam" }], totalLabel: "" },
+        picture: { type: "bar", bars: [{ label: "cadet (now)", units: 1, color: "sg" }, { label: "commander (now)", units: 3, color: "cam" }], totalLabel: "" },
         algebra: "3x + 5 = 2(x + 5)",
-        working: ["Let cabin boy = x, captain = 3x", "in 5 years: 3x + 5 = 2(x + 5)", "3x + 5 = 2x + 10", "x = 5", "cabin boy = 5, captain = 15"],
-        answer: "Cabin boy = 5, Captain = 15"
+        working: ["Let cadet = x, commander = 3x", "in 5 years: 3x + 5 = 2(x + 5)", "3x + 5 = 2x + 10", "x = 5", "cadet = 5, commander = 15"],
+        answer: "Cadet = 5, Commander = 15"
       }
     ],
     boss: {
-      name: "The Bridge Guardian", hp: 100,
+      name: "The Trajectory Guardian", icon: "🛡️", hp: 100,
       questions: [
-        { prompt: "4x = 96. Find x.", answer: "24" },
-        { prompt: "2x + 5 = 17. Find x.", answer: "6" },
+        { prompt: "3(x + 2) = 21. Find x.", answer: "5" },
         { prompt: "Ratio 1:2, sum 36 — find the smaller part.", answer: "12" },
         { prompt: "8 − (−5) = ?", answer: "13" },
-        { prompt: "52 × 19 = ?", answer: "988" },
-        { prompt: "3/4 of the crew is 60. Find the total crew.", answer: "80" },
-        { prompt: "3(x + 2) = 21. Find x.", answer: "5" }
+        { prompt: "3/4 of the crew is 60. Find the total crew.", answer: "80" }
       ]
     }
   }
@@ -2312,9 +3127,10 @@ function loadStore() {
     s.strategyRaceDone = s.strategyRaceDone || [];
     s.toolUsage = s.toolUsage || {};
     s.patternProgress = s.patternProgress || {};
+    s.attemptLog = s.attemptLog || [];
     return s;
   } catch (e) {
-    return { xp: 0, completedMissions: [], worldStars: {}, badges: [], notebook: [], strategyRaceDone: [], toolUsage: {}, patternProgress: {} };
+    return { xp: 0, completedMissions: [], worldStars: {}, badges: [], notebook: [], strategyRaceDone: [], toolUsage: {}, patternProgress: {}, attemptLog: [] };
   }
 }
 function saveStore() {
@@ -2331,11 +3147,21 @@ function addXP(amount) {
   store.xp += amount;
   saveStore();
   const afterLevel = heroLevel();
-  if (afterLevel > beforeLevel) showToast(`⭐ Level Up! You're now Level ${afterLevel}!`);
+  if (afterLevel > beforeLevel) showToast(`🚀 Clearance Level ${afterLevel} unlocked!`);
   else showToast(`+${amount} XP`);
 }
 function heroLevel() { return Math.floor(store.xp / 100) + 1; }
 function xpIntoLevel() { return store.xp % 100; }
+
+// Silent background log — never shown to the child, feeds the future Full
+// Report / skill dashboard (Phase 4). Additive only: does not change any
+// mission behavior, timing, or UI. Capped so localStorage can't grow forever.
+function logAttempt(missionId, stageId, meta) {
+  store.attemptLog = store.attemptLog || [];
+  store.attemptLog.push(Object.assign({ missionId, stage: stageId, ts: Date.now() }, meta || {}));
+  if (store.attemptLog.length > 500) store.attemptLog = store.attemptLog.slice(-500);
+  saveStore();
+}
 
 function isWorldUnlocked(world) {
   if (world.status === "soon") return false;
@@ -2579,6 +3405,101 @@ function renderLabeledSequence(terms, arrowLabels) {
     }
   });
   return wrap;
+}
+
+/* ---------- INTERACTIVE BUILD-STEPS LADDER ---------- */
+// Turns a worked example from something he reads into something he builds:
+// each step is typed and checked before the next one reveals. Additive —
+// only used when picture.type === "buildSteps"; every other picture type
+// (bar, line, steps, angle, etc.) renders exactly as before.
+function renderBuildStepsInteractive(body, pic, onDone) {
+  const wrap = document.createElement("div");
+  wrap.className = "mental-steps";
+  const givenRow = document.createElement("div");
+  givenRow.className = "mental-step build-step-given";
+  givenRow.textContent = pic.given;
+  wrap.appendChild(givenRow);
+  const stepsHolder = document.createElement("div");
+  wrap.appendChild(stepsHolder);
+  body.appendChild(wrap);
+
+  let idx = 0;
+  function renderNextPrompt() {
+    if (idx >= pic.steps.length) {
+      body.appendChild(mkBtn("Next →", onDone));
+      return;
+    }
+    const step = pic.steps[idx];
+    const row = document.createElement("div");
+    row.className = "build-step-active";
+    const promptEl = document.createElement("div");
+    promptEl.className = "build-step-prompt";
+    promptEl.textContent = step.prompt;
+    row.appendChild(promptEl);
+    const inputRow = document.createElement("div");
+    inputRow.className = "build-step-input-row";
+    const input = document.createElement("input");
+    input.type = "text"; input.className = "build-step-input"; input.placeholder = "?";
+    const feedback = document.createElement("div");
+    feedback.className = "challenge-feedback";
+    const checkBtn = mkBtn("Check", () => {
+      if (checkAnswer(input.value, step.answer)) {
+        const done = document.createElement("div");
+        done.className = "mental-step build-step-done";
+        done.innerHTML = `→ ${escapeHtml(step.prompt.replace(/\?\s*$/, ""))} <strong>${escapeHtml(step.answer)}</strong>` + (step.note ? ` <span class="build-step-note">(${escapeHtml(step.note)})</span>` : "");
+        stepsHolder.appendChild(done);
+        row.remove();
+        idx++;
+        renderNextPrompt();
+      } else {
+        feedback.innerHTML = `<span class="feedback-retry-text">Not quite — try again.</span>`;
+      }
+    });
+    inputRow.appendChild(input);
+    inputRow.appendChild(checkBtn);
+    row.appendChild(inputRow);
+    row.appendChild(feedback);
+    stepsHolder.appendChild(row);
+  }
+  renderNextPrompt();
+}
+
+function renderBuildStepsStatic(pic) {
+  const wrap = document.createElement("div");
+  wrap.className = "explain-tree explain-tree-flip";
+
+  const rootNode = document.createElement("div");
+  rootNode.className = "explain-tree-node";
+  rootNode.innerHTML = `<div class="explain-tree-dot explain-tree-dot-root"></div>` +
+    `<div class="explain-tree-box explain-tree-root-box"><div class="explain-tree-tag">🌱 Start</div>${escapeHtml(pic.given)}</div>`;
+  wrap.appendChild(rootNode);
+
+  pic.steps.forEach((step, i) => {
+    const isLast = i === pic.steps.length - 1;
+    const node = document.createElement("div");
+    node.className = "explain-tree-node";
+    node.innerHTML = `<div class="explain-tree-dot${isLast ? " explain-tree-dot-final" : ""}"></div>` +
+      `<div class="explain-tree-box${isLast ? " explain-tree-final-box" : ""}">` +
+      (isLast ? `<div class="explain-tree-tag">🍃 Where it landed</div>` : "") +
+      `${escapeHtml(step.prompt.replace(/\?\s*$/, ""))} <strong>${escapeHtml(step.answer)}</strong>` +
+      (step.note ? ` <span class="build-step-note">(${escapeHtml(step.note)})</span>` : "") +
+      `</div>`;
+    wrap.appendChild(node);
+  });
+
+  return wrap;
+}
+
+/* ---------- EXPLAIN IT (deterministic mark-point checklist) ---------- */
+// Same philosophy as the Astro Sketchbook Explainer Lab's Answer Upgrade:
+// keyword/mark-point matching, not AI grading. A fixed hint sequence nudges
+// toward the missing point rather than an open-ended conversation.
+function checkMarkPoints(text, markPoints) {
+  const lower = String(text).toLowerCase();
+  return markPoints.map(mp => ({
+    label: mp.label,
+    achieved: mp.terms.some(t => new RegExp("\\b" + t.replace(/ /g, "\\s+") + "\\b", "i").test(lower))
+  }));
 }
 
 function renderPicture(pic) {
@@ -3614,14 +4535,243 @@ function buildExpandSolveScratchpad(spec) {
   return wrap;
 }
 
+/* ---------- RATE TABLE (distance/speed/time — "given distance + rate, find time") ---------- */
+// Deliberately narrow: only fires when a rate ("8 km/s", "60 km/h") AND a matching
+// standalone quantity are both present, and the question isn't asking for distance
+// or speed instead. Anything else falls through to the generic grid, same as before
+// this tool existed — see SCmathHANDOFF.md §3 on why silent scope-creep here is risky.
+function parseRateSpec(promptRaw) {
+  const p = promptRaw.replace(/,/g, "");
+  if (/how far|what distance|how fast|what speed|what rate/i.test(p)) return null;
+  const rateMatch = p.match(/(\d+(?:\.\d+)?)\s*(km|m|miles?|mi|kg|g|litres?|liters?|l)\s*\/\s*(s|sec|secs|seconds?|h|hr|hrs|hours?|min|mins|minutes?)\b/i);
+  if (!rateMatch) return null;
+  const rateVal = parseFloat(rateMatch[1]);
+  const qtyUnit = rateMatch[2].toLowerCase();
+  const perUnit = rateMatch[3].toLowerCase();
+  const qtyUnitBase = qtyUnit.replace(/s$/, "");
+  const qtyRe = new RegExp("(\\d+(?:\\.\\d+)?)\\s*" + qtyUnitBase + "s?\\b(?!\\s*\\/)", "i");
+  const qtyMatch = p.match(qtyRe);
+  if (!qtyMatch) return null;
+  return { qty: parseFloat(qtyMatch[1]), qtyUnit, rate: rateVal, perUnit };
+}
+
+function rateTimeUnitLabel(u) {
+  if (/^s|sec/i.test(u)) return "seconds";
+  if (/^min/i.test(u)) return "minutes";
+  return "hours";
+}
+
+function buildRateScratchpad(spec) {
+  const wrap = document.createElement("div");
+  const note = document.createElement("p");
+  note.className = "stage-text";
+  note.style.fontSize = "12.5px";
+  note.style.color = "var(--ink-soft)";
+  note.style.marginBottom = "10px";
+  note.textContent = "Distance ÷ Rate = Time. Work out the blank, then convert units if the question asks for something other than " + rateTimeUnitLabel(spec.perUnit) + ".";
+  wrap.appendChild(note);
+
+  const row = document.createElement("div");
+  row.className = "rate-row";
+  row.innerHTML = `
+    <div class="rate-box rate-given">
+      <div class="rate-box-label">Distance</div>
+      <div class="rate-box-value">${spec.qty.toLocaleString()} ${spec.qtyUnit}</div>
+    </div>
+    <div class="rate-op">÷</div>
+    <div class="rate-box rate-given">
+      <div class="rate-box-label">Rate</div>
+      <div class="rate-box-value">${spec.rate} ${spec.qtyUnit}/${spec.perUnit}</div>
+    </div>
+    <div class="rate-op">=</div>
+    <div class="rate-box rate-blank">
+      <div class="rate-box-label">Time</div>
+      <input class="rate-answer" inputmode="decimal" placeholder="?">
+      <div class="rate-box-unit">${rateTimeUnitLabel(spec.perUnit)}</div>
+    </div>
+  `;
+  wrap.appendChild(row);
+
+  const helper = document.createElement("div");
+  helper.className = "rate-helper";
+  helper.textContent = "Handy: 60 s = 1 min · 60 min = 1 hr · 3,600 s = 1 hr";
+  wrap.appendChild(helper);
+
+  return wrap;
+}
+
+/* ---------- UNIT LADDER (unit conversion) ---------- */
+// Deliberately narrow, same discipline as the rate tool: only two clear phrasings
+// trigger it ("Convert X to Y" and "how many Y is/are/in X") with a known metric
+// conversion pair. Anything else falls through, same as before this tool existed.
+const UNIT_ALIASES = {
+  km: "km", kilometre: "km", kilometres: "km", kilometer: "km", kilometers: "km",
+  m: "m", metre: "m", metres: "m", meter: "m", meters: "m",
+  cm: "cm", centimetre: "cm", centimetres: "cm", centimeter: "cm", centimeters: "cm",
+  mm: "mm", millimetre: "mm", millimetres: "mm", millimeter: "mm", millimeters: "mm",
+  kg: "kg", kilogram: "kg", kilograms: "kg",
+  g: "g", gram: "g", grams: "g",
+  l: "l", litre: "l", litres: "l", liter: "l", liters: "l",
+  ml: "ml", millilitre: "ml", millilitres: "ml", milliliter: "ml", milliliters: "ml",
+  hr: "hr", hrs: "hr", hour: "hr", hours: "hr",
+  min: "min", mins: "min", minute: "min", minutes: "min",
+  s: "s", sec: "s", secs: "s", second: "s", seconds: "s"
+};
+const UNIT_LADDER_FACTORS = {
+  "km|m": 1000, "m|km": 1 / 1000,
+  "m|cm": 100, "cm|m": 1 / 100,
+  "cm|mm": 10, "mm|cm": 1 / 10,
+  "m|mm": 1000, "mm|m": 1 / 1000,
+  "km|cm": 100000, "cm|km": 1 / 100000,
+  "kg|g": 1000, "g|kg": 1 / 1000,
+  "l|ml": 1000, "ml|l": 1 / 1000,
+  "hr|min": 60, "min|hr": 1 / 60,
+  "min|s": 60, "s|min": 1 / 60,
+  "hr|s": 3600, "s|hr": 1 / 3600
+};
+const UNIT_WORD = "(kilometres?|kilometers?|centimetres?|centimeters?|millimetres?|millimeters?|millilitres?|milliliters?|kilograms?|hours?|hrs?|minutes?|mins?|seconds?|secs?|litres?|liters?|metres?|meters?|grams?|km|kg|cm|mm|ml|m|l|s|g)";
+
+function parseUnitLadderSpec(promptRaw) {
+  const p = promptRaw.replace(/,/g, "");
+  let m = p.match(new RegExp("convert\\s+(\\d+(?:\\.\\d+)?)\\s*" + UNIT_WORD + "\\s+(?:to|into)\\s+" + UNIT_WORD, "i"));
+  let qty, fromUnit, toUnit;
+  if (m) {
+    qty = parseFloat(m[1]);
+    fromUnit = UNIT_ALIASES[m[2].toLowerCase()];
+    toUnit = UNIT_ALIASES[m[3].toLowerCase()];
+  } else {
+    m = p.match(new RegExp("how many\\s+" + UNIT_WORD + "\\s+(?:is in|are in|is|are|in)\\s+(\\d+(?:\\.\\d+)?)\\s*" + UNIT_WORD, "i"));
+    if (!m) return null;
+    toUnit = UNIT_ALIASES[m[1].toLowerCase()];
+    qty = parseFloat(m[2]);
+    fromUnit = UNIT_ALIASES[m[3].toLowerCase()];
+  }
+  if (!fromUnit || !toUnit || fromUnit === toUnit) return null;
+  const factor = UNIT_LADDER_FACTORS[fromUnit + "|" + toUnit];
+  if (factor === undefined) return null;
+  return { qty, fromUnit, toUnit, factor };
+}
+
+function buildUnitLadderScratchpad(spec) {
+  const wrap = document.createElement("div");
+  const note = document.createElement("p");
+  note.className = "stage-text";
+  note.style.fontSize = "12.5px";
+  note.style.color = "var(--ink-soft)";
+  note.style.marginBottom = "10px";
+  note.textContent = spec.factor >= 1
+    ? `Bigger unit → smaller unit means multiply. 1 ${spec.fromUnit} = ${spec.factor.toLocaleString()} ${spec.toUnit}.`
+    : `Smaller unit → bigger unit means divide. ${Math.round(1 / spec.factor).toLocaleString()} ${spec.fromUnit} = 1 ${spec.toUnit}.`;
+  wrap.appendChild(note);
+
+  const row = document.createElement("div");
+  row.className = "ladder-row";
+  row.innerHTML = `
+    <div class="ladder-box ladder-given">
+      <div class="ladder-box-value">${spec.qty.toLocaleString()}</div>
+      <div class="ladder-box-unit">${spec.fromUnit}</div>
+    </div>
+    <div class="ladder-op">
+      <span class="ladder-op-arrow">→</span>
+      <span>${spec.factor >= 1 ? "×" : "÷"} ${spec.factor >= 1 ? spec.factor.toLocaleString() : Math.round(1 / spec.factor).toLocaleString()}</span>
+    </div>
+    <div class="ladder-box ladder-blank">
+      <input class="ladder-answer" inputmode="decimal" placeholder="?">
+      <div class="ladder-box-unit">${spec.toUnit}</div>
+    </div>
+  `;
+  wrap.appendChild(row);
+
+  const helper = document.createElement("div");
+  helper.className = "ladder-helper";
+  helper.textContent = "Handy ladder: km ×1000→ m ×100→ cm ×10→ mm  ·  kg ×1000→ g  ·  l ×1000→ ml  ·  hr ×60→ min ×60→ s";
+  wrap.appendChild(helper);
+
+  return wrap;
+}
+
+/* ---------- SCIENTIFIC NOTATION ---------- */
+// Deliberately narrow: only fires on the literal phrase "scientific notation" or
+// "standard form" combined with a number, in either direction. Nothing else in the
+// existing corpus uses this phrase, so this is a clean, low-collision-risk trigger.
+function parseSciNotationSpec(promptRaw) {
+  const p = promptRaw.replace(/,/g, "");
+  let m = p.match(/(-?\d+(?:\.\d+)?)\s*(?:in|into)\s+(?:scientific notation|standard form)/i);
+  if (m) {
+    return { direction: "toSci", ordinary: parseFloat(m[1]) };
+  }
+  m = p.match(/(-?\d+(?:\.\d+)?)\s*[×xX*]\s*10\s*\^?\s*\{?(-?\d+)\}?/);
+  if (m && /scientific notation|standard form|ordinary number/i.test(p)) {
+    return { direction: "toOrdinary", mantissa: parseFloat(m[1]), exponent: parseInt(m[2], 10) };
+  }
+  return null;
+}
+
+function buildSciNotationScratchpad(spec) {
+  const wrap = document.createElement("div");
+  const note = document.createElement("p");
+  note.className = "stage-text";
+  note.style.fontSize = "12.5px";
+  note.style.color = "var(--ink-soft)";
+  note.style.marginBottom = "10px";
+
+  const row = document.createElement("div");
+  row.className = "sci-row";
+
+  if (spec.direction === "toSci") {
+    note.textContent = "Move the decimal point until only one non-zero digit is in front. Count how many places you moved it — that's the exponent.";
+    row.innerHTML = `
+      <div class="sci-box sci-given">
+        <div class="sci-box-label">Number</div>
+        <div class="sci-box-value">${spec.ordinary.toLocaleString()}</div>
+      </div>
+      <div class="sci-eq">=</div>
+      <div class="sci-box sci-blank">
+        <div class="sci-box-label">Mantissa</div>
+        <input class="sci-answer" inputmode="decimal" placeholder="?">
+      </div>
+      <div class="sci-eq">× 10</div>
+      <div class="sci-box sci-blank">
+        <div class="sci-box-label">Exponent</div>
+        <input class="sci-answer sci-answer-narrow" inputmode="numeric" placeholder="?">
+      </div>
+    `;
+  } else {
+    note.textContent = "A positive exponent moves the decimal point right (bigger number). A negative exponent moves it left (smaller number).";
+    row.innerHTML = `
+      <div class="sci-box sci-given">
+        <div class="sci-box-label">Mantissa</div>
+        <div class="sci-box-value">${spec.mantissa}</div>
+      </div>
+      <div class="sci-eq">× 10<sup>${spec.exponent}</sup> =</div>
+      <div class="sci-box sci-blank">
+        <div class="sci-box-label">Ordinary number</div>
+        <input class="sci-answer" style="width:120px" inputmode="decimal" placeholder="?">
+      </div>
+    `;
+  }
+  wrap.appendChild(note);
+  wrap.appendChild(row);
+
+  const helper = document.createElement("div");
+  helper.className = "sci-helper";
+  helper.textContent = "Handy: mantissa is always between 1 and 10 (e.g. 3.84, not 38.4 or 0.384).";
+  wrap.appendChild(helper);
+
+  return wrap;
+}
+
 function attachScratchpad(container, prompt, forceLine, autoOpen, forceFraction) {
   const barSpec = parseBarSpec(prompt);
-  const facSpec = !barSpec ? parseFactoriseSpec(prompt) : null;
-  const expSpec = !barSpec && !facSpec ? parseExpandSolveSpec(prompt) : null;
-  const eqSpec = !barSpec && !facSpec && !expSpec ? parseEquationSpec(prompt) : null;
-  const isFraction = !barSpec && !facSpec && !expSpec && !eqSpec && (forceFraction || isFractionQuestion(prompt));
-  const isLine = !barSpec && !facSpec && !expSpec && !eqSpec && !isFraction && (forceLine || isNumberLineQuestion(prompt));
-  const icon = barSpec ? "🧱" : facSpec ? "🧩" : expSpec ? "🔤" : eqSpec ? "🔤" : isFraction ? "🥧" : (isLine ? "📏" : "🧮");
+  const rateSpec = !barSpec ? parseRateSpec(prompt) : null;
+  const ladderSpec = !barSpec && !rateSpec ? parseUnitLadderSpec(prompt) : null;
+  const sciSpec = !barSpec && !rateSpec && !ladderSpec ? parseSciNotationSpec(prompt) : null;
+  const facSpec = !barSpec && !rateSpec && !ladderSpec && !sciSpec ? parseFactoriseSpec(prompt) : null;
+  const expSpec = !barSpec && !rateSpec && !ladderSpec && !sciSpec && !facSpec ? parseExpandSolveSpec(prompt) : null;
+  const eqSpec = !barSpec && !rateSpec && !ladderSpec && !sciSpec && !facSpec && !expSpec ? parseEquationSpec(prompt) : null;
+  const isFraction = !barSpec && !rateSpec && !ladderSpec && !sciSpec && !facSpec && !expSpec && !eqSpec && (forceFraction || isFractionQuestion(prompt));
+  const isLine = !barSpec && !rateSpec && !ladderSpec && !sciSpec && !facSpec && !expSpec && !eqSpec && !isFraction && (forceLine || isNumberLineQuestion(prompt));
+  const icon = barSpec ? "🧱" : rateSpec ? "🚀" : ladderSpec ? "🪜" : sciSpec ? "🔬" : facSpec ? "🧩" : expSpec ? "🔤" : eqSpec ? "🔤" : isFraction ? "🥧" : (isLine ? "📏" : "🧮");
   const toggleBtn = mkBtn(`${icon} Working Space`, null, true);
   toggleBtn.classList.add("scratchpad-toggle");
   const padHolder = document.createElement("div");
@@ -3631,9 +4781,9 @@ function attachScratchpad(container, prompt, forceLine, autoOpen, forceFraction)
     padHolder.innerHTML = "";
     const titled = document.createElement("div");
     titled.className = "scratchpad";
-    const title = barSpec ? "Cut the bar — work it out here" : facSpec ? "Pull out the common factor — work it out here" : expSpec ? "Expand, then solve — work it out here" : eqSpec ? "Boxes → equation — build it here" : isFraction ? "Fraction pies — tap to shade" : (isLine ? "Number line — mark your jump" : "Th · H · T · O — work it out here");
+    const title = barSpec ? "Cut the bar — work it out here" : rateSpec ? "Rate table — work it out here" : ladderSpec ? "Unit ladder — convert it here" : sciSpec ? "Scientific notation — convert it here" : facSpec ? "Pull out the common factor — work it out here" : expSpec ? "Expand, then solve — work it out here" : eqSpec ? "Boxes → equation — build it here" : isFraction ? "Fraction pies — tap to shade" : (isLine ? "Number line — mark your jump" : "Th · H · T · O — work it out here");
     titled.innerHTML = `<div class="scratchpad-title">${title}</div>`;
-    titled.appendChild(barSpec ? buildBarModelScratchpad(barSpec) : facSpec ? buildFactoriseScratchpad(facSpec) : expSpec ? buildExpandSolveScratchpad(expSpec) : eqSpec ? buildEquationScratchpad(eqSpec) : isFraction ? buildPieScratchpad(prompt) : (isLine ? buildNumberLineScratchpad(prompt) : buildScratchpadGrid(prompt)));
+    titled.appendChild(barSpec ? buildBarModelScratchpad(barSpec) : rateSpec ? buildRateScratchpad(rateSpec) : ladderSpec ? buildUnitLadderScratchpad(ladderSpec) : sciSpec ? buildSciNotationScratchpad(sciSpec) : facSpec ? buildFactoriseScratchpad(facSpec) : expSpec ? buildExpandSolveScratchpad(expSpec) : eqSpec ? buildEquationScratchpad(eqSpec) : isFraction ? buildPieScratchpad(prompt) : (isLine ? buildNumberLineScratchpad(prompt) : buildScratchpadGrid(prompt)));
     padHolder.appendChild(titled);
   }
 
@@ -3667,6 +4817,22 @@ function monsterFace(hpPct) {
 }
 
 function structuredHint(prompt) {
+  const rateSpec = parseRateSpec(prompt);
+  if (rateSpec) {
+    return `${rateSpec.qty.toLocaleString()} ${rateSpec.qtyUnit} ÷ ${rateSpec.rate} ${rateSpec.qtyUnit}/${rateSpec.perUnit} — divide in the Working Space above, then convert units if the question asks for something other than ${rateTimeUnitLabel(rateSpec.perUnit)}.`;
+  }
+  const ladderSpec = parseUnitLadderSpec(prompt);
+  if (ladderSpec) {
+    return ladderSpec.factor >= 1
+      ? `${ladderSpec.qty.toLocaleString()} ${ladderSpec.fromUnit} × ${ladderSpec.factor.toLocaleString()} — work it out in the Working Space above.`
+      : `${ladderSpec.qty.toLocaleString()} ${ladderSpec.fromUnit} ÷ ${Math.round(1 / ladderSpec.factor).toLocaleString()} — work it out in the Working Space above.`;
+  }
+  const sciSpec = parseSciNotationSpec(prompt);
+  if (sciSpec) {
+    return sciSpec.direction === "toSci"
+      ? "Move the decimal point in the Working Space above until one non-zero digit is left in front — count the places you moved it."
+      : "In the Working Space above, move the decimal point right if the exponent is positive, left if it's negative.";
+  }
   const facSpec = parseFactoriseSpec(prompt);
   if (facSpec) {
     const g = gcdTwo(facSpec.a, facSpec.b);
@@ -3722,9 +4888,9 @@ function bossHint(prompt) {
 }
 
 const BOSS_CHEERS = [
-  "🔧 Plank secured! The bridge holds a little stronger.",
-  "⚙️ Nice work — the golem staggers back!",
-  "🪵 Another beam locked in place!",
+  "🛰️ Relay locked in! The transfer bridge holds a little stronger.",
+  "⚙️ Nice work — the anomaly staggers back!",
+  "🔧 Another system calibrated!",
   "✨ You're chipping away at it — keep going!"
 ];
 
@@ -3783,9 +4949,9 @@ function renderAtlas(container) {
   const heroBar = document.createElement("div");
   heroBar.className = "hero-hud";
   heroBar.innerHTML = `
-    <div class="hero-hud-avatar">🧑‍🔧</div>
+    <div class="hero-hud-avatar">🧑‍🚀</div>
     <div class="hero-hud-mid">
-      <div class="hero-hud-level">Level ${heroLevel()}</div>
+      <div class="hero-hud-level">Clearance Level ${heroLevel()}</div>
       <div class="xp-track"><div class="xp-fill" style="width:${xpIntoLevel()}%"></div></div>
     </div>
     <div class="hero-hud-stars">⭐ ${Object.values(store.worldStars).reduce((a, b) => a + b, 0)}</div>
@@ -3794,12 +4960,12 @@ function renderAtlas(container) {
 
   const title = document.createElement("div");
   title.className = "atlas-title";
-  title.textContent = "🗺️ The Bridge Atlas";
+  title.textContent = "🛰️ Mission Star Map";
   wrap.appendChild(title);
 
   const narrative = document.createElement("div");
   narrative.className = "atlas-narrative";
-  narrative.textContent = "🔧 Repair every bridge, defeat the monster guarding it, and reach Castle Cambridge to rescue Princess Anna!";
+  narrative.textContent = "🛰️ Chart every transfer bridge, clear the anomaly guarding it, and reach Cambridge Station to rescue Princess Anna!";
   wrap.appendChild(narrative);
 
   const grid = document.createElement("div");
@@ -3828,6 +4994,8 @@ function renderAtlas(container) {
 
 /* ---------- WORLD DETAIL (level select) ---------- */
 
+const SEALED_POD_ICON = '<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" style="display:block"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="currentColor" opacity="0.9"/><line x1="12" y1="2.3" x2="12" y2="4.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="19.2" x2="12" y2="21.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="2.3" y1="12" x2="4.8" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="19.2" y1="12" x2="21.7" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
 function renderWorldDetail(container) {
   const world = WORLDS.find(w => w.id === activeWorldId);
   const wrap = document.createElement("div");
@@ -3845,26 +5013,60 @@ function renderWorldDetail(container) {
     </div>
   `;
 
-  const missionGrid = document.createElement("div");
-  missionGrid.className = "mission-grid";
-  world.missions.forEach((m, i) => {
-    const done = store.completedMissions.includes(m.id);
+  const PART_SIZE = 3;
+  const makePathNode = (i, done, symbol, onClick, displayNum) => {
+    const nodeWrap = document.createElement("div");
+    nodeWrap.className = "path-node-wrap " + (i % 2 === 0 ? "align-left" : "align-right");
     const tile = document.createElement("button");
-    let stateClass, symbol;
-    if (done) { stateClass = "tile-done"; symbol = "✓"; }
-    else { stateClass = "tile-unlocked"; symbol = "❓"; }
-    tile.className = "mission-tile " + stateClass;
-    tile.innerHTML = `<div class="tile-badge">${i + 1}</div><div class="tile-symbol">${symbol}</div>`;
-    tile.onclick = () => goMission(world.id, i);
-    missionGrid.appendChild(tile);
-  });
-  wrap.appendChild(missionGrid);
+    tile.className = "mission-tile path-node " + (done ? "tile-done" : "tile-unlocked");
+    tile.innerHTML = `<div class="tile-badge">${displayNum != null ? displayNum : i + 1}</div><div class="tile-symbol">${done ? "✓" : symbol}</div>`;
+    tile.onclick = onClick;
+    nodeWrap.appendChild(tile);
+    return nodeWrap;
+  };
+  const PATH_DECOS = ["✨", "🪐", "☄️", "🌟", "🛰️"];
+  const makeDecoration = (i) => {
+    const d = document.createElement("div");
+    d.className = "path-decoration";
+    d.textContent = PATH_DECOS[i % PATH_DECOS.length];
+    return d;
+  };
+  if (world.missions.length > PART_SIZE) {
+    let idx = 0, partNum = 1;
+    while (idx < world.missions.length) {
+      const chunk = world.missions.slice(idx, idx + PART_SIZE);
+      const partHeading = document.createElement("div");
+      partHeading.className = "pattern-set-heading";
+      partHeading.textContent = `Part ${partNum} of ${Math.ceil(world.missions.length / PART_SIZE)}`;
+      wrap.appendChild(partHeading);
+      const path = document.createElement("div");
+      path.className = "path-map";
+      chunk.forEach((m, j) => {
+        const i = idx + j;
+        const done = store.completedMissions.includes(m.id);
+        if (j > 0) path.appendChild(makeDecoration(i));
+        path.appendChild(makePathNode(i, done, SEALED_POD_ICON, () => goMission(world.id, i)));
+      });
+      wrap.appendChild(path);
+      idx += PART_SIZE;
+      partNum++;
+    }
+  } else {
+    const path = document.createElement("div");
+    path.className = "path-map";
+    world.missions.forEach((m, i) => {
+      const done = store.completedMissions.includes(m.id);
+      if (i > 0) path.appendChild(makeDecoration(i));
+      path.appendChild(makePathNode(i, done, SEALED_POD_ICON, () => goMission(world.id, i)));
+    });
+    wrap.appendChild(path);
+  }
 
   const allMissionsDone = world.missions.every(m => store.completedMissions.includes(m.id));
   const bossTile = document.createElement("button");
   const bossDone = (store.worldStars[world.id] || 0) >= 1;
   bossTile.className = "boss-tile" + (bossDone ? " boss-done" : "");
-  bossTile.innerHTML = `<div class="boss-tile-icon">🏰</div><div class="boss-tile-text">Boss Battle: ${world.boss.name}${bossDone ? " — Cleared!" : ""}</div>`;
+  bossTile.innerHTML = `<div class="boss-portrait">${world.boss.icon || "⚠️"}</div><div class="boss-tile-text"><div class="boss-tile-label">⚠️ Boss Battle</div>${world.boss.name}${bossDone ? " — Cleared!" : ""}</div>`;
   bossTile.onclick = () => goBoss(world.id);
   wrap.appendChild(bossTile);
 
@@ -3891,21 +5093,15 @@ function renderWorldDetail(container) {
         setHeading.textContent = setLabels[setNum];
         wrap.appendChild(setHeading);
 
-        const compGrid = document.createElement("div");
-        compGrid.className = "mission-grid";
-        setMissions.forEach((m) => {
+        const compPath = document.createElement("div");
+        compPath.className = "path-map";
+        setMissions.forEach((m, k) => {
           const globalIndex = world.competitionMissions.indexOf(m);
           const done = store.completedMissions.includes(m.id);
-          const tile = document.createElement("button");
-          let stateClass, symbol;
-          if (done) { stateClass = "tile-done"; symbol = "✓"; }
-          else { stateClass = "tile-unlocked"; symbol = "⭐"; }
-          tile.className = "mission-tile " + stateClass;
-          tile.innerHTML = `<div class="tile-badge">${globalIndex + 1}</div><div class="tile-symbol">${symbol}</div>`;
-          tile.onclick = () => goCompetitionMission(world.id, globalIndex);
-          compGrid.appendChild(tile);
+          if (k > 0) compPath.appendChild(makeDecoration(k));
+          compPath.appendChild(makePathNode(k, done, "⭐", () => goCompetitionMission(world.id, globalIndex), globalIndex + 1));
         });
-        wrap.appendChild(compGrid);
+        wrap.appendChild(compPath);
 
         if (setNum === 1) {
           const set1Done = setMissions.every(m => store.completedMissions.includes(m.id));
@@ -4324,6 +5520,14 @@ function renderStrategyRaceStage(body, mission, onNext) {
 // Both can be present on the same mission.
 function getStages(mission) {
   let stages = STAGE_LABELS.slice();
+  if (mission.spot) {
+    const thinkIdx = stages.findIndex(s => s.id === "thinking");
+    stages.splice(thinkIdx, 0, { id: "spot", icon: "🔍", label: "Spot the Numbers" });
+  }
+  if (mission.explainIt) {
+    const drawIdx = stages.findIndex(s => s.id === "draw");
+    stages.splice(drawIdx + 1, 0, { id: "explainIt", icon: "💬", label: "Explain It" });
+  }
   if (mission.toolChoice) {
     const drawIdx = stages.findIndex(s => s.id === "draw");
     stages.splice(drawIdx, 0, { id: "toolbox", icon: "🧰", label: "Toolbox" });
@@ -4332,7 +5536,94 @@ function getStages(mission) {
     const challengeIdx = stages.findIndex(s => s.id === "challenge");
     stages.splice(challengeIdx, 0, { id: "strategyRace", icon: "🏁", label: "Strategy Race" });
   }
+  if (mission.checkPrompt) {
+    const challengeIdx = stages.findIndex(s => s.id === "challenge");
+    stages.splice(challengeIdx, 0, { id: "check", icon: "🎯", label: "Check" });
+  }
+  if (mission.explainTemplate && !mission.explainIt) {
+    const challengeIdx = stages.findIndex(s => s.id === "challenge");
+    stages.splice(challengeIdx + 1, 0, { id: "explain", icon: "💬", label: "Explain" });
+  }
   return stages;
+}
+
+function renderExplainItStage(body, mission, onNext) {
+    const ei = mission.explainIt;
+    body.innerHTML = `<p class="stage-text">${ei.prompt}</p>`;
+    if (mission.picture) {
+      body.appendChild(mission.picture.type === "buildSteps" ? renderBuildStepsStatic(mission.picture) : renderPicture(mission.picture));
+    }
+    const scaffoldBox = document.createElement("div");
+    scaffoldBox.className = "explain-scaffold-box";
+    scaffoldBox.innerHTML = `<div class="explain-scaffold-title">📝 A sentence starter is already in the box below — tap the words to swap in the right ones</div>`;
+    body.appendChild(scaffoldBox);
+    const textarea = document.createElement("textarea");
+    textarea.className = "explain-textarea";
+    textarea.rows = 4;
+    textarea.placeholder = "Type your explanation here...";
+    textarea.value = "First I ___, then I ___ because ___.";
+    body.appendChild(textarea);
+    const wordBank = document.createElement("div");
+    wordBank.className = "explain-wordbank";
+    ei.markPoints.forEach(mp => {
+      const label = document.createElement("div");
+      label.className = "explain-wordbank-label";
+      label.textContent = mp.label + ":";
+      wordBank.appendChild(label);
+      const pillRow = document.createElement("div");
+      pillRow.className = "word-pill-row";
+      mp.terms.forEach(term => {
+        const pill = document.createElement("button");
+        pill.type = "button";
+        pill.className = "word-pill";
+        pill.textContent = term;
+        pill.onclick = () => insertAtCursor(textarea, term);
+        pillRow.appendChild(pill);
+      });
+      wordBank.appendChild(pillRow);
+    });
+    body.appendChild(wordBank);
+    const chipsRow = document.createElement("div");
+    chipsRow.className = "chip-row";
+    ei.markPoints.forEach((mp, i) => {
+      const chip = document.createElement("div");
+      chip.className = "markpoint-chip";
+      chip.textContent = mp.label;
+      chip.dataset.mpIndex = i;
+      chipsRow.appendChild(chip);
+    });
+    body.appendChild(chipsRow);
+    const feedback = document.createElement("div");
+    feedback.className = "challenge-feedback";
+    body.appendChild(feedback);
+    let hintIdx = 0;
+    const checkBtn = mkBtn("Check my explanation", () => {
+      const results = checkMarkPoints(textarea.value, ei.markPoints);
+      results.forEach((r, i) => {
+        const chip = chipsRow.querySelector(`[data-mp-index="${i}"]`);
+        chip.classList.toggle("markpoint-achieved", r.achieved);
+      });
+      const allDone = results.every(r => r.achieved);
+      logAttempt(mission.id, "explainIt", { correct: allDone });
+      if (allDone) {
+        feedback.innerHTML = `<span class="feedback-good">✓ Nice — you explained it like a real mission scientist!</span>`;
+        checkBtn.disabled = true; checkBtn.style.opacity = "0.5";
+        body.appendChild(mkBtn("Next →", () => onNext()));
+      } else if (ei.hintSequence && ei.hintSequence[hintIdx]) {
+        feedback.innerHTML = `<span class="feedback-retry">💡 ${ei.hintSequence[hintIdx]}</span>`;
+        hintIdx = Math.min(hintIdx + 1, ei.hintSequence.length - 1);
+      } else {
+        feedback.innerHTML = `<span class="feedback-retry">Keep going — try mentioning what you did, step by step.</span>`;
+      }
+    });
+    body.appendChild(checkBtn);
+}
+
+function getMissionIcon(mission) {
+  if (!mission.title) return null;
+  const firstToken = mission.title.split(" ")[0];
+  if (/^[a-zA-Z0-9]/.test(firstToken)) return null;
+  return firstToken;
 }
 
 function renderMissionStage(box, mission, world) {
@@ -4349,9 +5640,51 @@ function renderMissionStage(box, mission, world) {
   body.className = "stage-body";
 
   if (stageId === "warmup") {
-    body.innerHTML = `<p class="stage-text">${mission.warmup}</p>`;
+    const icon = getMissionIcon(mission);
+    body.innerHTML = (icon ? `<div class="warmup-visual">${icon}</div>` : "") + `<p class="stage-text">${mission.warmup}</p>`;
     const btn = mkBtn("I'm ready →", () => nextStage(box, mission, world));
     body.appendChild(btn);
+  } else if (stageId === "spot") {
+    body.innerHTML = `<p class="stage-text">${mission.warmup}</p><p class="stage-subtext">Tap the numbers you actually need to solve this:</p>`;
+    const chipWrap = document.createElement("div");
+    chipWrap.className = "chip-row";
+    const selected = new Set();
+    let locked = false;
+    mission.spot.forEach((item, i) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "spot-chip";
+      chip.textContent = item.text;
+      chip.onclick = () => {
+        if (locked) return;
+        if (selected.has(i)) { selected.delete(i); chip.classList.remove("spot-selected"); }
+        else { selected.add(i); chip.classList.add("spot-selected"); }
+      };
+      chipWrap.appendChild(chip);
+    });
+    body.appendChild(chipWrap);
+    const feedback = document.createElement("div");
+    feedback.className = "challenge-feedback";
+    body.appendChild(feedback);
+    const checkBtn = mkBtn("Check my picks", () => {
+      locked = true;
+      let allCorrect = true;
+      Array.from(chipWrap.children).forEach((chip, i) => {
+        chip.classList.remove("spot-selected");
+        const isRelevant = mission.spot[i].relevant;
+        const isSelected = selected.has(i);
+        if (isRelevant && isSelected) chip.classList.add("spot-correct");
+        else if (isRelevant && !isSelected) { chip.classList.add("spot-missed"); allCorrect = false; }
+        else if (!isRelevant && isSelected) { chip.classList.add("spot-wrong"); allCorrect = false; }
+      });
+      feedback.innerHTML = allCorrect
+        ? `<span class="feedback-good">✓ Nice — those are exactly the numbers you need.</span>`
+        : `<span class="feedback-retry">Green = spot on, amber = you missed one, red = that one's a distractor.</span>`;
+      logAttempt(mission.id, "spot", { correct: allCorrect });
+      checkBtn.disabled = true; checkBtn.style.opacity = "0.5";
+      body.appendChild(mkBtn("Next →", () => nextStage(box, mission, world)));
+    }, true);
+    body.appendChild(checkBtn);
   } else if (stageId === "thinking") {
     body.innerHTML = `<p class="stage-text">${mission.thinking.prompt}</p>`;
     if (mission.picture) body.appendChild(renderPicture(mission.picture));
@@ -4375,8 +5708,14 @@ function renderMissionStage(box, mission, world) {
   } else if (stageId === "toolbox") {
     renderToolboxStage(body, mission, () => nextStage(box, mission, world));
   } else if (stageId === "draw") {
-    body.appendChild(renderPicture(mission.picture));
-    body.appendChild(mkBtn("Next →", () => nextStage(box, mission, world)));
+    if (mission.picture && mission.picture.type === "buildSteps") {
+      renderBuildStepsInteractive(body, mission.picture, () => nextStage(box, mission, world));
+    } else {
+      body.appendChild(renderPicture(mission.picture));
+      body.appendChild(mkBtn("Next →", () => nextStage(box, mission, world)));
+    }
+  } else if (stageId === "explainIt") {
+    renderExplainItStage(body, mission, () => nextStage(box, mission, world));
   } else if (stageId === "translate") {
     const alg = document.createElement("div");
     alg.className = "algebra-line";
@@ -4396,6 +5735,33 @@ function renderMissionStage(box, mission, world) {
     body.appendChild(mkBtn("Next →", () => nextStage(box, mission, world)));
   } else if (stageId === "strategyRace") {
     renderStrategyRaceStage(body, mission, () => nextStage(box, mission, world));
+  } else if (stageId === "check") {
+    body.innerHTML = `<p class="stage-text">${mission.checkPrompt.question}</p>`;
+    const choiceWrap = document.createElement("div");
+    choiceWrap.className = "choice-list";
+    const feedback = document.createElement("div");
+    feedback.className = "challenge-feedback";
+    let answered = false;
+    mission.checkPrompt.choices.forEach((choiceText, i) => {
+      const cbtn = document.createElement("button");
+      cbtn.className = "choice-btn";
+      cbtn.textContent = choiceText;
+      cbtn.onclick = () => {
+        if (answered) return;
+        answered = true;
+        const correct = i === mission.checkPrompt.correctIndex;
+        Array.from(choiceWrap.children).forEach(b => b.disabled = true);
+        choiceWrap.children[mission.checkPrompt.correctIndex].classList.add("choice-selected");
+        feedback.innerHTML = correct
+          ? `<span class="feedback-good">✓ Good estimate — let's see if the exact answer matches.</span>`
+          : `<span class="feedback-retry">Not quite — but an estimate is just a first guess. Let's calculate exactly.</span>`;
+        logAttempt(mission.id, "check", { correct });
+        body.appendChild(mkBtn("Next →", () => nextStage(box, mission, world)));
+      };
+      choiceWrap.appendChild(cbtn);
+    });
+    body.appendChild(choiceWrap);
+    body.appendChild(feedback);
   } else if (stageId === "challenge") {
     body.innerHTML = `<p class="stage-text">${mission.challenge.prompt}</p>`;
     attachScratchpad(body, mission.challenge.prompt, mission.picture && mission.picture.type === "line", false, world.id === 5);
@@ -4410,9 +5776,11 @@ function renderMissionStage(box, mission, world) {
     const checkBtn = mkBtn("Check", () => {
       if (checkAnswer(input.value, mission.challenge.answer)) {
         feedback.innerHTML = `<span class="feedback-good">✓ Correct! Great translation.</span>`;
+        logAttempt(mission.id, "challenge", { correct: true, usedHint: false });
         setTimeout(() => nextStage(box, mission, world), 900);
       } else {
         feedback.innerHTML = `<span class="feedback-retry">${retryFeedback(input.value, mission.challenge.answer)}</span><span class="feedback-hint">🔍 Troubleshooting tip: ${mission.challenge.hint}</span>`;
+        logAttempt(mission.id, "challenge", { correct: false, usedHint: false });
       }
     });
     const skipBtn = mkBtn("Show me the answer", () => {
@@ -4421,10 +5789,46 @@ function renderMissionStage(box, mission, world) {
       feedback.innerHTML = `<span class="feedback-good">✓ Answer: ${mission.challenge.answer}</span><span class="feedback-hint">🔍 ${mission.challenge.hint}</span>`;
       checkBtn.disabled = true; checkBtn.style.opacity = "0.5";
       skipBtn.disabled = true; skipBtn.style.opacity = "0.5";
+      logAttempt(mission.id, "challenge", { correct: false, usedHint: true });
       body.appendChild(mkBtn("Continue →", () => nextStage(box, mission, world)));
     }, true);
     btnRow.appendChild(checkBtn); btnRow.appendChild(skipBtn);
     body.appendChild(btnRow);
+  } else if (stageId === "explain") {
+    const et = mission.explainTemplate;
+    body.innerHTML = `<p class="stage-text explain-sentence">${et.before} <span class="explain-blank" id="explain-blank-slot">___</span> ${et.after}</p>`;
+    const chipWrap = document.createElement("div");
+    chipWrap.className = "chip-row";
+    const feedback = document.createElement("div");
+    feedback.className = "challenge-feedback";
+    let answered = false;
+    et.blankOptions.forEach(optText => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "choice-chip";
+      chip.textContent = optText;
+      chip.onclick = () => {
+        if (answered) return;
+        const slot = body.querySelector("#explain-blank-slot");
+        slot.textContent = optText;
+        slot.classList.remove("explain-blank-correct", "explain-blank-wrong");
+        if (optText === et.correctBlank) {
+          answered = true;
+          chip.classList.add("choice-selected");
+          slot.classList.add("explain-blank-correct");
+          feedback.innerHTML = `<span class="feedback-good">✓ That's the explanation — nice scientific communication!</span>`;
+          logAttempt(mission.id, "explain", { correct: true });
+          body.appendChild(mkBtn("Next →", () => nextStage(box, mission, world)));
+        } else {
+          slot.classList.add("explain-blank-wrong");
+          feedback.innerHTML = `<span class="feedback-retry">Not quite — try another option.</span>`;
+          logAttempt(mission.id, "explain", { correct: false });
+        }
+      };
+      chipWrap.appendChild(chip);
+    });
+    body.appendChild(chipWrap);
+    body.appendChild(feedback);
   } else if (stageId === "reflection") {
     const list = document.createElement("div");
     list.className = "mark-box";
@@ -4487,6 +5891,10 @@ function renderWordProblemMission(container, world) {
       const idx = stages.findIndex(s => s.id === "draw");
       stages.splice(idx, 0, { id: "toolbox", icon: "🧰", label: "Toolbox" });
     }
+    if (mission.explainIt) {
+      const idx = stages.findIndex(s => s.id === "draw");
+      stages.splice(idx + 1, 0, { id: "explainIt", icon: "💬", label: "Explain It" });
+    }
     if (mission.strategies) {
       const idx = stages.findIndex(s => s.id === "answer");
       stages.splice(idx, 0, { id: "strategyRace", icon: "🏁", label: "Strategy Race" });
@@ -4512,7 +5920,7 @@ function renderWordProblemMission(container, world) {
     body.className = "stage-body";
 
     if (stageId === "read") {
-      body.innerHTML = `<p class="stage-text">${escapeHtml(mission.text)}</p>`;
+      body.innerHTML = (mission.icon ? `<div class="warmup-visual">${mission.icon}</div>` : "") + `<p class="stage-text">${escapeHtml(mission.text)}</p>`;
       if (mission.picture) body.appendChild(renderPicture(mission.picture));
       body.appendChild(mkBtn("Next →", advance));
     } else if (stageId === "numbers") {
@@ -4527,6 +5935,8 @@ function renderWordProblemMission(container, world) {
     } else if (stageId === "draw") {
       body.appendChild(renderPicture(mission.picture));
       body.appendChild(mkBtn("Next →", advance));
+    } else if (stageId === "explainIt") {
+      renderExplainItStage(body, mission, advance);
     } else if (stageId === "equation") {
       const alg = document.createElement("div");
       alg.className = "algebra-line";
@@ -4693,12 +6103,12 @@ function renderBossBattle(container) {
   wrap.style.setProperty("--wcolor", world.color);
 
   const planksHtml = questions.map((q, i) =>
-    `<div class="bridge-plank${i < bossState.qIndex ? " plank-fixed" : ""}">${i < bossState.qIndex ? "🪵" : ""}</div>`
+    `<div class="bridge-plank${i < bossState.qIndex ? " plank-fixed" : ""}">${i < bossState.qIndex ? "🛰️" : ""}</div>`
   ).join("");
 
   wrap.innerHTML = `<button class="back-btn" id="back-to-world">← ${world.name}</button>
     <div class="boss-header">
-      <div class="boss-name-row"><div class="boss-name">🏰 ${boss.name}</div><div class="boss-face">${monsterFace(bossState.hp)}</div></div>
+      <div class="boss-name-row"><div class="boss-name">⚠️ ${boss.name}</div><div class="boss-face">${monsterFace(bossState.hp)}</div></div>
       <div class="hp-track"><div class="hp-fill" style="width:${bossState.hp}%"></div></div>
       <div class="hp-label">${Math.round(bossState.hp)} / 100 HP</div>
       <div class="bridge-track">${planksHtml}</div>
@@ -4709,10 +6119,10 @@ function renderBossBattle(container) {
 
   if (bossState.cleared) {
     box.innerHTML = `<div class="victory-box">
-      <div class="victory-title">🏆 ${world.id === 12 ? "Bridge Complete!" : "Victory!"}</div>
+      <div class="victory-title">🏆 ${world.id === 12 ? "Transfer Bridge Complete!" : "Victory!"}</div>
       <p class="stage-text">${world.id === 12
-        ? `You defeated ${boss.name} and repaired the final bridge into Castle Cambridge — Princess Anna is rescued! 👸🎉`
-        : `You repaired the bridge and defeated ${boss.name}, earning a star for ${world.name}!`}</p>
+        ? `You cleared ${boss.name} and completed the final transfer bridge into Cambridge Station — Princess Anna is rescued! 👸🎉`
+        : `You completed the transfer bridge and cleared ${boss.name}, earning a star for ${world.name}!`}</p>
       <div class="victory-star">${world.id === 12 ? "👸" : "⭐"}</div>
     </div>`;
     box.appendChild(mkBtn("Return to Atlas", goAtlas));
@@ -4729,7 +6139,7 @@ function renderBossBattle(container) {
     if (bossState.hintLevel >= 2) {
       const answerBox = document.createElement("div");
       answerBox.className = "boss-hint-box boss-hint-answer";
-      answerBox.textContent = "🔑 The answer is " + q.answer + " — type it in below to fix the bridge!";
+      answerBox.textContent = "🔑 The answer is " + q.answer + " — type it in below to lock in the relay!";
       box.appendChild(answerBox);
     }
 
@@ -4741,7 +6151,7 @@ function renderBossBattle(container) {
     feedback.className = "challenge-feedback";
     const btnRow = document.createElement("div");
     btnRow.className = "btn-row";
-    btnRow.appendChild(mkBtn("🔧 Fix the Bridge!", () => {
+    btnRow.appendChild(mkBtn("🛰️ Lock In Relay!", () => {
       if (checkAnswer(input.value, q.answer)) {
         bossState.hp -= bossState.hpStep;
         bossState.qIndex++;
@@ -5030,7 +6440,7 @@ function renderDictionaryBody() {
 }
 
 /* ================================================================
-   WORKSHOP (My Bridge — freeform worksheet, unchanged, new skin)
+   WORKSHOP (My Lab — freeform worksheet, unchanged, new skin)
    ================================================================ */
 
 let builderBars = [{ label: "bar A", units: 3 }, { label: "bar B", units: 5 }];
@@ -5367,7 +6777,7 @@ function decodeStore(code) {
   const parsed = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
   if (typeof parsed.xp !== "number" || !Array.isArray(parsed.completedMissions) ||
       typeof parsed.worldStars !== "object" || !Array.isArray(parsed.badges) || !Array.isArray(parsed.notebook)) {
-    throw new Error("This doesn't look like a valid SC Bridge backup code.");
+    throw new Error("This doesn't look like a valid Math Mission Bridge backup code.");
   }
   return parsed;
 }
